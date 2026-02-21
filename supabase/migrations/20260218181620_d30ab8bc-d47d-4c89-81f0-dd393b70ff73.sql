@@ -1,0 +1,1 @@
+ALTER TABLE public.funnel_events ADD COLUMN IF NOT EXISTS lead_variant TEXT NOT NULL DEFAULT 'pre';
