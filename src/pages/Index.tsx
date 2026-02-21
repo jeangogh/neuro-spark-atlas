@@ -318,20 +318,12 @@ export default function Index() {
         <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between gap-4">
           <SendFriendButton />
 
-          <div className="flex items-center gap-5">
-            <Link
-              to="/resultados"
-              className="text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Meus Resultados
-            </Link>
-            <button
-              onClick={() => setShowAbout(true)}
-              className="text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Sobre
-            </button>
-          </div>
+          <button
+            onClick={() => setShowAbout(true)}
+            className="text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Sobre
+          </button>
         </div>
 
       </nav>
