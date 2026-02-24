@@ -188,7 +188,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
 
         {/* Highest dimension complement */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }} className="rounded-xl border border-primary/15 bg-primary/[0.03] p-4 sm:p-5">
-          <h3 className="font-display font-semibold text-foreground text-[13px] mb-1">Dimensão mais alta: {highestCat.label}</h3>
+          <h3 className="text-foreground mb-1">Dimensão mais alta: {highestCat.label}</h3>
           <p className="text-[12px] text-card-foreground leading-relaxed">
             Essa foi a dimensão com maior pontuação no seu perfil ({scores.categoryScores[highestCat.key]?.pct}%). Considere investigar mais a fundo com um profissional especializado.
           </p>
@@ -196,7 +196,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
 
         {/* Disclaimer */}
         <div className="rounded-xl border border-accent/20 bg-accent/[0.03] p-4 sm:p-5">
-          <h3 className="font-display font-semibold text-foreground text-[13px] mb-1">Nota Importante</h3>
+          <h3 className="text-foreground mb-1">Nota Importante</h3>
           <p className="text-[12px] text-card-foreground leading-relaxed">
             Este questionário é um instrumento de autorrelato e <strong>não substitui avaliação profissional</strong>. Os resultados indicam padrões de funcionamento que merecem investigação com profissional qualificado.
           </p>
