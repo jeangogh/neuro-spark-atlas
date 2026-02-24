@@ -86,6 +86,57 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          nome: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      quiz_results: {
+        Row: {
+          answers: Json
+          created_at: string
+          demographic_data: Json | null
+          id: string
+          scores: Json
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          created_at?: string
+          demographic_data?: Json | null
+          id?: string
+          scores: Json
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          created_at?: string
+          demographic_data?: Json | null
+          id?: string
+          scores?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

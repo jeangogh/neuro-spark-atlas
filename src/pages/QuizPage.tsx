@@ -1,6 +1,9 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFunnelTracking, getLayoutVariant, getLeadVariant } from "@/hooks/useFunnelTracking";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { Navigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -9,7 +12,7 @@ import {
   Cell, Tooltip, LineChart, Line, ReferenceLine, Label, AreaChart, Area,
 } from "recharts";
 import {
-  MessageCircle, Twitter, Download, RotateCcw, Copy, Check, ChevronDown, Lock,
+  MessageCircle, Twitter, Download, RotateCcw, Copy, Check, ChevronDown, Lock, LogOut, History,
 } from "lucide-react";
 import {
   questionBlocks,
@@ -543,8 +546,9 @@ function ReferencesModal({ open, onClose }: { open: boolean; onClose: () => void
 }
 
 /* ────── Expandable Hypothesis Card ────── */
-function HypothesisCard({ hypothesis, index }: { hypothesis: HypothesisResult; index: number }) {
-  const [expanded, setExpanded] = useState(false);
+function HypothesisCard({ hypothesis, index, forceExpanded = false }: { hypothesis: HypothesisResult; index: number; forceExpanded?: boolean }) {
+  const [expanded, setExpanded] = useState(forceExpanded);
+  useEffect(() => { if (forceExpanded) setExpanded(true); }, [forceExpanded]);
   const color = conditionColor(hypothesis.id, hypothesis.score);
 
   function formatDescription(text: string) {
@@ -746,10 +750,11 @@ function LeadCaptureForm({ onSubmit }: { onSubmit: (d: { nome: string; whatsapp:
 }
 
 /* ────── Results View ────── */
-function ResultsView({ answers, onRestart, onCheckout }: { answers: Answers; onRestart: () => void; onCheckout?: () => void }) {
+function ResultsView({ answers, onRestart, onCheckout, onSignOut }: { answers: Answers; onRestart: () => void; onCheckout?: () => void; onSignOut?: () => void }) {
   const scores = useMemo(() => calculateScores(answers), [answers]);
   const results = useMemo(() => interpretResults(scores), [scores]);
   const [showRefs, setShowRefs] = useState(false);
+  const [printMode, setPrintMode] = useState(false);
   const blurRef = useRef<HTMLDivElement>(null);
 
   const sortedHypotheses = useMemo(() => {
@@ -837,7 +842,7 @@ function ResultsView({ answers, onRestart, onCheckout }: { answers: Answers; onR
             <p className="text-[11px] text-muted-foreground mt-0.5">Toque em cada área para expandir a explicação completa</p>
           </div>
           {sortedHypotheses.map((h, i) => (
-            <HypothesisCard key={h.id} hypothesis={h} index={i} />
+            <HypothesisCard key={h.id} hypothesis={h} index={i} forceExpanded={printMode} />
           ))}
         </section>
 
@@ -851,19 +856,7 @@ function ResultsView({ answers, onRestart, onCheckout }: { answers: Answers; onR
         {/* Propensão de Expressão do Potencial */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.14 }} className="rounded-xl border bg-card p-5 sm:p-6">
           <h2 className="font-display text-lg font-semibold text-foreground mb-1">Propensão de Expressão do Potencial</h2>
-          <p className="text-[11px] text-muted-foreground mb-1 leading-relaxed">
-            Barras coloridas = intensidade atual · Barras verdes = estimativa com intervenção adequada
-          </p>
-          <div className="flex items-center gap-3 mb-4 flex-wrap">
-            <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: "hsl(0,65%,45%)" }} />
-            <span className="text-[11px] text-muted-foreground">Barreiras ao potencial</span>
-            <span className="inline-block w-3 h-3 rounded-sm bg-primary ml-2" />
-            <span className="text-[11px] text-muted-foreground">Forças cognitivas</span>
-            <span className="inline-block w-3 h-3 rounded-sm ml-2" style={{ backgroundColor: "hsl(36,87%,44%)" }} />
-            <span className="text-[11px] text-muted-foreground">Com intervenção</span>
-          </div>
-          <PotentialExpressionChart hypotheses={sortedHypotheses} />
-          <div className="mt-4 p-3.5 rounded-lg bg-primary/5 border border-primary/15">
+          <div className="mt-3 p-3.5 rounded-lg bg-primary/5 border border-primary/15">
             <p className="text-[12px] text-card-foreground leading-relaxed">
               <strong className="italic">Pesquisas indicam que transtornos emocionais e neurofuncionais não tratados reduzem o desempenho cognitivo em 20 a 30%.</strong> Este gráfico mostra o quanto cada área pode melhorar com intervenção direcionada.
             </p>
@@ -918,7 +911,13 @@ function ResultsView({ answers, onRestart, onCheckout }: { answers: Answers; onR
         {/* Actions row */}
         <div className="flex gap-3 justify-center flex-wrap print:hidden">
           <button
-            onClick={() => window.print()}
+            onClick={() => {
+              setPrintMode(true);
+              setTimeout(() => {
+                window.print();
+                setTimeout(() => setPrintMode(false), 500);
+              }, 300);
+            }}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]"
           >
             <Download className="w-4 h-4" />
@@ -931,6 +930,22 @@ function ResultsView({ answers, onRestart, onCheckout }: { answers: Answers; onR
             <RotateCcw className="w-4 h-4" />
             <span>Refazer Questionário</span>
           </button>
+          <Link
+            to="/historico"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]"
+          >
+            <History className="w-4 h-4" />
+            <span>Meus Resultados</span>
+          </Link>
+          {onSignOut && (
+            <button
+              onClick={onSignOut}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-muted-foreground hover:scale-[1.02]"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Sair</span>
+            </button>
+          )}
         </div>
 
       </main>
@@ -1343,7 +1358,8 @@ function LeadCapturePost({ onComplete }: { onComplete: (data: { nome: string; em
 
 /* ────── Quiz Page ────── */
 export default function QuizPage() {
-  const leadVariant = getLeadVariant(); // 'pre' | 'post' — A/B por sessão
+  const { user, loading, signOut } = useAuth();
+  const leadVariant = getLeadVariant();
   const initialPhase = leadVariant === "pre" ? "lead" : "demographic";
 
   const [phase, setPhase] = useState<"lead" | "demographic" | "quiz" | "lead_post" | "results">(initialPhase);
@@ -1352,16 +1368,34 @@ export default function QuizPage() {
   const [currentBlock, setCurrentBlock] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [motivationalMsg, setMotivationalMsg] = useState<string | null>(null);
+  const [resultsSaved, setResultsSaved] = useState(false);
 
   // ── Funil tracking ──
   const { trackStart, trackStep, trackComplete, trackCheckout } = useFunnelTracking(TOTAL_QUESTIONS);
-  const layout = getLayoutVariant(); // 'single' | 'multi' — atribuído automaticamente por sessão
+  const layout = getLayoutVariant();
 
   const block = questionBlocks[currentBlock];
   const answeredCount = Object.keys(answers).length;
   const progress = Math.round((answeredCount / TOTAL_QUESTIONS) * 100);
   const blockComplete = block?.questions.every((q) => answers[q.id] !== undefined);
   const isLast = currentBlock === questionBlocks.length - 1;
+
+  // Save results to database
+  const saveResults = async () => {
+    if (resultsSaved || !user) return;
+    try {
+      const scores = calculateScores(answers);
+      await supabase.from("quiz_results").insert({
+        user_id: user.id,
+        answers: answers as any,
+        scores: scores as any,
+        demographic_data: demographicData as any,
+      });
+      setResultsSaved(true);
+    } catch (e) {
+      console.warn("Error saving results:", e);
+    }
+  };
 
   useEffect(() => {
     let msg: string | null = null;
@@ -1377,12 +1411,24 @@ export default function QuizPage() {
     }
   }, [progress, answeredCount]);
 
+  // Redirect to auth if not logged in
+  if (!loading && !user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   const handleAnswer = (id: string, val: number) => setAnswers((p) => ({ ...p, [id]: val }));
   const handleNext = () => {
     if (isLast) {
       trackComplete();
       if (leadVariant === "post") {
-        // Variante B: mostrar captura de lead DEPOIS do quiz
         setPhase("lead_post");
       } else {
         setPhase("results");
@@ -1397,6 +1443,7 @@ export default function QuizPage() {
   const handleRestart = () => {
     setAnswers({});
     setCurrentBlock(0);
+    setResultsSaved(false);
     setPhase(leadVariant === "pre" ? "lead" : "demographic");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -1412,7 +1459,7 @@ export default function QuizPage() {
   if (phase === "demographic") {
     return <DemographicSurvey onComplete={(data) => {
       setDemographicData(data);
-      trackStart(); // ← início do quiz após dados demográficos
+      trackStart();
       setPhase("quiz");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }} />;
@@ -1424,7 +1471,12 @@ export default function QuizPage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }} />;
   }
-  if (phase === "results") return <ResultsView answers={answers} onRestart={handleRestart} onCheckout={trackCheckout} />;
+  if (phase === "results") {
+    // Save results when entering results phase
+    if (!resultsSaved) saveResults();
+    return <ResultsView answers={answers} onRestart={handleRestart} onCheckout={trackCheckout} onSignOut={signOut} />;
+  }
+  
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
