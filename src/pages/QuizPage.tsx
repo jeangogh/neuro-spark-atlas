@@ -57,172 +57,6 @@ const DARK = {
   accentDeep: "hsl(36, 87%, 44%)",
 };
 
-/* ────── Demographic Survey ────── */
-interface DemographicData {
-  nome: string;
-  idade: string;
-  sexo: string;
-  profissao: string;
-  laudo: string;
-  qualLaudo: string;
-}
-
-function DemographicSurvey({ onComplete }: { onComplete: (data: DemographicData) => void }) {
-  const [step, setStep] = useState(0);
-  const [data, setData] = useState<DemographicData>({
-    nome: "", idade: "", sexo: "", profissao: "", laudo: "", qualLaudo: ""
-  });
-  const [inputVal, setInputVal] = useState("");
-
-  const fields = [
-    { key: "nome",      label: "Como você se chama?",                    placeholder: "Seu nome",           type: "text" },
-    { key: "idade",     label: "Qual é a sua idade?",                    placeholder: "Ex: 32",             type: "number" },
-    { key: "sexo",      label: "Com qual gênero você se identifica?",    placeholder: "Ex: Feminino, Masculino, Não-binário…", type: "text" },
-    { key: "profissao", label: "Qual é a sua profissão ou área de atuação?", placeholder: "Ex: Designer, Professora, Dev…", type: "text" },
-    { key: "laudo",     label: "Você já tem algum laudo formal de saúde mental ou neurodesenvolvimento?", placeholder: "", type: "select" },
-    { key: "qualLaudo", label: "Qual é o laudo (ou suspeita diagnóstica)?", placeholder: "Ex: TDAH, TEA, TEPT, nenhum por enquanto…", type: "text" },
-  ];
-
-  const currentField = fields[step];
-  const isLaudoStep = currentField.key === "laudo";
-  const showQualLaudoStep = currentField.key === "qualLaudo";
-  const totalSteps = data.laudo === "nao" && step === 5 ? fields.length : fields.length;
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !isLaudoStep) handleNext();
-  };
-
-  const handleNext = () => {
-    const newData = { ...data, [currentField.key]: inputVal || data[currentField.key as keyof DemographicData] };
-    setData(newData);
-    if (step < fields.length - 1) {
-      setStep(s => s + 1);
-      setInputVal("");
-    } else {
-      onComplete(newData);
-    }
-  };
-
-  const handleSelect = (val: string) => {
-    const newData = { ...data, laudo: val };
-    setData(newData);
-    setStep(s => s + 1);
-    setInputVal("");
-  };
-
-  const handleSkipLaudo = () => {
-    onComplete({ ...data, laudo: "nao", qualLaudo: "" });
-  };
-
-  const progress = ((step) / fields.length) * 100;
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="pt-10 pb-5 px-5 text-center">
-        <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="max-w-md mx-auto">
-          <p className="text-primary text-[11px] font-semibold uppercase tracking-[0.15em] mb-4">
-            Rastreio de Altas Habilidades e Neurodivergência
-          </p>
-          <div className="flex items-baseline justify-between mb-1.5">
-            <span className="font-semibold text-foreground text-sm tabular-nums">{Math.round(progress)}%</span>
-            <span className="text-[11px] text-muted-foreground">Dados iniciais</span>
-          </div>
-          <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: "linear-gradient(90deg, hsl(40,88%,61%), hsl(36,87%,44%))" }}
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-          </div>
-        </motion.div>
-      </header>
-
-      <main className="max-w-lg mx-auto w-full px-5 flex-1 flex flex-col justify-center pb-24">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="space-y-5"
-          >
-            <div>
-              <p className="text-[11px] text-muted-foreground uppercase tracking-widest mb-2">{step + 1} de {fields.length}</p>
-              <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground leading-tight">
-                {currentField.label}
-              </h2>
-            </div>
-
-            {isLaudoStep ? (
-              <div className="space-y-3">
-                {["Sim, tenho laudo formal", "Tenho suspeita diagnóstica", "Não tenho laudo"].map((opt, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleSelect(i === 0 ? "sim" : i === 1 ? "suspeita" : "nao")}
-                    className="w-full text-left p-4 rounded-xl border border-border bg-card hover:border-primary/40 hover:bg-primary/[0.03] transition-all duration-200 text-sm font-medium text-foreground"
-                  >
-                    {opt}
-                  </button>
-                ))}
-                <button
-                  onClick={handleSkipLaudo}
-                  className="w-full text-center text-[11px] text-muted-foreground hover:text-primary transition-colors mt-2"
-                >
-                  Prefiro não informar — continuar sem essa pergunta
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="relative">
-                  <input
-                    autoFocus
-                    type={currentField.type === "number" ? "number" : "text"}
-                    value={inputVal}
-                    onChange={e => setInputVal(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder={currentField.placeholder}
-                    className="w-full text-lg sm:text-xl font-medium bg-transparent border-0 border-b-2 border-border focus:border-primary outline-none pb-2 text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <button
-                    onClick={() => { setStep(s => Math.max(0, s - 1)); setInputVal(""); }}
-                    disabled={step === 0}
-                    className="text-[12px] text-muted-foreground hover:text-foreground disabled:opacity-30 transition-colors"
-                  >
-                    Voltar
-                  </button>
-                  <div className="flex items-center gap-3">
-                    {showQualLaudoStep && (
-                      <button
-                        onClick={() => onComplete({ ...data, qualLaudo: "" })}
-                        className="text-[12px] text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        Pular
-                      </button>
-                    )}
-                    <button
-                      onClick={handleNext}
-                      className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-primary-foreground transition-all hover:scale-[1.02]"
-                      style={{ background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))", color: "hsl(225,12%,7%)" }}
-                    >
-                      {step === fields.length - 1 ? "Iniciar Rastreio" : "Continuar"}
-                      <span className="text-[11px] opacity-70">↵</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </main>
-    </div>
-  );
-}
-
 /* ────── Likert Scale — with shimmer on select ────── */
 function LikertScale({ questionId, value, onChange }: {
   questionId: string; value: number | undefined; onChange: (id: string, val: number) => void;
@@ -330,54 +164,8 @@ function ProfileRadarChart({ hypotheses }: { hypotheses: HypothesisResult[] }) {
   );
 }
 
-/* ────── Simplified Potential Chart: 3 bars per hypothesis ────── */
-function PotentialExpressionChart({ hypotheses }: { hypotheses: HypothesisResult[] }) {
-  const BARRIER_IDS = ["tdah", "tea", "trauma", "ansiedade", "depressao"];
-  const data = hypotheses.map((h) => {
-    const isBarrier = BARRIER_IDS.includes(h.id);
-    const expressao = h.score;
-    // potencial: strengths get +15, barriers get inflated potencial
-    const potencial = isBarrier ? Math.min(100, Math.round(h.score * 1.08 + 12)) : Math.min(100, Math.round(h.score + 12));
-    const melhoria = isBarrier ? Math.min(100, Math.round(h.score * 0.72)) : Math.min(100, Math.round(h.score + 22));
-    return {
-      name: CONDITION_COLORS[h.id]?.label ?? h.id,
-      potencial,
-      expressao,
-      melhoria,
-      id: h.id,
-    };
-  });
-
-  return (
-    <div className="w-full" style={{ height: Math.max(280, data.length * 50) }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" margin={{ left: 6, right: 36, top: 4, bottom: 4 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
-          <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} tickFormatter={(v) => `${v}%`} />
-          <YAxis dataKey="name" type="category" width={72} tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
-          <Tooltip
-            contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
-            formatter={(value: number, name: string) => {
-              const labels: Record<string, string> = {
-                potencial: "Potencial identificado",
-                expressao: "Expressão identificada",
-                melhoria: "Possível melhoria pós-intervenção",
-              };
-              return [`${value}%`, labels[name] ?? name];
-            }}
-          />
-          <Bar dataKey="potencial" radius={[0, 3, 3, 0]} barSize={11} fill="hsl(0,60%,52%)" fillOpacity={0.85} />
-          <Bar dataKey="expressao" radius={[0, 3, 3, 0]} barSize={11} fill="hsl(40,88%,61%)" fillOpacity={0.85} />
-          <Bar dataKey="melhoria" radius={[0, 3, 3, 0]} barSize={11} fill="hsl(36,87%,44%)" fillOpacity={0.85} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-}
-
 /* ────── Intervention Curve — dynamic based on barrier scores ────── */
 function InterventionCurveChart({ dark = false, barrierAvg = 50 }: { dark?: boolean; barrierAvg?: number }) {
-  // The higher the barrier score, the lower the floor and more dramatic the intervention lift
   const floor = Math.max(60, Math.round(82 - barrierAvg * 0.12));
   const peak  = Math.round(88 + barrierAvg * 0.04);
   const intPeak = Math.round(88 + barrierAvg * 0.06);
@@ -427,80 +215,6 @@ function InterventionCurveChart({ dark = false, barrierAvg = 50 }: { dark?: bool
           <Line type="natural" dataKey="baseline" stroke="hsl(0,55%,50%)" strokeWidth={2} dot={false} connectNulls={false} />
           <Line type="natural" dataKey="intervention" stroke="hsl(40,88%,61%)" strokeWidth={2.5} dot={false} connectNulls={false} />
         </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
-}
-
-/* ────── Dark Radar Chart ────── */
-function DarkRadarChart({ hypotheses }: { hypotheses: HypothesisResult[] }) {
-  const data = hypotheses.map((h) => ({
-    subject: CONDITION_COLORS[h.id]?.label ?? h.id,
-    score: h.score,
-    fullMark: 100,
-  }));
-  return (
-    <div className="w-full" style={{ height: 220 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <RadarChart cx="50%" cy="50%" outerRadius="65%" data={data}>
-          <PolarGrid stroke={DARK.border} />
-          <PolarAngleAxis dataKey="subject" tick={{ fontSize: 9, fill: DARK.muted }} />
-          <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8, fill: DARK.muted }} tickCount={4} />
-          <Radar name="Perfil" dataKey="score" stroke={DARK.accent} fill={DARK.accent} fillOpacity={0.18} strokeWidth={2} />
-        </RadarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-}
-
-/* ────── Dark Bar Chart ────── */
-function DarkBarChart({ hypotheses }: { hypotheses: HypothesisResult[] }) {
-  const data = hypotheses.map((h) => ({
-    name: CONDITION_COLORS[h.id]?.label ?? h.id,
-    score: h.score,
-    id: h.id,
-  }));
-  return (
-    <div className="w-full" style={{ height: 200 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" margin={{ left: 4, right: 30, top: 4, bottom: 4 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={DARK.border} horizontal={false} />
-          <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 9, fill: DARK.muted }} tickFormatter={(v) => `${v}%`} />
-          <YAxis dataKey="name" type="category" width={68} tick={{ fontSize: 9, fill: DARK.muted }} />
-          <Bar dataKey="score" radius={[0, 4, 4, 0]} barSize={12}>
-            {data.map((entry) => <Cell key={entry.id} fill={conditionColor(entry.id, entry.score)} opacity={0.8} />)}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-}
-
-/* ────── Dark Area Chart (decorative) ────── */
-function DarkAreaChart() {
-  const data = [
-    { x: 0, a: 30, b: 55 }, { x: 1, a: 45, b: 38 }, { x: 2, a: 62, b: 70 },
-    { x: 3, a: 48, b: 85 }, { x: 4, a: 78, b: 62 }, { x: 5, a: 55, b: 90 },
-    { x: 6, a: 88, b: 72 }, { x: 7, a: 70, b: 55 }, { x: 8, a: 92, b: 80 },
-    { x: 9, a: 65, b: 95 }, { x: 10, a: 80, b: 68 },
-  ];
-  return (
-    <div className="w-full" style={{ height: 120 }}>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ left: 0, right: 0, top: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id="gradA" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(40,88%,61%)" stopOpacity={0.4} />
-              <stop offset="95%" stopColor="hsl(40,88%,61%)" stopOpacity={0.02} />
-            </linearGradient>
-            <linearGradient id="gradB" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="hsl(36,87%,44%)" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="hsl(36,87%,44%)" stopOpacity={0.02} />
-            </linearGradient>
-          </defs>
-          <Area type="natural" dataKey="a" stroke="hsl(40,88%,61%)" strokeWidth={1.5} fill="url(#gradA)" dot={false} />
-          <Area type="natural" dataKey="b" stroke="hsl(36,87%,44%)" strokeWidth={1.5} fill="url(#gradB)" dot={false} />
-        </AreaChart>
       </ResponsiveContainer>
     </div>
   );
@@ -678,84 +392,17 @@ function ShareButtons({ onShare }: { onShare: () => void }) {
   );
 }
 
-/* ────── Lead Capture Form (inside popup) ────── */
-function LeadCaptureForm({ onSubmit }: { onSubmit: (d: { nome: string; whatsapp: string; email: string }) => void }) {
-  const [form, setForm] = useState({ nome: "", whatsapp: "", email: "" });
-  const [step, setStep] = useState(0);
-
-  const handleChange = (field: string, val: string) => setForm(p => ({ ...p, [field]: val }));
-
-  const isValid = form.nome.trim() && form.email.includes("@");
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-4"
-    >
-      <div className="space-y-3">
-        <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wider mb-1.5 block" style={{ color: DARK.muted }}>Nome</label>
-          <input
-            type="text"
-            value={form.nome}
-            onChange={e => handleChange("nome", e.target.value)}
-            placeholder="Seu nome"
-            className="w-full rounded-lg px-3.5 py-2.5 text-sm bg-transparent border outline-none focus:border-opacity-80 transition-all"
-            style={{
-              borderColor: DARK.border,
-              color: DARK.text,
-              background: "hsl(225,12%,13%)",
-            }}
-          />
-        </div>
-        <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wider mb-1.5 block" style={{ color: DARK.muted }}>E-mail</label>
-          <input
-            type="email"
-            value={form.email}
-            onChange={e => handleChange("email", e.target.value)}
-            placeholder="seu@email.com"
-            className="w-full rounded-lg px-3.5 py-2.5 text-sm bg-transparent border outline-none transition-all"
-            style={{ borderColor: DARK.border, color: DARK.text, background: "hsl(225,12%,13%)" }}
-          />
-        </div>
-        <div>
-          <label className="text-[11px] font-semibold uppercase tracking-wider mb-1.5 block" style={{ color: DARK.muted }}>WhatsApp (opcional)</label>
-          <input
-            type="tel"
-            value={form.whatsapp}
-            onChange={e => handleChange("whatsapp", e.target.value)}
-            placeholder="(11) 99999-9999"
-            className="w-full rounded-lg px-3.5 py-2.5 text-sm bg-transparent border outline-none transition-all"
-            style={{ borderColor: DARK.border, color: DARK.text, background: "hsl(225,12%,13%)" }}
-          />
-        </div>
-      </div>
-      <button
-        onClick={() => isValid && onSubmit(form)}
-        disabled={!isValid}
-        className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:opacity-90 hover:scale-[1.01] disabled:opacity-40 disabled:cursor-not-allowed"
-        style={{
-          background: isValid ? "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))" : "hsl(225,12%,15%)",
-          color: isValid ? "hsl(225,12%,7%)" : "hsl(40,12%,40%)",
-          boxShadow: isValid ? "0 0 20px hsl(40 88% 61% / 0.3), 0 4px 24px hsl(40,88%,61%/0.4)" : undefined,
-        }}
-      >
-        Acessar Relatório Aprofundado
-      </button>
-    </motion.div>
-  );
-}
-
-/* ────── Results View ────── */
-function ResultsView({ answers, onRestart, onCheckout, onSignOut }: { answers: Answers; onRestart: () => void; onCheckout?: () => void; onSignOut?: () => void }) {
-  const scores = useMemo(() => calculateScores(answers), [answers]);
+/* ────── Results View (works with answers OR scores directly) ────── */
+function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
+  answers?: Answers;
+  scores?: Record<string, number>;
+  onRestart: () => void;
+  onSignOut?: () => void;
+}) {
+  const scores = useMemo(() => scoresProp ?? (answers ? calculateScores(answers) : null), [answers, scoresProp]) as any;
   const results = useMemo(() => interpretResults(scores), [scores]);
   const [showRefs, setShowRefs] = useState(false);
   const [printMode, setPrintMode] = useState(false);
-  const blurRef = useRef<HTMLDivElement>(null);
 
   const sortedHypotheses = useMemo(() => {
     return [...results.hypotheses].sort((a, b) => {
@@ -765,13 +412,6 @@ function ResultsView({ answers, onRestart, onCheckout, onSignOut }: { answers: A
     });
   }, [results.hypotheses]);
 
-  const barrierIds = ["tdah", "tea", "trauma", "ansiedade", "depressao"];
-  const activeBarriers = sortedHypotheses.filter(h => barrierIds.includes(h.id) && h.score >= 40);
-  const avgBarrierScore = activeBarriers.length
-    ? activeBarriers.reduce((sum, h) => sum + h.score, 0) / activeBarriers.length
-    : 0;
-  const potentialLoss = Math.round(20 + (avgBarrierScore / 100) * 10);
-
   const handleShare = async () => {
     const text = "Fiz o rastreio de Altas Habilidades e Neurodivergência — você precisa conhecer.";
     const url = window.location.origin + "/triagem";
@@ -780,11 +420,6 @@ function ResultsView({ answers, onRestart, onCheckout, onSignOut }: { answers: A
     } else {
       await navigator.clipboard.writeText(`${text}\n${url}`);
     }
-  };
-
-  const handleUnlockClick = () => {
-    onCheckout?.(); // rastreia checkout no funil
-    window.open("https://hotmart.com", "_blank");
   };
 
   return (
@@ -902,7 +537,6 @@ function ResultsView({ answers, onRestart, onCheckout, onSignOut }: { answers: A
           </button>
         </div>
 
-
         {/* Share Buttons */}
         <div className="py-4">
           <ShareButtons onShare={handleShare} />
@@ -947,7 +581,6 @@ function ResultsView({ answers, onRestart, onCheckout, onSignOut }: { answers: A
             </button>
           )}
         </div>
-
       </main>
 
       {/* References modal */}
@@ -958,427 +591,44 @@ function ResultsView({ answers, onRestart, onCheckout, onSignOut }: { answers: A
   );
 }
 
-/* ────── Participant Counter ────── */
-const PARTICIPANT_BASE = 4_217; // seed count — replace with real backend value
-
-function ParticipantCounter() {
-  const [count, setCount] = useState(PARTICIPANT_BASE);
-  useEffect(() => {
-    // Simulate real-time increments (replace with API call in production)
-    const interval = setInterval(() => {
-      setCount(c => c + Math.floor(Math.random() * 2));
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
-  return (
-    <div className="flex items-center justify-center gap-2 mt-6">
-      <div className="flex -space-x-1.5">
-        {["hsl(174,55%,39%)", "hsl(213,73%,59%)", "hsl(0,70%,58%)", "hsl(40,88%,61%)"].map((bg, i) => (
-          <div
-            key={i}
-            className="w-6 h-6 rounded-full border-2 border-background"
-            style={{ background: bg }}
-          />
-        ))}
-      </div>
-      <p className="text-[12px] text-muted-foreground">
-        <span className="font-semibold text-foreground tabular-nums">
-          {count.toLocaleString("pt-BR")}
-        </span>{" "}
-        pessoas já fizeram este rastreio
-      </p>
-    </div>
-  );
-}
-
-/* ────── Lead Capture Pre-Quiz ────── */
-function LeadCapturePre({ onComplete }: { onComplete: (data: { nome: string; email: string; telefone: string }) => void }) {
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [focused, setFocused] = useState<string | null>(null);
-
-  /* ── Validation ── */
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  // Accepts: (11) 99999-9999 / 11999999999 / +55 11 99999-9999
-  const phoneRegex = /^(\+?55\s?)?(\(?\d{2}\)?[\s-]?)(\d{4,5}[\s-]?\d{4})$/;
-
-  const errors = {
-    nome: nome.trim().length === 0
-      ? "Nome é obrigatório"
-      : nome.trim().length < 2
-      ? "Nome muito curto"
-      : null,
-    email: email.trim().length === 0
-      ? "E-mail é obrigatório"
-      : !emailRegex.test(email.trim())
-      ? "E-mail inválido"
-      : null,
-    telefone: telefone.trim().length === 0
-      ? "WhatsApp é obrigatório"
-      : !phoneRegex.test(telefone.trim())
-      ? "Número inválido — use (11) 99999-9999"
-      : null,
-  };
-
-  const isValid = !errors.nome && !errors.email && !errors.telefone;
-
-  const handleBlur = (field: string) => {
-    setFocused(null);
-    setTouched(p => ({ ...p, [field]: true }));
-  };
-
-  const handleSubmit = () => {
-    setTouched({ nome: true, email: true, telefone: true });
-    if (!isValid) return;
-    onComplete({ nome: nome.trim(), email: email.trim(), telefone: telefone.trim() });
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSubmit();
-  };
-
-  const borderColor = (field: string, hasError: boolean) => {
-    if (focused === field) return "hsl(174,55%,39%)";
-    if (touched[field] && hasError) return "hsl(0,70%,58%)";
-    if (touched[field] && !hasError) return "hsl(141,58%,54%)";
-    return "hsl(var(--border))";
-  };
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 py-12">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
-        className="w-full max-w-md"
-      >
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary mb-6 text-center">
-          Rastreio de Altas Habilidades e Neurodivergência
-        </p>
-
-        <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-3 text-center">
-          Para onde quer que{" "}
-          <span className="text-primary">enviemos seu</span>
-          <br />
-          relatório gratuito?
-        </h1>
-
-        <p className="text-muted-foreground text-sm text-center mb-8 leading-relaxed">
-          Preencha os dados abaixo para receber seu resultado.<br />
-          <span className="text-foreground font-medium">Gratuito. Leva ~7 minutos.</span>
-        </p>
-
-        <div className="space-y-5">
-          {/* Nome */}
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-              Nome *
-            </label>
-            <input
-              autoFocus
-              type="text"
-              value={nome}
-              maxLength={100}
-              onChange={e => setNome(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setFocused("nome")}
-              onBlur={() => handleBlur("nome")}
-              placeholder="Seu nome completo"
-              className="w-full text-base bg-transparent border-0 border-b-2 pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200"
-              style={{ borderBottomColor: borderColor("nome", !!errors.nome) }}
-            />
-            <AnimatePresence>
-              {touched.nome && errors.nome && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18 }}
-                  className="text-[11px] mt-1" style={{ color: "hsl(0,65%,50%)" }}
-                >
-                  {errors.nome}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-              E-mail *
-            </label>
-            <input
-              type="email"
-              value={email}
-              maxLength={255}
-              onChange={e => setEmail(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setFocused("email")}
-              onBlur={() => handleBlur("email")}
-              placeholder="seu@email.com"
-              className="w-full text-base bg-transparent border-0 border-b-2 pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200"
-              style={{ borderBottomColor: borderColor("email", !!errors.email) }}
-            />
-            <AnimatePresence>
-              {touched.email && errors.email && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18 }}
-                  className="text-[11px] mt-1" style={{ color: "hsl(0,65%,50%)" }}
-                >
-                  {errors.email}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Telefone */}
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-              WhatsApp *
-            </label>
-            <input
-              type="tel"
-              value={telefone}
-              maxLength={20}
-              onChange={e => setTelefone(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setFocused("telefone")}
-              onBlur={() => handleBlur("telefone")}
-              placeholder="(11) 99999-9999"
-              className="w-full text-base bg-transparent border-0 border-b-2 pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200"
-              style={{ borderBottomColor: borderColor("telefone", !!errors.telefone) }}
-            />
-            <AnimatePresence>
-              {touched.telefone && errors.telefone && (
-                <motion.p
-                  initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18 }}
-                  className="text-[11px] mt-1" style={{ color: "hsl(0,65%,50%)" }}
-                >
-                  {errors.telefone}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* CTA */}
-          <div className="pt-3">
-            <button
-              onClick={handleSubmit}
-              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.01] hover:opacity-95"
-              style={{
-                background: isValid
-                  ? "linear-gradient(135deg, hsl(174,55%,39%), hsl(174,62%,29%))"
-                  : "hsl(var(--muted))",
-                color: isValid ? "hsl(0,0%,97%)" : "hsl(var(--muted-foreground))",
-                boxShadow: isValid ? "0 0 20px hsl(174 55% 39% / 0.25), 0 4px 24px hsl(174,55%,39%/0.35)" : undefined,
-                cursor: isValid ? "pointer" : "default",
-              }}
-            >
-              Iniciar Rastreio Gratuito →
-            </button>
-            <p className="text-[11px] text-muted-foreground text-center mt-3 leading-snug">
-              Seus dados são confidenciais e não serão compartilhados.
-            </p>
-          </div>
-        </div>
-
-        <ParticipantCounter />
-      </motion.div>
-    </div>
-  );
-}
-
-/* ────── Lead Capture Post-Quiz ────── */
-function LeadCapturePost({ onComplete }: { onComplete: (data: { nome: string; email: string; telefone: string }) => void }) {
-  const [nome, setNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefone, setTelefone] = useState("");
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [focused, setFocused] = useState<string | null>(null);
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  const phoneRegex = /^(\+?55\s?)?(\(?\d{2}\)?[\s-]?)(\d{4,5}[\s-]?\d{4})$/;
-
-  const errors = {
-    nome: nome.trim().length === 0 ? "Nome é obrigatório" : nome.trim().length < 2 ? "Nome muito curto" : null,
-    email: email.trim().length === 0 ? "E-mail é obrigatório" : !emailRegex.test(email.trim()) ? "E-mail inválido" : null,
-    telefone: telefone.trim().length === 0 ? "WhatsApp é obrigatório" : !phoneRegex.test(telefone.trim()) ? "Número inválido — use (11) 99999-9999" : null,
-  };
-  const isValid = !errors.nome && !errors.email && !errors.telefone;
-
-  const handleBlur = (field: string) => { setFocused(null); setTouched(p => ({ ...p, [field]: true })); };
-  const handleSubmit = () => {
-    setTouched({ nome: true, email: true, telefone: true });
-    if (!isValid) return;
-    onComplete({ nome: nome.trim(), email: email.trim(), telefone: telefone.trim() });
-  };
-  const handleKeyDown = (e: React.KeyboardEvent) => { if (e.key === "Enter") handleSubmit(); };
-
-  const borderColor = (field: string, hasError: boolean) => {
-    if (focused === field) return "hsl(40,88%,61%)";
-    if (touched[field] && hasError) return "hsl(0,70%,58%)";
-    if (touched[field] && !hasError) return "hsl(141,58%,54%)";
-    return "hsl(var(--border))";
-  };
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 py-12">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
-        className="w-full max-w-md"
-      >
-        {/* Badge de conclusão */}
-        <div className="flex justify-center mb-6">
-          <motion.div
-            initial={{ scale: 0, rotate: -10 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 320, damping: 20 }}
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl"
-            style={{ background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))" }}
-          >
-            ✓
-          </motion.div>
-        </div>
-
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary mb-3 text-center">
-          Rastreio concluído
-        </p>
-
-        <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-3 text-center">
-          Para onde enviamos{" "}
-          <span className="text-primary">seu resultado?</span>
-        </h1>
-
-        <p className="text-muted-foreground text-sm text-center mb-8 leading-relaxed">
-          Seu perfil cognitivo está pronto. Insira seus dados para<br />
-          <span className="text-foreground font-medium">visualizar o resultado completo agora.</span>
-        </p>
-
-        <div className="space-y-5">
-          {/* Nome */}
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">Nome *</label>
-            <input
-              autoFocus type="text" value={nome} maxLength={100}
-              onChange={e => setNome(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setFocused("nome")}
-              onBlur={() => handleBlur("nome")}
-              placeholder="Seu nome completo"
-              className="w-full text-base bg-transparent border-0 border-b-2 pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200"
-              style={{ borderBottomColor: borderColor("nome", !!errors.nome) }}
-            />
-            <AnimatePresence>
-              {touched.nome && errors.nome && (
-                <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18 }}
-                  className="text-[11px] mt-1" style={{ color: "hsl(0,65%,50%)" }}>
-                  {errors.nome}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">E-mail *</label>
-            <input
-              type="email" value={email} maxLength={255}
-              onChange={e => setEmail(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setFocused("email")}
-              onBlur={() => handleBlur("email")}
-              placeholder="seu@email.com"
-              className="w-full text-base bg-transparent border-0 border-b-2 pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200"
-              style={{ borderBottomColor: borderColor("email", !!errors.email) }}
-            />
-            <AnimatePresence>
-              {touched.email && errors.email && (
-                <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18 }}
-                  className="text-[11px] mt-1" style={{ color: "hsl(0,65%,50%)" }}>
-                  {errors.email}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Telefone */}
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">WhatsApp *</label>
-            <input
-              type="tel" value={telefone} maxLength={20}
-              onChange={e => setTelefone(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={() => setFocused("telefone")}
-              onBlur={() => handleBlur("telefone")}
-              placeholder="(11) 99999-9999"
-              className="w-full text-base bg-transparent border-0 border-b-2 pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200"
-              style={{ borderBottomColor: borderColor("telefone", !!errors.telefone) }}
-            />
-            <AnimatePresence>
-              {touched.telefone && errors.telefone && (
-                <motion.p initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18 }}
-                  className="text-[11px] mt-1" style={{ color: "hsl(0,65%,50%)" }}>
-                  {errors.telefone}
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* CTA */}
-          <div className="pt-3">
-            <button
-              onClick={handleSubmit}
-              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.01] hover:opacity-95"
-              style={{
-                background: isValid
-                  ? "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))"
-                  : "hsl(var(--muted))",
-                color: isValid ? "hsl(225,12%,7%)" : "hsl(var(--muted-foreground))",
-                boxShadow: isValid ? "0 0 20px hsl(40 88% 61% / 0.25), 0 4px 24px hsl(40,88%,61%/0.35)" : undefined,
-                cursor: isValid ? "pointer" : "default",
-              }}
-            >
-              Ver meu resultado completo →
-            </button>
-            <p className="text-[11px] text-muted-foreground text-center mt-3 leading-snug">
-              Seus dados são confidenciais e não serão compartilhados.
-            </p>
-          </div>
-        </div>
-
-        <ParticipantCounter />
-      </motion.div>
-    </div>
-  );
-}
-
 /* ────── Quiz Page ────── */
 export default function QuizPage() {
   const { user, loading, signOut } = useAuth();
-  const leadVariant = getLeadVariant();
-  const initialPhase = leadVariant === "pre" ? "lead" : "demographic";
 
-  const [phase, setPhase] = useState<"lead" | "demographic" | "quiz" | "lead_post" | "results">(initialPhase);
-  const [leadData, setLeadData] = useState<{ nome: string; email: string; telefone: string } | null>(null);
-  const [demographicData, setDemographicData] = useState<any>(null);
+  const [phase, setPhase] = useState<"loading" | "quiz" | "results">("loading");
   const [currentBlock, setCurrentBlock] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [motivationalMsg, setMotivationalMsg] = useState<string | null>(null);
   const [resultsSaved, setResultsSaved] = useState(false);
+  const [savedScores, setSavedScores] = useState<Record<string, number> | null>(null);
 
   // ── Funil tracking ──
-  const { trackStart, trackStep, trackComplete, trackCheckout } = useFunnelTracking(TOTAL_QUESTIONS);
-  const layout = getLayoutVariant();
+  const { trackStart, trackStep, trackComplete } = useFunnelTracking(TOTAL_QUESTIONS);
 
   const block = questionBlocks[currentBlock];
   const answeredCount = Object.keys(answers).length;
   const progress = Math.round((answeredCount / TOTAL_QUESTIONS) * 100);
   const blockComplete = block?.questions.every((q) => answers[q.id] !== undefined);
   const isLast = currentBlock === questionBlocks.length - 1;
+
+  // On mount: check if user has a saved result
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const { data } = await supabase
+        .from("quiz_results")
+        .select("scores")
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (data && data.length > 0) {
+        setSavedScores(data[0].scores as any);
+        setPhase("results");
+      } else {
+        setPhase("quiz");
+        trackStart();
+      }
+    })();
+  }, [user]);
 
   // Save results to database
   const saveResults = async () => {
@@ -1389,7 +639,6 @@ export default function QuizPage() {
         user_id: user.id,
         answers: answers as any,
         scores: scores as any,
-        demographic_data: demographicData as any,
       });
       setResultsSaved(true);
     } catch (e) {
@@ -1416,7 +665,7 @@ export default function QuizPage() {
     return <Navigate to="/auth" replace />;
   }
 
-  if (loading) {
+  if (loading || phase === "loading") {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -1428,11 +677,7 @@ export default function QuizPage() {
   const handleNext = () => {
     if (isLast) {
       trackComplete();
-      if (leadVariant === "post") {
-        setPhase("lead_post");
-      } else {
-        setPhase("results");
-      }
+      setPhase("results");
     } else {
       setCurrentBlock((c) => c + 1);
       trackStep(answeredCount);
@@ -1444,40 +689,25 @@ export default function QuizPage() {
     setAnswers({});
     setCurrentBlock(0);
     setResultsSaved(false);
-    setPhase(leadVariant === "pre" ? "lead" : "demographic");
+    setSavedScores(null);
+    setPhase("quiz");
+    trackStart();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Phases
-  if (phase === "lead") {
-    return <LeadCapturePre onComplete={(data) => {
-      setLeadData(data);
-      setPhase("demographic");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }} />;
-  }
-  if (phase === "demographic") {
-    return <DemographicSurvey onComplete={(data) => {
-      setDemographicData(data);
-      trackStart();
-      setPhase("quiz");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }} />;
-  }
-  if (phase === "lead_post") {
-    return <LeadCapturePost onComplete={(data) => {
-      setLeadData(data);
-      setPhase("results");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }} />;
-  }
+  // Results phase
   if (phase === "results") {
-    // Save results when entering results phase
-    if (!resultsSaved) saveResults();
-    return <ResultsView answers={answers} onRestart={handleRestart} onCheckout={trackCheckout} onSignOut={signOut} />;
+    // If we have fresh answers, save & show from answers; otherwise show from saved scores
+    if (Object.keys(answers).length > 0) {
+      if (!resultsSaved) saveResults();
+      return <ResultsView answers={answers} onRestart={handleRestart} onSignOut={signOut} />;
+    }
+    if (savedScores) {
+      return <ResultsView scores={savedScores} onRestart={handleRestart} onSignOut={signOut} />;
+    }
   }
-  
 
+  // Quiz phase
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
