@@ -386,7 +386,7 @@ export default function Index() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.38, duration: 0.5 }}
             >
-              <ShimmerButton to="/triagem">
+              <ShimmerButton to="/selecionar-teste">
                 Iniciar Rastreio Gratuito
               </ShimmerButton>
             </motion.div>

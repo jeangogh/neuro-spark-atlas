@@ -8,6 +8,8 @@ import { usePreferences } from "@/hooks/usePreferences";
 
 const Index = lazy(() => import("./pages/Index"));
 const QuizPage = lazy(() => import("./pages/QuizPage"));
+const AhsdQuizPage = lazy(() => import("./pages/AhsdQuizPage"));
+const TestSelectionPage = lazy(() => import("./pages/TestSelectionPage"));
 const ResultsPage = lazy(() => import("./pages/ResultsPage"));
 const PrefsAnalyticsPage = lazy(() => import("./pages/PrefsAnalyticsPage"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
@@ -32,7 +34,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/selecionar-teste" element={<TestSelectionPage />} />
               <Route path="/triagem" element={<QuizPage />} />
+              <Route path="/triagem/:testKey" element={<AhsdQuizPage />} />
               <Route path="/resultados" element={<ResultsPage />} />
               <Route path="/historico" element={<HistoryPage />} />
               <Route path="/admin/preferencias" element={<PrefsAnalyticsPage />} />

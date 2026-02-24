@@ -117,6 +117,7 @@ export type Database = {
           demographic_data: Json | null
           id: string
           scores: Json
+          test_type: string
           user_id: string
         }
         Insert: {
@@ -125,6 +126,7 @@ export type Database = {
           demographic_data?: Json | null
           id?: string
           scores: Json
+          test_type?: string
           user_id: string
         }
         Update: {
@@ -133,6 +135,7 @@ export type Database = {
           demographic_data?: Json | null
           id?: string
           scores?: Json
+          test_type?: string
           user_id?: string
         }
         Relationships: []

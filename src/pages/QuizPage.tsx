@@ -618,6 +618,7 @@ export default function QuizPage() {
       const { data } = await supabase
         .from("quiz_results")
         .select("scores")
+        .eq("test_type", "neurocognitivo")
         .order("created_at", { ascending: false })
         .limit(1);
       if (data && data.length > 0) {
@@ -639,6 +640,7 @@ export default function QuizPage() {
         user_id: user.id,
         answers: answers as any,
         scores: scores as any,
+        test_type: "neurocognitivo",
       });
       setResultsSaved(true);
     } catch (e) {
