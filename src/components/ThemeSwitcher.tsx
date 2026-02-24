@@ -21,6 +21,7 @@ const FONT_FAMILY_MAP: Record<FontTheme, string> = {
   instrument: "'Instrument Serif', Georgia, serif",
   cormorant:  "'Cormorant Garamond', Georgia, serif",
   "dm-serif": "'DM Serif Display', Georgia, serif",
+  // Note: default display font is now Fraunces (set in CSS base)
 };
 
 export function ThemeSwitcher() {
