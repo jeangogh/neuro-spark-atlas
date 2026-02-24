@@ -130,7 +130,7 @@ function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal }: {
       <header className="pt-10 pb-6 md:pt-14 md:pb-8 px-5 text-center">
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="max-w-xl mx-auto">
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-2">Painel Dimensional</p>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-foreground mb-1.5 tracking-tight">
+          <h1 className="text-foreground mb-1.5">
             Screening — Camada 1
           </h1>
           <p className="text-muted-foreground text-[13px] max-w-md mx-auto leading-relaxed">
@@ -142,7 +142,7 @@ function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal }: {
       <main className="max-w-2xl mx-auto px-5 pb-24 space-y-6">
         {/* Radar */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-1">Mapa Dimensional</h2>
+          <h2 className="text-foreground mb-1">Mapa Dimensional</h2>
           <div className="w-full aspect-square max-w-[340px] mx-auto">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
@@ -157,7 +157,7 @@ function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal }: {
 
         {/* Per-dimension bars */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-4">Detalhamento por Dimensão</h2>
+          <h2 className="text-foreground mb-4">Detalhamento por Dimensão</h2>
           <div className="space-y-4">
             {DIMENSIONS.map((dim, i) => {
               const { score, zone } = c1Scores.dimensions[dim.key] ?? { score: 0, zone: "regulado" as DimZone };
@@ -186,7 +186,7 @@ function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal }: {
           <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
             className="rounded-xl border border-destructive/30 bg-destructive/[0.04] p-5 sm:p-6 text-center"
           >
-            <h2 className="font-display text-lg font-semibold text-foreground mb-2">
+            <h2 className="text-foreground mb-2">
               {c1Scores.alostatic.length} {c1Scores.alostatic.length === 1 ? "dimensão" : "dimensões"} com custo alto
             </h2>
             <p className="text-[13px] text-muted-foreground mb-4 leading-relaxed">
@@ -208,7 +208,7 @@ function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal }: {
           <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
             className="rounded-xl border border-clarity/30 bg-clarity/[0.04] p-5 sm:p-6 text-center"
           >
-            <h2 className="font-display text-lg font-semibold text-foreground mb-2">Perfil Regulado</h2>
+            <h2 className="text-foreground mb-2">Perfil Regulado</h2>
             <p className="text-[13px] text-muted-foreground mb-4 leading-relaxed">
               Nenhuma dimensão atingiu o limiar de alostase. Seu perfil indica regulação suficiente nas 7 dimensões avaliadas.
             </p>
@@ -261,7 +261,7 @@ function C2QuizView({ dimKey, answers, openAnswers, onAnswer, onOpenAnswer, onCo
       <header className="pt-10 pb-5 md:pt-14 md:pb-7 px-5 text-center">
         <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="max-w-md mx-auto space-y-2">
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em]">Camada 2 — Aprofundamento</p>
-          <h1 className="font-display text-xl md:text-2xl font-bold text-foreground tracking-tight">
+          <h1 className="text-foreground">
             {dim.label}
           </h1>
           <p className="text-muted-foreground text-[13px] leading-relaxed">
@@ -368,7 +368,7 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
       <header className="pt-10 pb-6 md:pt-14 md:pb-8 px-5 text-center">
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="max-w-xl mx-auto">
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-2">Painel Dimensional de Adaptação</p>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-foreground mb-1.5 tracking-tight">
+          <h1 className="text-foreground mb-1.5">
             Resultado Integrado
           </h1>
         </motion.div>
@@ -377,7 +377,7 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
       <main className="max-w-2xl mx-auto px-5 pb-24 space-y-6">
         {/* Radar */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-1">Screening — Camada 1</h2>
+          <h2 className="text-foreground mb-1">Screening — Camada 1</h2>
           <div className="w-full aspect-square max-w-[320px] mx-auto">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="65%" data={radarData}>
@@ -416,7 +416,7 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
           <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
             className="rounded-xl border bg-card p-5 sm:p-6"
           >
-            <h2 className="font-display text-lg font-semibold text-foreground mb-1">Aprofundamento — Camada 2</h2>
+            <h2 className="text-foreground mb-1">Aprofundamento — Camada 2</h2>
             <p className="text-[11px] text-muted-foreground mb-5">Mapa de custo por domínio funcional nas dimensões alostáticas</p>
             <div className="space-y-6">
               {alostaticDims.map((dim) => {
@@ -424,7 +424,7 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
                 if (!scores) return null;
                 return (
                   <div key={dim.key} className="border-t border-border pt-4 first:border-0 first:pt-0">
-                    <h3 className="font-semibold text-foreground text-[13px] mb-3">{dim.label}</h3>
+                    <h3 className="text-foreground mb-3">{dim.label}</h3>
                     <div className="space-y-2.5">
                       <CostBar label="Desempenho" score={scores.desempenho.score} max={scores.desempenho.max} delay={0.1} />
                       <CostBar label="Vínculo" score={scores.vinculo.score} max={scores.vinculo.max} delay={0.15} />
@@ -441,7 +441,7 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="rounded-xl border border-primary/15 bg-primary/[0.03] p-5 sm:p-6"
         >
-          <h2 className="font-display text-lg font-semibold text-foreground mb-2">Síntese</h2>
+          <h2 className="text-foreground mb-2">Síntese</h2>
           <div className="space-y-2 text-[13px] text-card-foreground leading-relaxed">
             {alostaticDims.length > 0 ? (
               <>
@@ -459,7 +459,7 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
 
         {/* Disclaimer */}
         <div className="rounded-xl border border-accent/20 bg-accent/[0.03] p-4 sm:p-5">
-          <h3 className="font-display font-semibold text-foreground text-[13px] mb-1">Nota Importante</h3>
+          <h3 className="text-foreground mb-1">Nota Importante</h3>
           <p className="text-[12px] text-card-foreground leading-relaxed">
             Este instrumento é de autorrelato e <strong>não substitui avaliação profissional</strong>. Os resultados mapeiam padrões de funcionamento e custo adaptativo que merecem investigação com profissional qualificado.
           </p>
@@ -687,7 +687,7 @@ export default function DimensionalQuizPage() {
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em]">
             Painel Dimensional de Adaptação
           </p>
-          <h1 className="font-display text-xl md:text-2xl font-bold text-foreground tracking-tight">
+          <h1 className="text-foreground">
             🧠 Screening Dimensional
           </h1>
           <p className="text-muted-foreground text-[13px] leading-relaxed">
@@ -735,7 +735,7 @@ export default function DimensionalQuizPage() {
               transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
               className="space-y-4"
             >
-              <p className="text-[15px] text-foreground leading-relaxed font-medium">
+              <p className="text-base text-foreground leading-relaxed font-medium">
                 {currentQ.text}
               </p>
               <DimLikertScale
