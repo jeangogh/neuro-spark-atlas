@@ -112,10 +112,11 @@ function CostBar({ label, score, max, delay = 0 }: { label: string; score: numbe
 /* ═══════════════════════════════════════════
    PHASE: C1 RESULTS
    ═══════════════════════════════════════════ */
-function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal }: {
+function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal, onSignOut }: {
   c1Scores: C1Scores;
   onDeepen: () => void;
   onSkipToFinal: () => void;
+  onSignOut?: () => void;
 }) {
   const radarData = DIMENSIONS.map((dim) => ({
     subject: dim.shortLabel,
@@ -228,6 +229,15 @@ function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal }: {
             Este instrumento é de autorrelato e <strong>não substitui avaliação profissional</strong>. Os resultados indicam padrões de funcionamento que merecem investigação qualificada.
           </p>
         </div>
+
+        {/* Sign out */}
+        {onSignOut && (
+          <div className="flex justify-center print:hidden">
+            <button onClick={onSignOut} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-muted-foreground hover:scale-[1.02]">
+              <LogOut className="w-4 h-4" /> Sair
+            </button>
+          </div>
+        )}
       </main>
     </div>
   );
@@ -236,13 +246,14 @@ function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal }: {
 /* ═══════════════════════════════════════════
    PHASE: C2 QUIZ (one dimension at a time)
    ═══════════════════════════════════════════ */
-function C2QuizView({ dimKey, answers, openAnswers, onAnswer, onOpenAnswer, onComplete }: {
+function C2QuizView({ dimKey, answers, openAnswers, onAnswer, onOpenAnswer, onComplete, onSignOut }: {
   dimKey: string;
   answers: Record<string, number>;
   openAnswers: Record<string, string>;
   onAnswer: (id: string, val: number) => void;
   onOpenAnswer: (id: string, val: string) => void;
   onComplete: () => void;
+  onSignOut?: () => void;
 }) {
   const dim = DIMENSIONS.find((d) => d.key === dimKey);
   if (!dim) return null;
@@ -322,6 +333,14 @@ function C2QuizView({ dimKey, answers, openAnswers, onAnswer, onOpenAnswer, onCo
           >
             Concluir {dim.shortLabel}
           </button>
+          {onSignOut && (
+            <button
+              onClick={onSignOut}
+              className="w-full py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-muted-foreground flex items-center justify-center gap-2"
+            >
+              <LogOut className="w-3.5 h-3.5" /> Sair
+            </button>
+          )}
         </div>
       </main>
     </div>
@@ -636,7 +655,7 @@ export default function DimensionalQuizPage() {
 
   // ──── C1 RESULTS ────
   if (phase === "c1_results" && c1Scores) {
-    return <C1ResultsView c1Scores={c1Scores} onDeepen={handleDeepen} onSkipToFinal={handleSkipToFinal} />;
+    return <C1ResultsView c1Scores={c1Scores} onDeepen={handleDeepen} onSkipToFinal={handleSkipToFinal} onSignOut={signOut} />;
   }
 
   // ──── C2 QUIZ ────
@@ -650,6 +669,7 @@ export default function DimensionalQuizPage() {
         onAnswer={handleC2Answer}
         onOpenAnswer={handleOpenAnswer}
         onComplete={handleC2DimComplete}
+        onSignOut={signOut}
       />
     );
   }
