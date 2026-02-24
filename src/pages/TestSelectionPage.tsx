@@ -1,11 +1,27 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { LogOut } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { LogOut, CheckCircle2 } from "lucide-react";
 import { ALL_TESTS } from "@/data/testRegistry";
 
 export default function TestSelectionPage() {
   const { user, loading, signOut } = useAuth();
+  const [completedTests, setCompletedTests] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const { data } = await supabase
+        .from("quiz_results")
+        .select("test_type")
+        .order("created_at", { ascending: false });
+      if (data) {
+        setCompletedTests(new Set(data.map((r: any) => r.test_type)));
+      }
+    })();
+  }, [user]);
 
   if (!loading && !user) return <Navigate to="/auth" replace />;
   if (loading) {
@@ -50,12 +66,22 @@ export default function TestSelectionPage() {
                 <div className="flex items-start gap-4">
                   <span className="text-3xl">{test.icon}</span>
                   <div className="flex-1 min-w-0">
-                    <h2 className="font-display font-semibold text-foreground text-base sm:text-lg group-hover:text-primary transition-colors">
-                      {test.title}
-                    </h2>
+                    <div className="flex items-center gap-2">
+                      <h2 className="font-display font-semibold text-foreground text-base sm:text-lg group-hover:text-primary transition-colors">
+                        {test.title}
+                      </h2>
+                      {completedTests.has(test.key) && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                          <CheckCircle2 className="w-3 h-3" />
+                          Feito
+                        </span>
+                      )}
+                    </div>
                     <p className="text-[12px] text-primary font-medium mt-0.5">{test.subtitle}</p>
                     <p className="text-[13px] text-muted-foreground mt-2 leading-relaxed">
-                      {test.description}
+                      {completedTests.has(test.key)
+                        ? "Clique para ver seu resultado ou refazer o teste."
+                        : test.description}
                     </p>
                   </div>
                   <div className="shrink-0 mt-1">
