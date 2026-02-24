@@ -40,14 +40,14 @@
 
     --radius: 1rem;
 
-    /* ── Profile colors ── */
-    --profile-1: 40 88% 61%;
-    --profile-2: 36 87% 44%;
-    --profile-3: 340 55% 55%;
-    --profile-4: 245 60% 65%;
-    --profile-5: 200 60% 45%;
-    --profile-6: 141 58% 54%;
-    --profile-7: 32 91% 37%;
+    /* ── Profile / AOP colors ── */
+    --profile-1: 42 45% 93%;
+    --profile-2: 243 58% 30%;
+    --profile-3: 17 29% 16%;
+    --profile-4: 61 59% 33%;
+    --profile-5: 31 11% 52%;
+    --profile-6: 154 25% 38%;
+    --profile-7: 124 22% 51%;
 
     /* ── Sidebar ── */
     --sidebar-background: 225 12% 11%;
