@@ -565,6 +565,12 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
             <span>Refazer Questionário</span>
           </button>
           <Link
+            to="/selecionar-teste"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]"
+          >
+            <span>Outros Testes</span>
+          </Link>
+          <Link
             to="/historico"
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]"
           >
