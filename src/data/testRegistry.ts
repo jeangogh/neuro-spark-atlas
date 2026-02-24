@@ -11,6 +11,15 @@ export const AHSD_TESTS: TestDefinition[] = [ahsdAdultTest, ahsdChildTest];
 
 export const ALL_TESTS = [
   {
+    key: "dimensional",
+    title: "Painel Dimensional de Adaptação",
+    shortTitle: "Dimensional",
+    subtitle: "56 itens · 7 dimensões · 2 camadas",
+    description: "Mapeamento de custo adaptativo em ritmo, ameaça, executivo, vínculo, sensorialidade, recompensa e modelagem de realidade.",
+    icon: "🧠",
+    route: "/triagem/dimensional",
+  },
+  {
     key: "neurocognitivo",
     title: "Rastreio Neurocognitivo Completo",
     shortTitle: "Neurocognitivo",
