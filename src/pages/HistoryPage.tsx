@@ -8,7 +8,8 @@ import { RotateCcw, LogOut } from "lucide-react";
 interface QuizResult {
   id: string;
   created_at: string;
-  scores: Record<string, number>;
+  scores: Record<string, number> | { pct: number; percentile: number; categoryScores: Record<string, { pct: number }> };
+  test_type: string;
 }
 
 const CONDITION_LABELS: Record<string, string> = {
@@ -21,6 +22,47 @@ const CONDITION_LABELS: Record<string, string> = {
   ansiedade: "Ansiedade",
 };
 
+const TEST_TYPE_LABELS: Record<string, string> = {
+  neurocognitivo: "Rastreio Neurocognitivo",
+  ahsd_adulto: "AH/SD Adulto",
+  ahsd_infantil: "AH/SD Infantil (Pais)",
+};
+
+function renderScoreSummary(scores: any, testType: string) {
+  // AHSD tests store { pct, categoryScores }
+  if (scores?.pct !== undefined && scores?.categoryScores) {
+    const cats = Object.entries(scores.categoryScores as Record<string, { pct: number }>)
+      .sort(([, a], [, b]) => b.pct - a.pct)
+      .slice(0, 3);
+    return (
+      <div className="flex flex-wrap gap-2">
+        <span className="text-[11px] font-bold px-2.5 py-1 rounded-md" style={{ backgroundColor: "hsl(var(--primary) / 0.15)", color: "hsl(var(--primary))" }}>
+          Total: {scores.pct}%
+        </span>
+        {cats.map(([key, val]) => (
+          <span key={key} className="text-[11px] font-medium px-2.5 py-1 rounded-md" style={{ backgroundColor: "hsl(var(--primary) / 0.1)", color: "hsl(var(--primary))" }}>
+            {key}: {val.pct}%
+          </span>
+        ))}
+      </div>
+    );
+  }
+
+  // Neurocognitive test stores flat { ahsd: 80, tdah: 60, ... }
+  const topKeys = Object.entries(scores as Record<string, number>)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 3);
+  return (
+    <div className="flex flex-wrap gap-2">
+      {topKeys.map(([key, score]) => (
+        <span key={key} className="text-[11px] font-medium px-2.5 py-1 rounded-md" style={{ backgroundColor: "hsl(var(--primary) / 0.1)", color: "hsl(var(--primary))" }}>
+          {CONDITION_LABELS[key] ?? key}: {score}%
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function HistoryPage() {
   const { user, loading, signOut } = useAuth();
   const [results, setResults] = useState<QuizResult[]>([]);
@@ -31,7 +73,7 @@ export default function HistoryPage() {
     (async () => {
       const { data } = await supabase
         .from("quiz_results")
-        .select("id, created_at, scores")
+        .select("id, created_at, scores, test_type")
         .order("created_at", { ascending: false });
       setResults((data as any) ?? []);
       setFetching(false);
@@ -52,7 +94,7 @@ export default function HistoryPage() {
     <div className="min-h-screen bg-background">
       <nav className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-3xl mx-auto px-5 h-14 flex items-center justify-between">
-          <Link to="/triagem" className="flex items-center gap-2 text-[12px] font-medium text-primary hover:underline">
+          <Link to="/selecionar-teste" className="flex items-center gap-2 text-[12px] font-medium text-primary hover:underline">
             <RotateCcw className="w-3.5 h-3.5" />
             Novo Rastreio
           </Link>
@@ -74,7 +116,7 @@ export default function HistoryPage() {
             <div className="rounded-xl border bg-card p-8 text-center">
               <p className="text-muted-foreground text-sm mb-4">Você ainda não fez nenhum rastreio.</p>
               <Link
-                to="/triagem"
+                to="/selecionar-teste"
                 className="inline-block px-6 py-2.5 rounded-xl font-semibold text-sm"
                 style={{
                   background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
@@ -86,48 +128,33 @@ export default function HistoryPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {results.map((r, i) => {
-                const scores = r.scores as Record<string, number>;
-                const topKeys = Object.entries(scores)
-                  .sort(([, a], [, b]) => b - a)
-                  .slice(0, 3);
-
-                return (
-                  <motion.div
-                    key={r.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="rounded-xl border bg-card p-5"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <p className="text-[11px] text-muted-foreground">
-                          {new Date(r.created_at).toLocaleDateString("pt-BR", {
-                            day: "2-digit",
-                            month: "long",
-                            year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
-                        <p className="text-sm font-semibold text-foreground mt-0.5">Rastreio #{results.length - i}</p>
-                      </div>
+              {results.map((r, i) => (
+                <motion.div
+                  key={r.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                  className="rounded-xl border bg-card p-5"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <p className="text-[11px] text-muted-foreground">
+                        {new Date(r.created_at).toLocaleDateString("pt-BR", {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                      <p className="text-sm font-semibold text-foreground mt-0.5">
+                        {TEST_TYPE_LABELS[r.test_type] ?? r.test_type} #{results.filter(x => x.test_type === r.test_type).indexOf(r) + 1}
+                      </p>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {topKeys.map(([key, score]) => (
-                        <span
-                          key={key}
-                          className="text-[11px] font-medium px-2.5 py-1 rounded-md"
-                          style={{ backgroundColor: "hsl(var(--primary) / 0.1)", color: "hsl(var(--primary))" }}
-                        >
-                          {CONDITION_LABELS[key] ?? key}: {score}%
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
-                );
-              })}
+                  </div>
+                  {renderScoreSummary(r.scores, r.test_type)}
+                </motion.div>
+              ))}
             </div>
           )}
         </motion.div>
