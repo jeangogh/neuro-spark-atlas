@@ -235,7 +235,7 @@ function ReferencesModal({ open, onClose }: { open: boolean; onClose: () => void
         className="bg-card border rounded-xl p-6 max-w-lg w-full shadow-2xl max-h-[80vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="font-display text-lg font-bold text-foreground mb-4">Referências Científicas</h2>
+        <h2 className="text-foreground mb-4">Referências Científicas</h2>
         <div className="space-y-3 text-[12px] text-card-foreground leading-relaxed">
           {[
             { ref: "Barkley, R.A. (2015). Attention-deficit hyperactivity disorder (4th ed.). Guilford Press.", note: "Base para compreensão do TDAH como disfunção executiva." },
@@ -428,7 +428,7 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
       <header className="pt-10 pb-6 md:pt-14 md:pb-8 px-5 text-center">
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-xl mx-auto">
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-2">Rastreio de Altas Habilidades e Neurodivergência</p>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-foreground mb-1.5 tracking-tight">
+          <h1 className="text-foreground mb-1.5">
             Seu Resultado
           </h1>
           <p className="text-muted-foreground text-[13px] max-w-md mx-auto leading-relaxed">
@@ -440,19 +440,19 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
       <main className="max-w-2xl mx-auto px-5 pb-24 space-y-8">
         {/* Summary */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }} className="rounded-xl border border-primary/15 bg-primary/[0.03] p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-2">Síntese Geral</h2>
+          <h2 className="text-foreground mb-2">Síntese Geral</h2>
           <p className="text-[13px] text-card-foreground leading-relaxed whitespace-pre-line">{results.summary}</p>
         </motion.section>
 
         {/* Potential vs Expression */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.05 }} className="rounded-xl border border-accent/20 bg-accent/[0.03] p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-2">Potencial vs. Expressão</h2>
+          <h2 className="text-foreground mb-2">Potencial vs. Expressão</h2>
           <p className="text-[13px] text-card-foreground leading-relaxed whitespace-pre-line">{results.potentialVsExpression}</p>
         </motion.section>
 
         {/* Detalhamento por Área */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.08 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-1">Detalhamento por Área</h2>
+          <h2 className="text-foreground mb-1">Detalhamento por Área</h2>
           <p className="text-[11px] text-muted-foreground mb-4 leading-relaxed">Intensidade dos padrões identificados em cada dimensão</p>
           <div className="space-y-3.5">
             {sortedHypotheses.map((h, i) => {
@@ -473,7 +473,7 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
         {/* Entenda Cada Área */}
         <section className="space-y-2.5">
           <div className="mb-1">
-            <h2 className="font-display text-lg font-semibold text-foreground">Entenda Cada Bloco</h2>
+            <h2 className="text-foreground">Entenda Cada Bloco</h2>
             <p className="text-[11px] text-muted-foreground mt-0.5">Toque em cada área para expandir a explicação completa</p>
           </div>
           {sortedHypotheses.map((h, i) => (
@@ -483,14 +483,14 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
 
         {/* Mapa de Perfil */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.12 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-1">Mapa de Perfil</h2>
+          <h2 className="text-foreground mb-1">Mapa de Perfil</h2>
           <p className="text-[11px] text-muted-foreground mb-4">Visão integrada de todas as dimensões avaliadas</p>
           <ProfileRadarChart hypotheses={sortedHypotheses} />
         </motion.section>
 
         {/* Propensão de Expressão do Potencial */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.14 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-1">Propensão de Expressão do Potencial</h2>
+          <h2 className="text-foreground mb-1">Propensão de Expressão do Potencial</h2>
           <div className="mt-3 p-3.5 rounded-lg bg-primary/5 border border-primary/15">
             <p className="text-[12px] text-card-foreground leading-relaxed">
               <strong className="italic">Pesquisas indicam que transtornos emocionais e neurofuncionais não tratados reduzem o desempenho cognitivo em 20 a 30%.</strong> Este gráfico mostra o quanto cada área pode melhorar com intervenção direcionada.
@@ -503,7 +503,7 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
 
         {/* Curva de Intervenção */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.16 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-1">Trajetória com Intervenção</h2>
+          <h2 className="text-foreground mb-1">Trajetória com Intervenção</h2>
           <p className="text-[11px] text-muted-foreground mb-4 leading-relaxed">
             Projeção de desempenho cognitivo e performance ao longo da vida
           </p>
@@ -525,7 +525,7 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
 
         {/* Disclaimer */}
         <div className="rounded-xl border border-accent/20 bg-accent/[0.03] p-4 sm:p-5">
-          <h3 className="font-display font-semibold text-foreground text-[13px] mb-1">Nota Importante</h3>
+          <h3 className="text-foreground mb-1">Nota Importante</h3>
           <p className="text-[12px] text-card-foreground leading-relaxed">
             Este questionário é um instrumento de autorrelato e <strong>não substitui avaliação profissional</strong>. Os resultados indicam padrões de funcionamento que merecem investigação com profissional qualificado.
           </p>
@@ -724,7 +724,7 @@ export default function QuizPage() {
           <p className="text-primary text-[11px] font-semibold uppercase tracking-[0.15em]">
             Rastreio de Altas Habilidades e Neurodivergência
           </p>
-          <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-[1.2]">
+          <h1 className="text-foreground">
             Você sempre se sentiu diferente.
             <br />
             <span className="text-primary">Agora vai saber por quê.</span>
@@ -744,7 +744,7 @@ export default function QuizPage() {
         <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
           <motion.div
             className="h-full rounded-full"
-            style={{ background: "linear-gradient(90deg, hsl(174,62%,29%), hsl(172,55%,20%))" }}
+            style={{ background: "linear-gradient(90deg, hsl(40,88%,61%), hsl(36,87%,44%))" }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           />
@@ -792,17 +792,27 @@ export default function QuizPage() {
               >
                 Anterior
               </Button>
-              <button
-                onClick={handleNext}
-                disabled={!blockComplete}
-                className="flex items-center gap-2 h-9 px-5 rounded-xl font-semibold text-sm text-white transition-all hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100"
-                style={{
-                  background: "linear-gradient(135deg, hsl(174,62%,29%), hsl(172,55%,20%))",
-                  boxShadow: blockComplete ? "0 0 20px hsl(174 55% 39% / 0.25), 0 4px 20px hsl(174,55%,39%/0.35)" : undefined,
-                }}
-              >
-                {isLast ? "Ver Resultado" : "Próximo"}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={signOut}
+                  className="flex items-center gap-1.5 h-9 px-3 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[11px] font-medium text-muted-foreground"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Sair
+                </button>
+                <button
+                  onClick={handleNext}
+                  disabled={!blockComplete}
+                  className="flex items-center gap-2 h-9 px-5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
+                    color: "hsl(225,12%,7%)",
+                    boxShadow: blockComplete ? "0 0 20px hsl(40 88% 61% / 0.25), 0 4px 20px hsl(40,88%,61%/0.35)" : undefined,
+                  }}
+                >
+                  {isLast ? "Ver Resultado" : "Próximo"}
+                </button>
+              </div>
             </div>
           </motion.div>
         </AnimatePresence>
