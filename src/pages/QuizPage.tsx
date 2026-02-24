@@ -285,7 +285,7 @@ function HypothesisCard({ hypothesis, index, forceExpanded = false }: { hypothes
       <div className="p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3 mb-2.5">
           <div className="flex-1">
-            <h3 className="font-display font-semibold text-foreground text-[13px] sm:text-sm leading-snug">{hypothesis.label}</h3>
+            <h3 className="text-foreground leading-snug">{hypothesis.label}</h3>
             {(hypothesis.id === "ahsd") && (
               <p className="text-[10px] text-muted-foreground mt-0.5 italic">
                 Funcionamento cognitivo de alta complexidade — não se resume a notas ou QI
