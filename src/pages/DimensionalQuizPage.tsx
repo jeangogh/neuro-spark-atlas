@@ -777,6 +777,15 @@ export default function DimensionalQuizPage() {
             </button>
           )}
         </div>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={signOut}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[11px] font-medium text-muted-foreground"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            Sair
+          </button>
+        </div>
       </main>
     </div>
   );

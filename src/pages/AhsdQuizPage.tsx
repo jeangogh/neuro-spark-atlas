@@ -115,7 +115,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
       <header className="pt-10 pb-6 md:pt-14 md:pb-8 px-5 text-center">
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-xl mx-auto">
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-2">{test.title}</p>
-          <h1 className="font-display text-2xl md:text-[2rem] font-bold text-foreground mb-1.5 tracking-tight">
+           <h1 className="text-foreground mb-1.5">
             Seu Resultado
           </h1>
           <p className="text-muted-foreground text-[13px] max-w-md mx-auto leading-relaxed">
@@ -129,19 +129,19 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl border border-primary/15 bg-primary/[0.03] p-5 sm:p-6 text-center">
           <div className="text-5xl font-bold text-primary mb-1 tabular-nums">{scores.pct}%</div>
           <p className="text-[11px] text-muted-foreground mb-3">Percentil estimado: {scores.percentile}</p>
-          <h2 className="font-display text-lg font-semibold text-foreground">{classification.label}</h2>
+          <h2 className="text-foreground">{classification.label}</h2>
         </motion.section>
 
         {/* Classification Description */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-2">Interpretação</h2>
+          <h2 className="text-foreground mb-2">Interpretação</h2>
           <p className="text-[13px] text-card-foreground leading-relaxed whitespace-pre-line">{classification.description}</p>
         </motion.section>
 
         {/* Dimension Rules */}
         {dimensionMessages.length > 0 && (
           <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="rounded-xl border border-accent/20 bg-accent/[0.03] p-5 sm:p-6">
-            <h2 className="font-display text-lg font-semibold text-foreground mb-2">Análise Dimensional</h2>
+            <h2 className="text-foreground mb-2">Análise Dimensional</h2>
             <div className="space-y-2">
               {dimensionMessages.map((msg, i) => (
                 <p key={i} className="text-[13px] text-card-foreground leading-relaxed">• {msg}</p>
@@ -152,7 +152,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
 
         {/* Category Scores */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-1">Detalhamento por Dimensão</h2>
+          <h2 className="text-foreground mb-1">Detalhamento por Dimensão</h2>
           <p className="text-[11px] text-muted-foreground mb-4">Intensidade em cada área avaliada</p>
           <div className="space-y-3.5">
             {test.categories.map((cat, i) => {
@@ -173,7 +173,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
 
         {/* Radar Chart */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }} className="rounded-xl border bg-card p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold text-foreground mb-1">Mapa de Perfil</h2>
+          <h2 className="text-foreground mb-1">Mapa de Perfil</h2>
           <div className="w-full aspect-square max-w-[320px] mx-auto">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="68%" data={radarData}>
@@ -351,7 +351,7 @@ export default function AhsdQuizPage() {
           <p className="text-primary text-[11px] font-semibold uppercase tracking-[0.15em]">
             {test.title}
           </p>
-          <h1 className="font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight leading-[1.2]">
+          <h1 className="text-foreground">
             {test.icon} {test.shortTitle}
           </h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
@@ -413,18 +413,27 @@ export default function AhsdQuizPage() {
                 <Button variant="ghost" size="sm" onClick={handleBack} disabled={currentBlock === 0} className="text-xs h-9 px-4">
                   Anterior
                 </Button>
-                <button
-                  onClick={handleNext}
-                  disabled={!blockComplete}
-                  className="flex items-center gap-2 h-9 px-5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-                    color: "hsl(225,12%,7%)",
-                    boxShadow: blockComplete ? "0 0 20px hsl(40 88% 61% / 0.25), 0 4px 20px hsl(40,88%,61%/0.35)" : undefined,
-                  }}
-                >
-                  {isLast ? "Ver Resultado" : "Próximo"}
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={signOut}
+                    className="flex items-center gap-1.5 h-9 px-3 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[11px] font-medium text-muted-foreground"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Sair
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    disabled={!blockComplete}
+                    className="flex items-center gap-2 h-9 px-5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
+                      color: "hsl(225,12%,7%)",
+                      boxShadow: blockComplete ? "0 0 20px hsl(40 88% 61% / 0.25), 0 4px 20px hsl(40,88%,61%/0.35)" : undefined,
+                    }}
+                  >
+                    {isLast ? "Ver Resultado" : "Próximo"}
+                  </button>
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>
