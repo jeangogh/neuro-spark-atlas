@@ -2,14 +2,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
+import { Mail } from "lucide-react";
 
 export default function AuthPage() {
-  const { user, loading, signIn, signUp } = useAuth();
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const { user, loading, signInWithOtp } = useAuth();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) {
@@ -20,30 +19,20 @@ export default function AuthPage() {
     );
   }
 
-  if (user) return <Navigate to="/triagem" replace />;
+  if (user) return <Navigate to="/selecionar-teste" replace />;
 
   const handleSubmit = async () => {
     setError(null);
-    setSuccess(null);
-    if (!email.trim() || !password.trim()) {
-      setError("Preencha todos os campos.");
-      return;
-    }
-    if (password.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres.");
+    if (!email.trim()) {
+      setError("Informe seu e-mail.");
       return;
     }
     setSubmitting(true);
-    if (mode === "login") {
-      const { error } = await signIn(email.trim(), password);
-      if (error) setError(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message);
+    const { error } = await signInWithOtp(email.trim());
+    if (error) {
+      setError(error.message);
     } else {
-      const { error } = await signUp(email.trim(), password);
-      if (error) {
-        setError(error.message);
-      } else {
-        setSuccess("Conta criada! Verifique seu e-mail para confirmar o cadastro.");
-      }
+      setSent(true);
     }
     setSubmitting(false);
   };
@@ -51,6 +40,39 @@ export default function AuthPage() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleSubmit();
   };
+
+  if (sent) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 py-12">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.45 }}
+          className="w-full max-w-md text-center"
+        >
+          <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 mx-auto">
+            <Mail className="w-7 h-7 text-primary" />
+          </div>
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-3">
+            Verifique seu e-mail
+          </h1>
+          <p className="text-muted-foreground text-[14px] leading-relaxed mb-2">
+            Enviamos um link de acesso para
+          </p>
+          <p className="text-foreground font-semibold text-[15px] mb-6">{email}</p>
+          <p className="text-muted-foreground text-[13px] leading-relaxed">
+            Clique no link no e-mail para entrar. Verifique também a pasta de spam.
+          </p>
+          <button
+            onClick={() => { setSent(false); setEmail(""); }}
+            className="mt-6 text-[12px] text-primary hover:underline font-medium"
+          >
+            Usar outro e-mail
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 py-12">
@@ -61,21 +83,15 @@ export default function AuthPage() {
         className="w-full max-w-md"
       >
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary mb-6 text-center">
-          Rastreio de Altas Habilidades e Neurodivergência
+          AHSD Lab
         </p>
 
         <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-3 text-center">
-          {mode === "login" ? (
-            <>Acesse sua <span className="text-primary">conta</span></>
-          ) : (
-            <>Crie sua <span className="text-primary">conta</span></>
-          )}
+          Entre com seu <span className="text-primary">e-mail</span>
         </h1>
 
         <p className="text-muted-foreground text-sm text-center mb-8 leading-relaxed">
-          {mode === "login"
-            ? "Entre para acessar o rastreio e ver seus resultados salvos."
-            : "Cadastre-se para salvar e revisar seus resultados."}
+          Enviaremos um link de acesso direto — sem senha.
         </p>
 
         <div className="space-y-5">
@@ -94,20 +110,6 @@ export default function AuthPage() {
             />
           </div>
 
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-              Senha
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Mínimo 6 caracteres"
-              className="w-full text-base bg-transparent border-0 border-b-2 border-border pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200 focus:border-primary"
-            />
-          </div>
-
           <AnimatePresence>
             {error && (
               <motion.p
@@ -117,17 +119,6 @@ export default function AuthPage() {
                 className="text-[12px] text-destructive"
               >
                 {error}
-              </motion.p>
-            )}
-            {success && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className="text-[12px]"
-                style={{ color: "hsl(141,58%,54%)" }}
-              >
-                {success}
               </motion.p>
             )}
           </AnimatePresence>
@@ -143,27 +134,9 @@ export default function AuthPage() {
                 boxShadow: "0 0 20px hsl(40 88% 61% / 0.25), 0 4px 24px hsl(40,88%,61%/0.35)",
               }}
             >
-              {submitting ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar Conta"}
+              {submitting ? "Enviando..." : "Enviar link de acesso"}
             </button>
           </div>
-
-          <p className="text-center text-[13px] text-muted-foreground">
-            {mode === "login" ? (
-              <>
-                Não tem conta?{" "}
-                <button onClick={() => { setMode("signup"); setError(null); setSuccess(null); }} className="text-primary hover:underline font-medium">
-                  Cadastre-se
-                </button>
-              </>
-            ) : (
-              <>
-                Já tem conta?{" "}
-                <button onClick={() => { setMode("login"); setError(null); setSuccess(null); }} className="text-primary hover:underline font-medium">
-                  Entrar
-                </button>
-              </>
-            )}
-          </p>
         </div>
       </motion.div>
     </div>
