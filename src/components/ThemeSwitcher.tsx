@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 
 /* ─── Color Themes ─── */
 const COLOR_THEMES: { id: ColorTheme; label: string; dot: string; title: string }[] = [
-  { id: "eclipse", label: "Eclipse", dot: "#F4B942", title: "Preto · Branco · Âmbar" },
-  { id: "amber",   label: "Amber",   dot: "#FFFBEB", title: "Âmbar quente · Bege" },
-  { id: "cinema",  label: "Cinema",  dot: "#2A9D8F", title: "Preto · Verde · Signal" },
+  { id: "eclipse", label: "Eclipse", dot: "#4a7a65", title: "Bege · Branco · Verde" },
+  { id: "amber",   label: "Amber",   dot: "#d4a574", title: "Bege quente · Dourado" },
+  { id: "cinema",  label: "Cinema",  dot: "#5a9a7d", title: "Escuro · Verde · Gold" },
 ];
 
 /* ─── Font Themes ─── */
