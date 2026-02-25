@@ -18,6 +18,8 @@ const AuthPage = lazy(() => import("./pages/AuthPage"));
 const HistoryPage = lazy(() => import("./pages/HistoryPage"));
 const SharePage = lazy(() => import("./pages/SharePage"));
 const GuestInvitePage = lazy(() => import("./pages/GuestInvitePage"));
+const BonusTestPage = lazy(() => import("./pages/BonusTestPage"));
+const ConsentPage = lazy(() => import("./pages/ConsentPage"));
 const StyleGuidePage = lazy(() => import("./pages/StyleGuidePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -48,6 +50,8 @@ const App = () => (
               <Route path="/historico" element={<HistoryPage />} />
               <Route path="/compartilhar" element={<SharePage />} />
               <Route path="/convite/:code" element={<GuestInvitePage />} />
+              <Route path="/teste-bonus" element={<BonusTestPage />} />
+              <Route path="/consentimento" element={<ConsentPage />} />
               <Route path="/admin/preferencias" element={<PrefsAnalyticsPage />} />
               <Route path="/style-guide" element={<StyleGuidePage />} />
               <Route path="*" element={<NotFound />} />

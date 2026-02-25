@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      bonus_requests: {
+        Row: {
+          analysis_result: Json | null
+          analyzed_at: string | null
+          consent_token: string
+          consented_at: string | null
+          created_at: string
+          id: string
+          partner_consented: boolean
+          partner_email: string
+          partner_id: string | null
+          relationship_detail: string | null
+          relationship_type: string
+          requester_consented: boolean
+          requester_id: string
+          status: string
+        }
+        Insert: {
+          analysis_result?: Json | null
+          analyzed_at?: string | null
+          consent_token?: string
+          consented_at?: string | null
+          created_at?: string
+          id?: string
+          partner_consented?: boolean
+          partner_email: string
+          partner_id?: string | null
+          relationship_detail?: string | null
+          relationship_type: string
+          requester_consented?: boolean
+          requester_id: string
+          status?: string
+        }
+        Update: {
+          analysis_result?: Json | null
+          analyzed_at?: string | null
+          consent_token?: string
+          consented_at?: string | null
+          created_at?: string
+          id?: string
+          partner_consented?: boolean
+          partner_email?: string
+          partner_id?: string | null
+          relationship_detail?: string | null
+          relationship_type?: string
+          requester_consented?: boolean
+          requester_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       funnel_events: {
         Row: {
           color_theme: string
