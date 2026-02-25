@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut, CheckCircle2 } from "lucide-react";
 import { ALL_TESTS } from "@/data/testRegistry";
+import BottomNav from "@/components/BottomNav";
 
 export default function TestSelectionPage() {
   const { user, loading, signOut } = useAuth();
@@ -92,13 +93,7 @@ export default function TestSelectionPage() {
           </motion.div>
         ))}
 
-        <div className="flex justify-center gap-4 pt-6">
-          <Link
-            to="/historico"
-            className="text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Meus Resultados
-          </Link>
+        <div className="flex justify-center pt-6 pb-20">
           <button
             onClick={signOut}
             className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors"
@@ -108,6 +103,7 @@ export default function TestSelectionPage() {
           </button>
         </div>
       </main>
+      <BottomNav />
     </div>
   );
 }

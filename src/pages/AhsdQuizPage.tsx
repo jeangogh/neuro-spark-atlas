@@ -8,7 +8,7 @@ import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
-import { RotateCcw, History, LogOut, Download } from "lucide-react";
+import { RotateCcw, History, LogOut, Download, MessageCircle, Twitter, Copy, Check } from "lucide-react";
 import { getTestByKey } from "@/data/testRegistry";
 import {
   type TestDefinition,
@@ -84,6 +84,50 @@ function ScoreBar({ score, color, delay = 0 }: { score: number; color: string; d
         animate={{ width: `${score}%` }}
         transition={{ duration: 0.8, delay, ease: "easeOut" }}
       />
+    </div>
+  );
+}
+
+/* ────── Share Buttons ────── */
+function ShareButtonsAhsd() {
+  const [copied, setCopied] = useState(false);
+  const url = encodeURIComponent(window.location.origin + "/selecionar-teste");
+  const text = encodeURIComponent("Fiz um rastreio de Altas Habilidades — você precisa conhecer.");
+  const whatsappUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+
+  const handleCopy = async () => {
+    const shareText = "Fiz um rastreio de Altas Habilidades — você precisa conhecer.";
+    const shareUrl = window.location.origin + "/selecionar-teste";
+    if (navigator.share) {
+      try { await navigator.share({ title: "Rastreio AH/SD", text: shareText, url: shareUrl }); } catch {}
+    } else {
+      await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <p className="text-[11px] text-muted-foreground uppercase tracking-widest">Compartilhar resultado</p>
+      <div className="flex gap-2.5">
+        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-[12px] text-white transition-all hover:opacity-90 hover:scale-[1.03]"
+          style={{ background: "#25D366" }}>
+          <MessageCircle className="w-4 h-4" /> WhatsApp
+        </a>
+        <a href={twitterUrl} target="_blank" rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-[12px] text-white transition-all hover:opacity-90 hover:scale-[1.03]"
+          style={{ background: "#000" }}>
+          <Twitter className="w-4 h-4" /> X
+        </a>
+        <button onClick={handleCopy}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.03]">
+          {copied ? <Check className="w-4 h-4" style={{ color: "hsl(141,58%,54%)" }} /> : <Copy className="w-4 h-4" />}
+          {copied ? "Copiado!" : "Copiar link"}
+        </button>
+      </div>
     </div>
   );
 }
@@ -201,6 +245,9 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
             Este questionário é um instrumento de autorrelato e <strong>não substitui avaliação profissional</strong>. Os resultados indicam padrões de funcionamento que merecem investigação com profissional qualificado.
           </p>
         </div>
+
+        {/* Share */}
+        <ShareButtonsAhsd />
 
         {/* Actions */}
         <div className="flex gap-3 justify-center flex-wrap print:hidden">
@@ -352,7 +399,7 @@ export default function AhsdQuizPage() {
             {test.title}
           </p>
           <h1 className="text-foreground">
-            {test.icon} {test.shortTitle}
+            {test.shortTitle}
           </h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
             {test.subtitle} · <span className="font-semibold text-foreground">~{test.estimatedMinutes} minutos</span>
