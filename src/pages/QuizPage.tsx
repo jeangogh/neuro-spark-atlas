@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useFunnelTracking, getLayoutVariant, getLeadVariant } from "@/hooks/useFunnelTracking";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -593,7 +593,8 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
 
 /* ────── Quiz Page ────── */
 export default function QuizPage() {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   const [phase, setPhase] = useState<"loading" | "quiz" | "results">("loading");
   const [currentBlock, setCurrentBlock] = useState(0);
@@ -702,10 +703,10 @@ export default function QuizPage() {
     // If we have fresh answers, save & show from answers; otherwise show from saved scores
     if (Object.keys(answers).length > 0) {
       if (!resultsSaved) saveResults();
-      return <ResultsView answers={answers} onRestart={handleRestart} onSignOut={signOut} />;
+      return <ResultsView answers={answers} onRestart={handleRestart} onSignOut={() => navigate("/selecionar-teste")} />;
     }
     if (savedScores) {
-      return <ResultsView scores={savedScores} onRestart={handleRestart} onSignOut={signOut} />;
+      return <ResultsView scores={savedScores} onRestart={handleRestart} onSignOut={() => navigate("/selecionar-teste")} />;
     }
   }
 
@@ -787,12 +788,12 @@ export default function QuizPage() {
               </Button>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={signOut}
-                  className="flex items-center gap-1.5 h-9 px-3 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[11px] font-medium text-muted-foreground"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  Sair
-                </button>
+                   onClick={() => navigate("/selecionar-teste")}
+                   className="flex items-center gap-1.5 h-9 px-3 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[11px] font-medium text-muted-foreground"
+                 >
+                   <LogOut className="w-3.5 h-3.5" />
+                   Sair do teste
+                 </button>
                 <button
                   onClick={handleNext}
                   disabled={!blockComplete}
