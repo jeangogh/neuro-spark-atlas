@@ -12,6 +12,7 @@ const AhsdQuizPage = lazy(() => import("./pages/AhsdQuizPage"));
 const DimensionalQuizPage = lazy(() => import("./pages/DimensionalQuizPage"));
 const TestSelectionPage = lazy(() => import("./pages/TestSelectionPage"));
 const ResultsPage = lazy(() => import("./pages/ResultsPage"));
+const ExplorePage = lazy(() => import("./pages/ExplorePage"));
 const PrefsAnalyticsPage = lazy(() => import("./pages/PrefsAnalyticsPage"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const HistoryPage = lazy(() => import("./pages/HistoryPage"));
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/triagem/dimensional" element={<DimensionalQuizPage />} />
               <Route path="/triagem/:testKey" element={<AhsdQuizPage />} />
               <Route path="/resultados" element={<ResultsPage />} />
+              <Route path="/explorar" element={<ExplorePage />} />
               <Route path="/historico" element={<HistoryPage />} />
               <Route path="/admin/preferencias" element={<PrefsAnalyticsPage />} />
               <Route path="*" element={<NotFound />} />

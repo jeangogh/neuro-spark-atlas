@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Navigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { RotateCcw, LogOut } from "lucide-react";
+import BottomNav from "@/components/BottomNav";
 
 interface QuizResult {
   id: string;
@@ -105,7 +106,7 @@ export default function HistoryPage() {
         </div>
       </nav>
 
-      <main className="max-w-3xl mx-auto px-5 py-10">
+      <main className="max-w-3xl mx-auto px-5 py-10 pb-24">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary mb-2">Seus Resultados</p>
           <h1 className="font-display text-2xl font-bold text-foreground mb-6">Histórico de Rastreios</h1>
@@ -159,6 +160,7 @@ export default function HistoryPage() {
           )}
         </motion.div>
       </main>
+      <BottomNav />
     </div>
   );
 }
