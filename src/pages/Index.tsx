@@ -221,7 +221,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     className="px-8 py-3 rounded-xl font-semibold text-sm text-white transition-all hover:scale-[1.02]"
                     style={{ background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))", boxShadow: "0 4px 20px hsl(40,88%,61%/0.3)", color: "hsl(225,12%,7%)" }}
                   >
-                    Iniciar Rastreio Gratuito
+                    Iniciar Rastreio
                   </button>
                 </Link>
               </div>
@@ -281,7 +281,7 @@ function SendFriendButton() {
   const [copied, setCopied] = useState(false);
   const handleShare = async () => {
     const url = window.location.origin + "/triagem";
-    const text = "Você precisa fazer esse rastreio de altas habilidades e neurodivergência. É gratuito e leva 7 minutos.";
+    const text = "Você precisa fazer esse rastreio de altas habilidades e neurodivergência. Leva apenas 7 minutos.";
     if (navigator.share) {
       try { await navigator.share({ title: "Rastreio de Altas Habilidades", text, url }); return; } catch {}
     }
@@ -387,7 +387,7 @@ export default function Index() {
               transition={{ delay: 0.38, duration: 0.5 }}
             >
               <ShimmerButton to="/selecionar-teste">
-                Iniciar Rastreio Gratuito
+                Iniciar Rastreio
               </ShimmerButton>
             </motion.div>
 
@@ -584,7 +584,7 @@ export default function Index() {
             Pronto para entender como você funciona?
           </h2>
           <p className="text-muted-foreground text-sm mb-2 leading-relaxed">
-            Rastreio gratuito.
+            Rastreio rápido e científico.
           </p>
           <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
             Resultado imediato, baixável em PDF e no seu e-mail.
