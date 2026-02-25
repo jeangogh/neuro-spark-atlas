@@ -20,6 +20,7 @@ const SharePage = lazy(() => import("./pages/SharePage"));
 const GuestInvitePage = lazy(() => import("./pages/GuestInvitePage"));
 const BonusTestPage = lazy(() => import("./pages/BonusTestPage"));
 const ConsentPage = lazy(() => import("./pages/ConsentPage"));
+const BonusReportPage = lazy(() => import("./pages/BonusReportPage"));
 const StyleGuidePage = lazy(() => import("./pages/StyleGuidePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/convite/:code" element={<GuestInvitePage />} />
               <Route path="/teste-bonus" element={<BonusTestPage />} />
               <Route path="/consentimento" element={<ConsentPage />} />
+              <Route path="/teste-bonus/relatorio" element={<BonusReportPage />} />
               <Route path="/admin/preferencias" element={<PrefsAnalyticsPage />} />
               <Route path="/style-guide" element={<StyleGuidePage />} />
               <Route path="*" element={<NotFound />} />
