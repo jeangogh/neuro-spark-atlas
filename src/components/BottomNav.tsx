@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { ClipboardList, BarChart3, Compass } from "lucide-react";
+import { Home, Compass, BarChart3, Share2 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { label: "Testes", path: "/selecionar-teste", icon: ClipboardList },
-  { label: "Análises", path: "/historico", icon: BarChart3 },
+  { label: "Home", path: "/selecionar-teste", icon: Home },
   { label: "Explorar", path: "/explorar", icon: Compass },
+  { label: "Análises", path: "/historico", icon: BarChart3 },
+  { label: "Compartilhar", path: "/compartilhar", icon: Share2 },
 ];
 
 export default function BottomNav() {
@@ -19,7 +20,7 @@ export default function BottomNav() {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex flex-col items-center gap-0.5 px-4 py-1.5 transition-colors ${
+              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 transition-colors ${
                 active ? "text-primary" : "text-muted-foreground hover:text-foreground"
               }`}
             >

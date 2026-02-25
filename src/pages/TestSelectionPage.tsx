@@ -6,10 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { LogOut, CheckCircle2 } from "lucide-react";
 import { ALL_TESTS } from "@/data/testRegistry";
 import BottomNav from "@/components/BottomNav";
+import { useGuestInviteClaim } from "@/hooks/useGuestInviteClaim";
 
 export default function TestSelectionPage() {
   const { user, loading, signOut } = useAuth();
   const [completedTests, setCompletedTests] = useState<Set<string>>(new Set());
+  useGuestInviteClaim();
 
   useEffect(() => {
     if (!user) return;
