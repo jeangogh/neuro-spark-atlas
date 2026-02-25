@@ -16,6 +16,7 @@ const ExplorePage = lazy(() => import("./pages/ExplorePage"));
 const PrefsAnalyticsPage = lazy(() => import("./pages/PrefsAnalyticsPage"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const HistoryPage = lazy(() => import("./pages/HistoryPage"));
+const StyleGuidePage = lazy(() => import("./pages/StyleGuidePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
               <Route path="/explorar" element={<ExplorePage />} />
               <Route path="/historico" element={<HistoryPage />} />
               <Route path="/admin/preferencias" element={<PrefsAnalyticsPage />} />
+              <Route path="/style-guide" element={<StyleGuidePage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

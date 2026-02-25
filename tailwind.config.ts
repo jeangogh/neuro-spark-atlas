@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
+        display: ['Sora', 'system-ui', 'sans-serif'],
         body: ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
       colors: {
