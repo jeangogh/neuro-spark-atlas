@@ -34,7 +34,7 @@
     --input:             41 20% 88%;
     --ring:              154 24% 38%;
 
-    --radius: 1rem;
+    --radius: 0.625rem;
 
     /* ── Profile / AOP colors ── */
     --profile-1: 42 45% 93%;
@@ -185,8 +185,7 @@
     transition: background-color 0.35s ease, color 0.25s ease;
   }
   h1 {
-    font-family: 'Fraunces', Georgia, serif;
-    font-optical-sizing: auto;
+    font-family: 'Sora', system-ui, sans-serif;
     font-weight: 700;
     font-size: 2rem;
     line-height: 1.1;
@@ -194,8 +193,7 @@
     transition: font-family 0.2s ease;
   }
   h2 {
-    font-family: 'Fraunces', Georgia, serif;
-    font-optical-sizing: auto;
+    font-family: 'Sora', system-ui, sans-serif;
     font-weight: 600;
     font-size: 1.5rem;
     line-height: 1.15;
@@ -203,8 +201,7 @@
     transition: font-family 0.2s ease;
   }
   h3 {
-    font-family: 'Fraunces', Georgia, serif;
-    font-optical-sizing: auto;
+    font-family: 'Sora', system-ui, sans-serif;
     font-weight: 600;
     font-size: 1.25rem;
     line-height: 1.2;
@@ -212,8 +209,7 @@
     transition: font-family 0.2s ease;
   }
   h4 {
-    font-family: 'Fraunces', Georgia, serif;
-    font-optical-sizing: auto;
+    font-family: 'Sora', system-ui, sans-serif;
     font-weight: 600;
     font-size: 1.125rem;
     line-height: 1.25;
