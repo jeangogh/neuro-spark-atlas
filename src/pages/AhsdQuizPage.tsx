@@ -47,13 +47,9 @@ function AhsdLikertScale({ questionId, value, onChange, labels }: {
             onClick={() => handleClick(opt.value)}
             className={`relative flex-1 flex flex-col items-center gap-0.5 py-2 px-0.5 rounded-lg border text-xs transition-all duration-150 overflow-hidden ${
               selected
-                ? "text-primary-foreground border-primary/60 scale-[1.03]"
+                ? "text-primary-foreground border-primary/60 scale-[1.03] bg-primary"
                 : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:bg-primary/[0.02]"
             }`}
-            style={selected ? {
-              background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-              color: "hsl(225,12%,7%)",
-            } : undefined}
           >
             {shimming && (
               <motion.span
@@ -61,7 +57,7 @@ function AhsdLikertScale({ questionId, value, onChange, labels }: {
                 animate={{ x: "200%", opacity: 0 }}
                 transition={{ duration: 0.48, ease: "easeOut" }}
                 className="absolute inset-y-0 w-1/2 pointer-events-none"
-                style={{ background: "linear-gradient(90deg, transparent, hsl(42,95%,81%/0.5), transparent)" }}
+                style={{ background: "linear-gradient(90deg, transparent, hsl(var(--accent) / 0.5), transparent)" }}
               />
             )}
             <span className="font-semibold text-sm relative z-[1]">{opt.value}</span>
@@ -124,7 +120,7 @@ function ShareButtonsAhsd() {
         </a>
         <button onClick={handleCopy}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.03]">
-          {copied ? <Check className="w-4 h-4" style={{ color: "hsl(141,58%,54%)" }} /> : <Copy className="w-4 h-4" />}
+          {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
           {copied ? "Copiado!" : "Copiar link"}
         </button>
       </div>
@@ -413,10 +409,9 @@ export default function AhsdQuizPage() {
           <span className="font-semibold text-foreground text-sm tabular-nums">{progress}%</span>
           <span className="text-[11px] text-muted-foreground tabular-nums">{answeredCount}/{totalQuestions}</span>
         </div>
-        <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
+        <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted">
           <motion.div
-            className="h-full rounded-full"
-            style={{ background: "linear-gradient(90deg, hsl(40,88%,61%), hsl(36,87%,44%))" }}
+            className="h-full rounded-full bg-primary"
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           />
@@ -471,11 +466,9 @@ export default function AhsdQuizPage() {
                   <button
                     onClick={handleNext}
                     disabled={!blockComplete}
-                    className="flex items-center gap-2 h-9 px-5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100"
+                    className="flex items-center gap-2 h-9 px-5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100 bg-primary text-primary-foreground"
                     style={{
-                      background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-                      color: "hsl(225,12%,7%)",
-                      boxShadow: blockComplete ? "0 0 20px hsl(40 88% 61% / 0.25), 0 4px 20px hsl(40,88%,61%/0.35)" : undefined,
+                      boxShadow: blockComplete ? "0 0 20px hsl(var(--primary) / 0.25), 0 4px 20px hsl(var(--primary) / 0.35)" : undefined,
                     }}
                   >
                     {isLast ? "Ver Resultado" : "Próximo"}
