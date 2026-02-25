@@ -15,10 +15,15 @@ export default function SharePage() {
           <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 mx-auto">
             <Share2 className="w-7 h-7 text-primary" />
           </div>
-          <h1 className="text-foreground text-2xl font-bold mb-3">Compartilhar</h1>
-          <p className="text-muted-foreground text-[14px] leading-relaxed mb-6">
-            Em breve você poderá convidar outras pessoas para fazer os testes gratuitamente com um link exclusivo.
+          <h1 className="text-foreground text-2xl font-bold mb-3">Compartilhar com Amigos</h1>
+          <p className="text-muted-foreground text-[14px] leading-relaxed mb-4">
+            Estamos preparando algo especial para você!
           </p>
+          <ul className="text-muted-foreground text-[13px] leading-relaxed text-left space-y-2 mb-6">
+            <li>🔗 Gere um <strong className="text-foreground">link exclusivo</strong> para amigos e familiares</li>
+            <li>🧠 Eles poderão fazer <strong className="text-foreground">todos os testes gratuitamente</strong></li>
+            <li>📊 Compare perfis e descubra <strong className="text-foreground">como vocês se complementam</strong></li>
+          </ul>
           <span className="inline-block px-4 py-2 rounded-full bg-primary/10 text-primary text-[12px] font-semibold uppercase tracking-wider">
             Em breve
           </span>

@@ -1,12 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Compass, BarChart3, Share2, Sparkles } from "lucide-react";
+import { Home, Compass, BarChart3, Share2 } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Home", path: "/selecionar-teste", icon: Home },
   { label: "Explorar", path: "/explorar", icon: Compass },
   { label: "Análises", path: "/historico", icon: BarChart3 },
   { label: "Compartilhar", path: "/compartilhar", icon: Share2 },
-  { label: "Bônus", path: "/teste-bonus", icon: Sparkles },
 ];
 
 export default function BottomNav() {
