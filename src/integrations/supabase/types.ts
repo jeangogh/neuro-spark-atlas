@@ -140,6 +140,39 @@ export type Database = {
         }
         Relationships: []
       }
+      shared_invites: {
+        Row: {
+          created_at: string
+          guest_email: string | null
+          guest_name: string | null
+          guest_user_id: string | null
+          id: string
+          invite_code: string
+          inviter_id: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          guest_email?: string | null
+          guest_name?: string | null
+          guest_user_id?: string | null
+          id?: string
+          invite_code?: string
+          inviter_id: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          guest_email?: string | null
+          guest_name?: string | null
+          guest_user_id?: string | null
+          id?: string
+          invite_code?: string
+          inviter_id?: string
+          used_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
