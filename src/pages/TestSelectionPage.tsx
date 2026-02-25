@@ -1,20 +1,35 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { LogOut, CheckCircle2 } from "lucide-react";
 import { ALL_TESTS } from "@/data/testRegistry";
 import BottomNav from "@/components/BottomNav";
 import { useGuestInviteClaim } from "@/hooks/useGuestInviteClaim";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function TestSelectionPage() {
-  const userEmail = localStorage.getItem("ahsd_user_email");
+  const { user, loading, signOut } = useAuth();
   const [completedTests, setCompletedTests] = useState<Set<string>>(new Set());
   useGuestInviteClaim();
 
-  if (!userEmail) return <Navigate to="/auth" replace />;
+  // Fallback: also check localStorage for legacy sessions
+  const legacyEmail = localStorage.getItem("ahsd_user_email");
 
-  /* completedTests are not tracked without Supabase auth for now */
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user && !legacyEmail) return <Navigate to="/auth" replace />;
+
+  const handleSignOut = async () => {
+    localStorage.removeItem("ahsd_user_email");
+    await signOut();
+    window.location.href = "/auth";
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,10 +93,7 @@ export default function TestSelectionPage() {
 
         <div className="flex justify-center pt-6 pb-20">
           <button
-            onClick={() => {
-              localStorage.removeItem("ahsd_user_email");
-              window.location.href = "/auth";
-            }}
+            onClick={handleSignOut}
             className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             <LogOut className="w-3.5 h-3.5" />
