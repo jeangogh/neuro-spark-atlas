@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Navigate, Link, useParams } from "react-router-dom";
+import { Navigate, Link, useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
@@ -292,7 +292,8 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
 /* ────── Main AHSD Quiz Page ────── */
 export default function AhsdQuizPage() {
   const { testKey } = useParams<{ testKey: string }>();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const test = testKey ? getTestByKey(testKey) : undefined;
 
   const [phase, setPhase] = useState<"loading" | "quiz" | "results">("loading");
@@ -382,7 +383,7 @@ export default function AhsdQuizPage() {
     if (Object.keys(answers).length > 0 && !resultsSaved) saveResults();
 
     if (computed) {
-      return <AhsdResultsView test={test} scores={computed} onRestart={handleRestart} onSignOut={signOut} />;
+      return <AhsdResultsView test={test} scores={computed} onRestart={handleRestart} onSignOut={() => navigate("/selecionar-teste")} />;
     }
   }
 
@@ -457,11 +458,11 @@ export default function AhsdQuizPage() {
                 </Button>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={signOut}
+                    onClick={() => navigate("/selecionar-teste")}
                     className="flex items-center gap-1.5 h-9 px-3 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[11px] font-medium text-muted-foreground"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    Sair
+                    Sair do teste
                   </button>
                   <button
                     onClick={handleNext}

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useNavigate } from "react-router-dom";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   ResponsiveContainer,
@@ -550,7 +550,8 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
 type Phase = "loading" | "c1_quiz" | "c1_results" | "c2_quiz" | "final";
 
 export default function DimensionalQuizPage() {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [phase, setPhase] = useState<Phase>("loading");
   const [currentQuestion, setCurrentQuestion] = useState(0); // C1: flat index across all 56
   const [c1Answers, setC1Answers] = useState<Record<string, number>>({});
@@ -690,7 +691,7 @@ export default function DimensionalQuizPage() {
 
   // ──── C1 RESULTS ────
   if (phase === "c1_results" && c1Scores) {
-    return <C1ResultsView c1Scores={c1Scores} onDeepen={handleDeepen} onSkipToFinal={handleSkipToFinal} onSignOut={signOut} />;
+    return <C1ResultsView c1Scores={c1Scores} onDeepen={handleDeepen} onSkipToFinal={handleSkipToFinal} onSignOut={() => navigate("/selecionar-teste")} />;
   }
 
   // ──── C2 QUIZ ────
@@ -704,7 +705,7 @@ export default function DimensionalQuizPage() {
         onAnswer={handleC2Answer}
         onOpenAnswer={handleOpenAnswer}
         onComplete={handleC2DimComplete}
-        onSignOut={signOut}
+        onSignOut={() => navigate("/selecionar-teste")}
       />
     );
   }
@@ -714,7 +715,7 @@ export default function DimensionalQuizPage() {
     const finalC1 = c1Scores ?? savedScores?.c1Scores;
     const finalC2 = Object.keys(c2Scores).length > 0 ? c2Scores : (savedScores?.c2Scores ?? {});
     if (finalC1) {
-      return <FinalResultsView c1Scores={finalC1} c2Scores={finalC2} onRestart={handleRestart} onSignOut={signOut} />;
+      return <FinalResultsView c1Scores={finalC1} c2Scores={finalC2} onRestart={handleRestart} onSignOut={() => navigate("/selecionar-teste")} />;
     }
   }
 
@@ -829,11 +830,11 @@ export default function DimensionalQuizPage() {
         </div>
         <div className="flex justify-center mt-4">
           <button
-            onClick={signOut}
+            onClick={() => navigate("/selecionar-teste")}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[11px] font-medium text-muted-foreground"
           >
             <LogOut className="w-3.5 h-3.5" />
-            Sair
+            Sair do teste
           </button>
         </div>
       </main>
