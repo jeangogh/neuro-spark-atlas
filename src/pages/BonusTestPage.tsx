@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Navigate } from "react-router-dom";
-import { Sparkles, Send, Clock, CheckCircle2, Users } from "lucide-react";
+import { Navigate, useNavigate } from "react-router-dom";
+import { Sparkles, Send, Clock, CheckCircle2, Users, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +37,7 @@ const STATUS_MAP: Record<string, { label: string; color: string; Icon: typeof Cl
 
 export default function BonusTestPage() {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
   const [requests, setRequests] = useState<BonusRequest[]>([]);
   const [fetching, setFetching] = useState(true);
 
@@ -149,10 +150,21 @@ export default function BonusTestPage() {
                                 <p className="text-sm font-semibold text-foreground mt-0.5">{req.partner_email}</p>
                                 <p className="text-[11px] text-muted-foreground mt-0.5">{relLabel}{req.relationship_detail ? ` — ${req.relationship_detail}` : ""}</p>
                               </div>
-                              <span className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-full bg-muted ${st.color}`}>
-                                <st.Icon className="w-3 h-3" />
-                                {st.label}
-                              </span>
+                              <div className="flex flex-col items-end gap-1.5">
+                                <span className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-full bg-muted ${st.color}`}>
+                                  <st.Icon className="w-3 h-3" />
+                                  {st.label}
+                                </span>
+                                {(req.status === "consented" || req.status === "analyzed") && (
+                                  <button
+                                    onClick={() => navigate(`/teste-bonus/relatorio?id=${req.id}`)}
+                                    className="flex items-center gap-1 text-[10px] font-semibold text-primary hover:underline"
+                                  >
+                                    <Eye className="w-3 h-3" />
+                                    Ver Relatório
+                                  </button>
+                                )}
+                              </div>
                             </div>
                           </CardContent>
                         </Card>
