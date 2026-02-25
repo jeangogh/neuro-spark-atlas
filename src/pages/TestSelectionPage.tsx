@@ -63,8 +63,7 @@ export default function TestSelectionPage() {
           >
             <Link to={test.route} className="block">
               <div className="rounded-xl border bg-card p-5 sm:p-6 hover:border-primary/30 hover:shadow-lg transition-all group cursor-pointer">
-                <div className="flex items-start gap-4">
-                  <span className="text-3xl">{test.icon}</span>
+                <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h2 className="font-display font-semibold text-foreground text-base sm:text-lg group-hover:text-primary transition-colors">
