@@ -12,8 +12,10 @@ export default function TestSelectionPage() {
   const [completedTests, setCompletedTests] = useState<Set<string>>(new Set());
   useGuestInviteClaim();
 
-  // Fallback: also check localStorage for legacy sessions
-  const legacyEmail = localStorage.getItem("ahsd_user_email");
+  // Clear legacy localStorage on mount (migrated to real auth)
+  useEffect(() => {
+    localStorage.removeItem("ahsd_user_email");
+  }, []);
 
   if (loading) {
     return (
@@ -23,10 +25,9 @@ export default function TestSelectionPage() {
     );
   }
 
-  if (!user && !legacyEmail) return <Navigate to="/auth" replace />;
+  if (!user) return <Navigate to="/auth" replace />;
 
   const handleSignOut = async () => {
-    localStorage.removeItem("ahsd_user_email");
     await signOut();
     window.location.href = "/auth";
   };
