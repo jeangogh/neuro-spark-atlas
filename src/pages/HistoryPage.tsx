@@ -30,18 +30,17 @@ const TEST_TYPE_LABELS: Record<string, string> = {
 };
 
 function renderScoreSummary(scores: any, testType: string) {
-  // AHSD tests store { pct, categoryScores }
   if (scores?.pct !== undefined && scores?.categoryScores) {
     const cats = Object.entries(scores.categoryScores as Record<string, { pct: number }>)
       .sort(([, a], [, b]) => b.pct - a.pct)
       .slice(0, 3);
     return (
       <div className="flex flex-wrap gap-2">
-        <span className="text-[11px] font-bold px-2.5 py-1 rounded-md" style={{ backgroundColor: "hsl(var(--primary) / 0.15)", color: "hsl(var(--primary))" }}>
+        <span className="text-[11px] font-bold px-2.5 py-1 rounded-md bg-primary/15 text-primary">
           Total: {scores.pct}%
         </span>
         {cats.map(([key, val]) => (
-          <span key={key} className="text-[11px] font-medium px-2.5 py-1 rounded-md" style={{ backgroundColor: "hsl(var(--primary) / 0.1)", color: "hsl(var(--primary))" }}>
+          <span key={key} className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-primary/10 text-primary">
             {key}: {val.pct}%
           </span>
         ))}
@@ -49,14 +48,13 @@ function renderScoreSummary(scores: any, testType: string) {
     );
   }
 
-  // Neurocognitive test stores flat { ahsd: 80, tdah: 60, ... }
   const topKeys = Object.entries(scores as Record<string, number>)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3);
   return (
     <div className="flex flex-wrap gap-2">
       {topKeys.map(([key, score]) => (
-        <span key={key} className="text-[11px] font-medium px-2.5 py-1 rounded-md" style={{ backgroundColor: "hsl(var(--primary) / 0.1)", color: "hsl(var(--primary))" }}>
+        <span key={key} className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-primary/10 text-primary">
           {CONDITION_LABELS[key] ?? key}: {score}%
         </span>
       ))}
@@ -118,11 +116,7 @@ export default function HistoryPage() {
               <p className="text-muted-foreground text-sm mb-4">Você ainda não fez nenhum rastreio.</p>
               <Link
                 to="/selecionar-teste"
-                className="inline-block px-6 py-2.5 rounded-xl font-semibold text-sm"
-                style={{
-                  background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-                  color: "hsl(225,12%,7%)",
-                }}
+                className="inline-block px-6 py-2.5 rounded-xl font-semibold text-sm bg-primary text-primary-foreground"
               >
                 Iniciar Rastreio
               </Link>

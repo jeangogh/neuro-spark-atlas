@@ -127,11 +127,9 @@ export default function AuthPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.01] hover:opacity-95 disabled:opacity-50"
+              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.01] hover:opacity-95 disabled:opacity-50 bg-primary text-primary-foreground"
               style={{
-                background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-                color: "hsl(225,12%,7%)",
-                boxShadow: "0 0 20px hsl(40 88% 61% / 0.25), 0 4px 24px hsl(40,88%,61%/0.35)",
+                boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 24px hsl(var(--primary) / 0.35)",
               }}
             >
               {submitting ? "Enviando..." : "Enviar link de acesso"}

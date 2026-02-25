@@ -51,13 +51,9 @@ function DimLikertScale({ questionId, value, onChange }: {
             onClick={() => handleClick(opt.value)}
             className={`relative flex-1 flex flex-col items-center gap-0.5 py-2 px-0.5 rounded-lg border text-xs transition-all duration-150 overflow-hidden ${
               selected
-                ? "text-primary-foreground border-primary/60 scale-[1.03]"
+                ? "text-primary-foreground border-primary/60 scale-[1.03] bg-primary"
                 : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:bg-primary/[0.02]"
             }`}
-            style={selected ? {
-              background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-              color: "hsl(225,12%,7%)",
-            } : undefined}
           >
             {shimming && (
               <motion.span
@@ -65,7 +61,7 @@ function DimLikertScale({ questionId, value, onChange }: {
                 animate={{ x: "200%", opacity: 0 }}
                 transition={{ duration: 0.48, ease: "easeOut" }}
                 className="absolute inset-y-0 w-1/2 pointer-events-none"
-                style={{ background: "linear-gradient(90deg, transparent, hsl(42,95%,81%/0.5), transparent)" }}
+                style={{ background: "linear-gradient(90deg, transparent, hsl(var(--accent) / 0.5), transparent)" }}
               />
             )}
             <span className="font-semibold text-sm relative z-[1]">{opt.value}</span>
@@ -97,7 +93,7 @@ function ScoreBar({ score, max, color, delay = 0 }: { score: number; max: number
 function CostBar({ label, score, max, delay = 0 }: { label: string; score: number; max: number; delay?: number }) {
   const pct = max > 0 ? Math.round((score / max) * 100) : 0;
   const isHighCost = pct >= 70;
-  const color = isHighCost ? "hsl(0, 70%, 58%)" : pct >= 40 ? "hsl(40, 88%, 61%)" : "hsl(141, 58%, 54%)";
+  const color = isHighCost ? "hsl(0, 70%, 58%)" : pct >= 40 ? "hsl(var(--accent))" : "hsl(var(--primary))";
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-[11px]">
@@ -145,7 +141,7 @@ function DimShareButtons() {
         </a>
         <button onClick={handleCopy}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.03]">
-          {copied ? <Check className="w-4 h-4" style={{ color: "hsl(141,58%,54%)" }} /> : <Copy className="w-4 h-4" />}
+          {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
           {copied ? "Copiado!" : "Copiar link"}
         </button>
       </div>
@@ -239,11 +235,7 @@ function C1ResultsView({ c1Scores, onDeepen, onSkipToFinal, onSignOut }: {
             </p>
             <button
               onClick={onDeepen}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02]"
-              style={{
-                background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-                color: "hsl(225,12%,7%)",
-              }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] bg-primary text-primary-foreground"
             >
               Aprofundar dimensões alostáticas
               <ChevronRight className="w-4 h-4" />
@@ -366,14 +358,10 @@ function C2QuizView({ dimKey, answers, openAnswers, onAnswer, onOpenAnswer, onCo
 
         {/* Next / Complete */}
         <div className="pt-4">
-          <button
+           <button
             onClick={onComplete}
             disabled={!allAnswered}
-            className="w-full py-3 rounded-xl font-semibold text-sm transition-all disabled:opacity-40"
-            style={allAnswered ? {
-              background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-              color: "hsl(225,12%,7%)",
-            } : undefined}
+            className={`w-full py-3 rounded-xl font-semibold text-sm transition-all disabled:opacity-40 ${allAnswered ? 'bg-primary text-primary-foreground' : ''}`}
           >
             Concluir {dim.shortLabel}
           </button>
@@ -771,8 +759,7 @@ export default function DimensionalQuizPage() {
         </div>
         <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted">
           <motion.div
-            className="h-full rounded-full"
-            style={{ background: "linear-gradient(90deg, hsl(40,88%,61%), hsl(36,87%,44%))" }}
+            className="h-full rounded-full bg-primary"
             animate={{ width: `${c1Progress}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           />
@@ -826,11 +813,7 @@ export default function DimensionalQuizPage() {
           {isLastQuestion && allC1Answered ? (
             <button
               onClick={handleC1Finish}
-              className="flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all"
-              style={{
-                background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-                color: "hsl(225,12%,7%)",
-              }}
+              className="flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all bg-primary text-primary-foreground"
             >
               Ver Resultado →
             </button>

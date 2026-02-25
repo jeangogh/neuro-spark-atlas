@@ -40,21 +40,21 @@ const CONDITION_COLORS: Record<string, { hue: number; label: string }> = {
 
 function conditionColor(id: string, score: number) {
   const cfg = CONDITION_COLORS[id];
-  if (!cfg) return `hsl(${Math.round(40 - (score / 100) * 10)}, 80%, 55%)`;
-  if (id === "ahsd") return `hsl(40, 88%, 61%)`;
-  if (id === "dupla_exc") return `hsl(36, 87%, 44%)`;
+  if (!cfg) return `hsl(${Math.round(154 - (score / 100) * 10)}, 24%, 38%)`;
+  if (id === "ahsd") return `hsl(154, 24%, 38%)`;
+  if (id === "dupla_exc") return `hsl(31, 53%, 50%)`;
   return `hsl(${cfg.hue}, 65%, 45%)`;
 }
 
-/* ────── Dark theme colors (result section) ────── */
-const DARK = {
-  bg: "hsl(225, 12%, 7%)",
-  bgMid: "hsl(225, 12%, 10%)",
-  border: "hsl(225, 10%, 18%)",
-  text: "hsl(42, 30%, 96%)",
-  muted: "hsl(40, 12%, 58%)",
-  accent: "hsl(40, 88%, 61%)",
-  accentDeep: "hsl(36, 87%, 44%)",
+/* ────── Theme colors (result section) ────── */
+const THEME = {
+  bg: "hsl(var(--background))",
+  bgMid: "hsl(var(--card))",
+  border: "hsl(var(--border))",
+  text: "hsl(var(--foreground))",
+  muted: "hsl(var(--muted-foreground))",
+  accent: "hsl(var(--primary))",
+  accentDeep: "hsl(var(--accent))",
 };
 
 /* ────── Likert Scale — with shimmer on select ────── */
@@ -80,13 +80,9 @@ function LikertScale({ questionId, value, onChange }: {
             onClick={() => handleClick(opt.value)}
             className={`relative flex-1 flex flex-col items-center gap-0.5 py-2 px-0.5 rounded-lg border text-xs transition-all duration-150 overflow-hidden ${
               selected
-                ? "text-primary-foreground border-primary/60 scale-[1.03]"
+                ? "text-primary-foreground border-primary/60 scale-[1.03] bg-primary"
                 : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:bg-primary/[0.02]"
             }`}
-            style={selected ? {
-              background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-              color: "hsl(225,12%,7%)",
-            } : undefined}
           >
             {shimming && (
               <motion.span
@@ -94,7 +90,7 @@ function LikertScale({ questionId, value, onChange }: {
                 animate={{ x: "200%", opacity: 0 }}
                 transition={{ duration: 0.48, ease: "easeOut" }}
                 className="absolute inset-y-0 w-1/2 pointer-events-none"
-                style={{ background: "linear-gradient(90deg, transparent, hsl(42,95%,81%/0.5), transparent)" }}
+                style={{ background: "linear-gradient(90deg, transparent, hsl(var(--accent) / 0.5), transparent)" }}
               />
             )}
             <span className="font-semibold text-sm relative z-[1]">{opt.value}</span>
@@ -114,12 +110,10 @@ function MotivationalToast({ message }: { message: string }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -16, scale: 0.97 }}
       transition={{ duration: 0.32, ease: [0.25, 0.1, 0.25, 1] }}
-      className="fixed z-50 left-1/2 -translate-x-1/2 px-5 py-3 rounded-xl shadow-2xl text-[13px] font-medium max-w-sm text-center pointer-events-none"
+      className="fixed z-50 left-1/2 -translate-x-1/2 px-5 py-3 rounded-xl shadow-2xl text-[13px] font-medium max-w-sm text-center pointer-events-none bg-primary text-primary-foreground"
       style={{
         top: "4.5rem",
-        background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-        color: "hsl(225,12%,7%)",
-        boxShadow: "0 0 20px hsl(40 88% 61% / 0.3), 0 8px 32px hsl(40,88%,61%/0.4)",
+        boxShadow: "0 0 20px hsl(var(--primary) / 0.3), 0 8px 32px hsl(var(--primary) / 0.4)",
       }}
     >
       {message}
@@ -188,9 +182,9 @@ function InterventionCurveChart({ dark = false, barrierAvg = 50 }: { dark?: bool
     { age: 90, baseline: floor,     intervention: intPeak - 13 },
   ];
 
-  const borderColor = dark ? DARK.border : "hsl(var(--border))";
-  const mutedColor  = dark ? DARK.muted  : "hsl(var(--muted-foreground))";
-  const cardColor   = dark ? DARK.bgMid  : "hsl(var(--card))";
+  const borderColor = "hsl(var(--border))";
+  const mutedColor  = "hsl(var(--muted-foreground))";
+  const cardColor   = "hsl(var(--card))";
 
   return (
     <div className="w-full" style={{ height: 220 }}>
@@ -204,16 +198,16 @@ function InterventionCurveChart({ dark = false, barrierAvg = 50 }: { dark?: bool
             <Label value="Performance" angle={-90} position="insideLeft" offset={14} style={{ fontSize: 10, fill: mutedColor }} />
           </YAxis>
           <Tooltip
-            contentStyle={{ backgroundColor: cardColor, border: `1px solid ${borderColor}`, borderRadius: 8, fontSize: 11, color: dark ? DARK.text : undefined }}
+            contentStyle={{ backgroundColor: cardColor, border: `1px solid ${borderColor}`, borderRadius: 8, fontSize: 11 }}
             formatter={(value: number, name: string) => [
               `${value}`,
               name === "baseline" ? "Sem intervenção" : "Com intervenção direcionada",
             ]}
           />
-          <ReferenceLine x={35} stroke={DARK.accent} strokeDasharray="4 3" strokeWidth={1.5}
-            label={{ value: "Intervenção", position: "top", fontSize: 9, fill: DARK.accent }} />
+          <ReferenceLine x={35} stroke="hsl(var(--primary))" strokeDasharray="4 3" strokeWidth={1.5}
+            label={{ value: "Intervenção", position: "top", fontSize: 9, fill: "hsl(var(--primary))" }} />
           <Line type="natural" dataKey="baseline" stroke="hsl(0,55%,50%)" strokeWidth={2} dot={false} connectNulls={false} />
-          <Line type="natural" dataKey="intervention" stroke="hsl(40,88%,61%)" strokeWidth={2.5} dot={false} connectNulls={false} />
+          <Line type="natural" dataKey="intervention" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={false} connectNulls={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -384,7 +378,7 @@ function ShareButtons({ onShare }: { onShare: () => void }) {
           onClick={handleCopy}
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.03]"
         >
-          {copied ? <Check className="w-4 h-4" style={{ color: "hsl(141,58%,54%)" }} /> : <Copy className="w-4 h-4" />}
+          {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
           <span>{copied ? "Copiado!" : "Copiar link"}</span>
         </button>
       </div>
@@ -514,7 +508,7 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
               <span className="text-[11px] text-muted-foreground">Sem intervenção</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-6 h-0.5" style={{ backgroundColor: "hsl(40,88%,61%)" }} />
+              <div className="w-6 h-0.5 bg-primary" />
               <span className="text-[11px] text-muted-foreground">Com intervenção direcionada</span>
             </div>
           </div>
@@ -741,10 +735,9 @@ export default function QuizPage() {
           <span className="font-semibold text-foreground text-sm tabular-nums">{progress}%</span>
           <span className="text-[11px] text-muted-foreground tabular-nums">{answeredCount}/{TOTAL_QUESTIONS}</span>
         </div>
-        <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "hsl(var(--muted))" }}>
+        <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted">
           <motion.div
-            className="h-full rounded-full"
-            style={{ background: "linear-gradient(90deg, hsl(40,88%,61%), hsl(36,87%,44%))" }}
+            className="h-full rounded-full bg-primary"
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           />
@@ -803,11 +796,9 @@ export default function QuizPage() {
                 <button
                   onClick={handleNext}
                   disabled={!blockComplete}
-                  className="flex items-center gap-2 h-9 px-5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100"
+                  className="flex items-center gap-2 h-9 px-5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:scale-100 bg-primary text-primary-foreground"
                   style={{
-                    background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-                    color: "hsl(225,12%,7%)",
-                    boxShadow: blockComplete ? "0 0 20px hsl(40 88% 61% / 0.25), 0 4px 20px hsl(40,88%,61%/0.35)" : undefined,
+                    boxShadow: blockComplete ? "0 0 20px hsl(var(--primary) / 0.25), 0 4px 20px hsl(var(--primary) / 0.35)" : undefined,
                   }}
                 >
                   {isLast ? "Ver Resultado" : "Próximo"}

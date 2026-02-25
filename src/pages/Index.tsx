@@ -26,7 +26,7 @@ function useLiveCount() {
   return count;
 }
 
-/* ─── Demo data: dupla exc 2e — AH/SD + TDAH high, Ansiedade high, Depressão low, Trauma near ─── */
+/* ─── Demo data ─── */
 const radarData = [
   { subject: "AH/SD",      score: 92 },
   { subject: "Dupla Exc.", score: 88 },
@@ -37,7 +37,6 @@ const radarData = [
   { subject: "Depressão",  score: 22 },
 ];
 
-/* ─── Intervention curve: floor at 75, gentle decline, intervention lift ─── */
 const curveData = [
   { age: 0,  baseline: 30,  intervention: null },
   { age: 5,  baseline: 52,  intervention: null },
@@ -63,14 +62,14 @@ function PhoneMockup({ children }: { children: React.ReactNode }) {
       <div
         className="relative rounded-[36px] overflow-hidden border-[7px]"
         style={{
-          borderColor: "hsl(228,14%,10%)",
-          background: "hsl(228,14%,10%)",
-          boxShadow: "0 32px 72px -16px hsl(225 10% 4% / 0.7), inset 0 0 0 1px hsl(222 13% 26%)",
+          borderColor: "hsl(28,33%,12%)",
+          background: "hsl(28,33%,12%)",
+          boxShadow: "0 32px 72px -16px hsl(28 20% 6% / 0.5), inset 0 0 0 1px hsl(28 15% 25%)",
         }}
       >
         <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-16 h-4 rounded-b-2xl"
-          style={{ background: "hsl(228,14%,10%)" }} />
-        <div className="rounded-[30px] overflow-hidden" style={{ background: "hsl(228,14%,14%)", minHeight: 440 }}>
+          style={{ background: "hsl(28,33%,12%)" }} />
+        <div className="rounded-[30px] overflow-hidden" style={{ background: "hsl(28,20%,10%)", minHeight: 440 }}>
           {children}
         </div>
       </div>
@@ -83,20 +82,20 @@ function PhoneMockup({ children }: { children: React.ReactNode }) {
 /* ─── Phone result screen ─── */
 function PhoneResultScreen() {
   const bars = [
-    { label: "AH/SD",      pct: 92, color: "hsl(40,88%,61%)" },
+    { label: "AH/SD",      pct: 92, color: "hsl(154,24%,38%)" },
     { label: "TDAH",       pct: 89, color: "hsl(0,70%,58%)" },
-    { label: "Ansiedade",  pct: 91, color: "hsl(36,87%,44%)" },
-    { label: "Dupla Exc.", pct: 88, color: "hsl(42,95%,81%)" },
+    { label: "Ansiedade",  pct: 91, color: "hsl(31,53%,50%)" },
+    { label: "Dupla Exc.", pct: 88, color: "hsl(31,53%,64%)" },
     { label: "Trauma",     pct: 68, color: "hsl(340,55%,55%)" },
     { label: "Autismo",    pct: 44, color: "hsl(245,60%,65%)" },
-    { label: "Depressão",  pct: 22, color: "hsl(40,12%,40%)" },
+    { label: "Depressão",  pct: 22, color: "hsl(79,5%,50%)" },
   ];
   return (
     <div className="pt-6 px-3 pb-4 select-none">
-      <p className="text-[6.5px] font-semibold uppercase tracking-[0.15em] mb-0.5" style={{ color: "hsl(40,88%,61%)" }}>
+      <p className="text-[6.5px] font-semibold uppercase tracking-[0.15em] mb-0.5" style={{ color: "hsl(154,24%,38%)" }}>
         Rastreio Neurocognitivo
       </p>
-      <h3 className="font-display text-[12px] font-bold leading-tight mb-3" style={{ color: "hsl(42,30%,96%)" }}>
+      <h3 className="font-display text-[12px] font-bold leading-tight mb-3" style={{ color: "hsl(41,35%,93%)" }}>
         Seu Resultado
       </h3>
       <div className="rounded-lg border border-border/60 bg-card/80 p-1.5 mb-2">
@@ -104,9 +103,9 @@ function PhoneResultScreen() {
         <div style={{ height: 96 }}>
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart cx="50%" cy="50%" outerRadius="62%" data={radarData}>
-              <PolarGrid stroke="hsl(225,10%,18%)" />
-              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 5.5, fill: "hsl(40,12%,58%)" }} />
-              <Radar dataKey="score" stroke="hsl(40,88%,61%)" fill="hsl(40,88%,61%)" fillOpacity={0.22} strokeWidth={1.5} />
+              <PolarGrid stroke="hsl(28,12%,22%)" />
+              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 5.5, fill: "hsl(79,5%,55%)" }} />
+              <Radar dataKey="score" stroke="hsl(154,24%,38%)" fill="hsl(154,24%,38%)" fillOpacity={0.22} strokeWidth={1.5} />
             </RadarChart>
           </ResponsiveContainer>
         </div>
@@ -116,7 +115,7 @@ function PhoneResultScreen() {
         {bars.map((b) => (
           <div key={b.label}>
             <div className="flex justify-between items-baseline mb-0.5">
-              <span className="text-[6.5px] font-medium" style={{ color: "hsl(42,30%,96%)" }}>{b.label}</span>
+              <span className="text-[6.5px] font-medium" style={{ color: "hsl(41,35%,93%)" }}>{b.label}</span>
               <span className="text-[6.5px] font-bold tabular-nums" style={{ color: b.color }}>{b.pct}%</span>
             </div>
             <div className="h-[3px] rounded-full bg-muted/60 overflow-hidden">
@@ -151,7 +150,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.22 }}
           className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-          style={{ background: "hsl(220,25%,5%/0.7)", backdropFilter: "blur(10px)" }}
+          style={{ background: "hsl(28,20%,5%/0.7)", backdropFilter: "blur(10px)" }}
           onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
           <motion.div
@@ -217,10 +216,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
               <div className="mt-7 pt-5 border-t border-border text-center">
                 <Link to="/triagem" onClick={onClose}>
-                  <button
-                    className="px-8 py-3 rounded-xl font-semibold text-sm text-white transition-all hover:scale-[1.02]"
-                    style={{ background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))", boxShadow: "0 4px 20px hsl(40,88%,61%/0.3)", color: "hsl(225,12%,7%)" }}
-                  >
+                  <button className="px-8 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] bg-primary text-primary-foreground shadow-lg">
                     Iniciar Rastreio
                   </button>
                 </Link>
@@ -250,11 +246,9 @@ function ShimmerButton({ to, children }: { to: string; children: React.ReactNode
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 380, damping: 22 }}
-        className="relative overflow-hidden px-8 py-3.5 rounded-xl font-semibold text-sm text-white tracking-wide"
+        className="relative overflow-hidden px-8 py-3.5 rounded-xl font-semibold text-sm tracking-wide bg-primary text-primary-foreground"
         style={{
-          background: "linear-gradient(135deg, hsl(40,88%,61%), hsl(36,87%,44%))",
-          boxShadow: "0 0 20px hsl(40 88% 61% / 0.3), 0 0 40px hsl(40 88% 61% / 0.12), 0 4px 24px hsl(40,88%,61%/0.4)",
-          color: "hsl(225,12%,7%)",
+          boxShadow: "0 0 20px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.12), 0 4px 24px hsl(var(--primary) / 0.4)",
         }}
       >
         <AnimatePresence>
@@ -266,7 +260,7 @@ function ShimmerButton({ to, children }: { to: string; children: React.ReactNode
               exit={{}}
               transition={{ duration: 0.65, ease: "easeOut" }}
               className="absolute inset-y-0 w-1/2 pointer-events-none"
-              style={{ background: "linear-gradient(90deg, transparent, hsl(40,88%,61%/0.35), transparent)" }}
+              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--primary) / 0.35), transparent)" }}
             />
           )}
         </AnimatePresence>
@@ -317,7 +311,6 @@ export default function Index() {
       <nav className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between gap-4">
           <SendFriendButton />
-
           <div className="flex items-center gap-4">
             <Link to="/historico" className="text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors">
               Meus Resultados
@@ -355,9 +348,7 @@ export default function Index() {
               Rastreio de Altas Habilidades<br className="sm:hidden" /> e Neurodivergência
             </motion.p>
 
-            <h1
-              className="font-display text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-foreground leading-[1.1] tracking-tight mb-5"
-            >
+            <h1 className="font-display text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-foreground leading-[1.1] tracking-tight mb-5">
               Você sempre se sentiu{" "}
               <span className="relative inline-block">
                 diferente.
@@ -391,7 +382,6 @@ export default function Index() {
               </ShimmerButton>
             </motion.div>
 
-            {/* Inline stats — text only, no pills */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -500,7 +490,7 @@ export default function Index() {
         </div>
 
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
-          {/* Radar — 2e example */}
+          {/* Radar */}
           <motion.div
             initial={{ opacity: 0, x: -16 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -517,7 +507,7 @@ export default function Index() {
                   <PolarGrid stroke="hsl(var(--border))" />
                   <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} />
                   <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 8 }} tickCount={4} />
-                  <Radar dataKey="score" stroke="hsl(40,88%,61%)" fill="hsl(40,88%,61%)" fillOpacity={0.18} strokeWidth={2} />
+                  <Radar dataKey="score" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.18} strokeWidth={2} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
@@ -553,7 +543,7 @@ export default function Index() {
                   <ReferenceLine x={35} stroke="hsl(var(--primary))" strokeDasharray="4 3" strokeWidth={1.5}
                     label={{ value: "Intervenção", position: "top", fontSize: 8, fill: "hsl(var(--primary))" }} />
                   <Line type="natural" dataKey="baseline" stroke="hsl(0,55%,50%)" strokeWidth={2} dot={false} connectNulls={false} />
-                  <Line type="natural" dataKey="intervention" stroke="hsl(40,88%,61%)" strokeWidth={2.5} dot={false} connectNulls={false} />
+                  <Line type="natural" dataKey="intervention" stroke="hsl(var(--primary))" strokeWidth={2.5} dot={false} connectNulls={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -563,7 +553,7 @@ export default function Index() {
                 <span className="text-[10px] text-muted-foreground">Sem intervenção</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <div className="w-5 h-0.5 rounded" style={{ backgroundColor: "hsl(40,88%,61%)" }} />
+                <div className="w-5 h-0.5 rounded bg-primary" />
                 <span className="text-[10px] text-muted-foreground">Com intervenção</span>
               </div>
             </div>
