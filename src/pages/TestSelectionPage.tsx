@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut, CheckCircle2 } from "lucide-react";
 import { ALL_TESTS } from "@/data/testRegistry";
@@ -9,31 +8,13 @@ import BottomNav from "@/components/BottomNav";
 import { useGuestInviteClaim } from "@/hooks/useGuestInviteClaim";
 
 export default function TestSelectionPage() {
-  const { user, loading, signOut } = useAuth();
+  const userEmail = localStorage.getItem("ahsd_user_email");
   const [completedTests, setCompletedTests] = useState<Set<string>>(new Set());
   useGuestInviteClaim();
 
-  useEffect(() => {
-    if (!user) return;
-    (async () => {
-      const { data } = await supabase
-        .from("quiz_results")
-        .select("test_type")
-        .order("created_at", { ascending: false });
-      if (data) {
-        setCompletedTests(new Set(data.map((r: any) => r.test_type)));
-      }
-    })();
-  }, [user]);
+  if (!userEmail) return <Navigate to="/auth" replace />;
 
-  if (!loading && !user) return <Navigate to="/auth" replace />;
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  /* completedTests are not tracked without Supabase auth for now */
 
   return (
     <div className="min-h-screen bg-background">
@@ -97,7 +78,10 @@ export default function TestSelectionPage() {
 
         <div className="flex justify-center pt-6 pb-20">
           <button
-            onClick={signOut}
+            onClick={() => {
+              localStorage.removeItem("ahsd_user_email");
+              window.location.href = "/auth";
+            }}
             className="flex items-center gap-1.5 text-[12px] font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             <LogOut className="w-3.5 h-3.5" />
