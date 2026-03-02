@@ -15,7 +15,19 @@ export default function AuthPage() {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate("/selecionar-teste", { replace: true });
+      // Check if user already completed qualification
+      supabase
+        .from("qualification_responses")
+        .select("id")
+        .eq("user_id", user.id)
+        .limit(1)
+        .then(({ data }) => {
+          if (data && data.length > 0) {
+            navigate("/selecionar-teste", { replace: true });
+          } else {
+            navigate("/qualificacao", { replace: true });
+          }
+        });
     }
   }, [user, loading, navigate]);
 

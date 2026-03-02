@@ -21,6 +21,7 @@ const GuestInvitePage = lazy(() => import("./pages/GuestInvitePage"));
 const BonusTestPage = lazy(() => import("./pages/BonusTestPage"));
 const ConsentPage = lazy(() => import("./pages/ConsentPage"));
 const BonusReportPage = lazy(() => import("./pages/BonusReportPage"));
+const QualificationPage = lazy(() => import("./pages/QualificationPage"));
 const StyleGuidePage = lazy(() => import("./pages/StyleGuidePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -42,6 +43,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
+              <Route path="/qualificacao" element={<QualificationPage />} />
               <Route path="/selecionar-teste" element={<TestSelectionPage />} />
               <Route path="/triagem" element={<QuizPage />} />
               <Route path="/triagem/dimensional" element={<DimensionalQuizPage />} />
