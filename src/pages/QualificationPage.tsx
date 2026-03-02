@@ -75,20 +75,10 @@ const Q = {
   momento_atual: {
     label: "Seu momento atual?",
     options: [
-      { label: "Urgente", value: "urgente" },
-      { label: "Explorando", value: "explorando" },
-      { label: "Aprofundar", value: "aprofundar" },
-      { label: "Certificação", value: "certificacao" },
-    ],
-  },
-  investimento: {
-    label: "Quanto pode investir agora?",
-    options: [
-      { label: "Até R$500", value: "ate_500" },
-      { label: "R$500–2k", value: "500_2k" },
-      { label: "R$2k–5k", value: "2k_5k" },
-      { label: "R$5k–10k", value: "5k_10k" },
-      { label: "+R$10k", value: "acima_10k" },
+      { label: "Busco solução urgente", value: "urgente" },
+      { label: "Estou explorando com calma", value: "explorando" },
+      { label: "Quero me aprofundar no tema", value: "aprofundar" },
+      { label: "Busco certificação profissional", value: "certificacao" },
     ],
   },
   contato_ahsd: {
@@ -132,7 +122,7 @@ const CONDITIONAL: Record<string, { label: string; options: { label: string; val
   },
 };
 
-const REQUIRED_KEYS = ["interesse", "faixa_renda", "preferencia_aprendizado", "momento_atual", "investimento", "contato_ahsd"] as const;
+const REQUIRED_KEYS = ["interesse", "faixa_renda", "preferencia_aprendizado", "momento_atual", "contato_ahsd"] as const;
 
 export default function QualificationPage() {
   const navigate = useNavigate();
