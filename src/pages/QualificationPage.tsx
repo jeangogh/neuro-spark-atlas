@@ -1,142 +1,148 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { ChevronRight, ChevronLeft, CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
-/* ── Question definitions ── */
-interface Option {
+/* ── Compact chip selector ── */
+function ChipSelect({
+  label,
+  options,
+  value,
+  onChange,
+}: {
   label: string;
-  value: string;
+  options: { label: string; value: string }[];
+  value: string | undefined;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <p className="text-sm font-semibold text-foreground">{label}</p>
+      <div className="flex flex-wrap gap-2">
+        {options.map((opt) => {
+          const selected = value === opt.value;
+          return (
+            <button
+              key={opt.value}
+              onClick={() => onChange(opt.value)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-100 ${
+                selected
+                  ? "border-primary bg-primary/10 text-foreground"
+                  : "border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground"
+              }`}
+            >
+              {opt.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
-interface Question {
-  id: string;
-  title: string;
-  options: Option[];
-  /** Only show when `interesse` matches one of these values */
-  condition?: string[];
-}
-
-const QUESTIONS: Question[] = [
-  {
-    id: "interesse",
-    title: "Qual é o seu interesse neste tema?",
+/* ── Data ── */
+const Q = {
+  interesse: {
+    label: "Qual é o seu interesse neste tema?",
     options: [
-      { label: "Sou profissional da saúde mental", value: "profissional" },
-      { label: "Sou pai/mãe de criança/adolescente", value: "pai_mae" },
-      { label: "Quero entender melhor sobre mim mesmo(a)", value: "autoconhecimento" },
+      { label: "Profissional da saúde mental", value: "profissional" },
+      { label: "Pai/mãe", value: "pai_mae" },
+      { label: "Sobre mim mesmo(a)", value: "autoconhecimento" },
       { label: "Outro", value: "outro" },
     ],
   },
-  {
-    id: "faixa_renda",
-    title: "Qual é a sua faixa de renda mensal familiar?",
+  faixa_renda: {
+    label: "Faixa de renda mensal familiar?",
     options: [
-      { label: "Até R$3.000", value: "ate_3k" },
-      { label: "R$3.000 – R$8.000", value: "3k_8k" },
-      { label: "R$8.000 – R$15.000", value: "8k_15k" },
-      { label: "R$15.000 – R$30.000", value: "15k_30k" },
-      { label: "Acima de R$30.000", value: "acima_30k" },
+      { label: "Até R$3k", value: "ate_3k" },
+      { label: "R$3k–8k", value: "3k_8k" },
+      { label: "R$8k–15k", value: "8k_15k" },
+      { label: "R$15k–30k", value: "15k_30k" },
+      { label: "+R$30k", value: "acima_30k" },
     ],
   },
-  {
-    id: "preferencia_aprendizado",
-    title: "Como você prefere aprender/ser atendido?",
+  preferencia_aprendizado: {
+    label: "Como prefere aprender?",
     options: [
-      { label: "Estudar sozinho no meu ritmo", value: "autodidata" },
-      { label: "Experiência ao vivo com grupo", value: "grupo" },
-      { label: "Atendimento individual personalizado", value: "individual" },
-      { label: "Formação técnica completa", value: "formacao" },
+      { label: "Sozinho(a)", value: "autodidata" },
+      { label: "Grupo ao vivo", value: "grupo" },
+      { label: "Individual", value: "individual" },
+      { label: "Formação completa", value: "formacao" },
     ],
   },
-  {
-    id: "momento_atual",
-    title: "Qual é o seu momento atual?",
+  momento_atual: {
+    label: "Seu momento atual?",
     options: [
-      { label: "Preciso de respostas urgentes", value: "urgente" },
-      { label: "Estou explorando, sem pressa", value: "explorando" },
-      { label: "Quero me aprofundar sistematicamente", value: "aprofundar" },
-      { label: "Busco certificação/credencial", value: "certificacao" },
+      { label: "Urgente", value: "urgente" },
+      { label: "Explorando", value: "explorando" },
+      { label: "Aprofundar", value: "aprofundar" },
+      { label: "Certificação", value: "certificacao" },
     ],
   },
-  {
-    id: "investimento",
-    title: "Quanto você pode investir agora em sua solução ideal?",
+  investimento: {
+    label: "Quanto pode investir agora?",
     options: [
       { label: "Até R$500", value: "ate_500" },
-      { label: "R$500 – R$2.000", value: "500_2k" },
-      { label: "R$2.000 – R$5.000", value: "2k_5k" },
-      { label: "R$5.000 – R$10.000", value: "5k_10k" },
-      { label: "Acima de R$10.000", value: "acima_10k" },
+      { label: "R$500–2k", value: "500_2k" },
+      { label: "R$2k–5k", value: "2k_5k" },
+      { label: "R$5k–10k", value: "5k_10k" },
+      { label: "+R$10k", value: "acima_10k" },
     ],
   },
-  {
-    id: "contato_ahsd",
-    title: "Você já teve contato com o tema de AH/SD antes?",
+  contato_ahsd: {
+    label: "Contato prévio com AH/SD?",
     options: [
-      { label: "Nunca ouvi falar até hoje", value: "nunca" },
-      { label: "Já li/estudei por conta própria", value: "autodidata" },
-      { label: "Já fiz avaliação ou tenho diagnóstico", value: "diagnostico" },
+      { label: "Nunca", value: "nunca" },
+      { label: "Já estudei", value: "autodidata" },
+      { label: "Tenho diagnóstico", value: "diagnostico" },
       { label: "Trabalho com isso", value: "profissional" },
     ],
   },
-  // Conditional 7A – pai/mãe
-  {
-    id: "pergunta_condicional",
-    title: "Seu filho(a) tem características de alta inteligência?",
-    condition: ["pai_mae"],
+};
+
+const CONDITIONAL: Record<string, { label: string; options: { label: string; value: string }[] }> = {
+  pai_mae: {
+    label: "Seu filho(a) tem características de alta inteligência?",
     options: [
       { label: "Sim, claramente", value: "sim_claro" },
       { label: "Suspeito que sim", value: "suspeito" },
       { label: "Não sei identificar", value: "nao_sei" },
-      { label: "Não, mas outras características importantes", value: "outras" },
+      { label: "Outras características", value: "outras" },
     ],
   },
-  // Conditional 7B – autoconhecimento
-  {
-    id: "pergunta_condicional",
-    title: "O que você mais busca agora?",
-    condition: ["autoconhecimento"],
+  autoconhecimento: {
+    label: "O que você mais busca agora?",
     options: [
-      { label: "Entender se sou superdotado", value: "entender" },
-      { label: "Desenvolver meu potencial", value: "potencial" },
-      { label: "Lidar com desafios emocionais", value: "emocional" },
-      { label: "Encontrar meu propósito", value: "proposito" },
+      { label: "Saber se sou superdotado", value: "entender" },
+      { label: "Desenvolver potencial", value: "potencial" },
+      { label: "Desafios emocionais", value: "emocional" },
+      { label: "Encontrar propósito", value: "proposito" },
     ],
   },
-  // Conditional 7C – profissional
-  {
-    id: "pergunta_condicional",
-    title: "Você já atende pessoas com AH/SD?",
-    condition: ["profissional"],
+  profissional: {
+    label: "Você já atende pessoas com AH/SD?",
     options: [
-      { label: "Sim, tenho casos atualmente", value: "sim_atende" },
-      { label: "Ainda não, mas quero atender", value: "quer_atender" },
-      { label: "Atendo mas tenho dúvidas", value: "duvidas" },
+      { label: "Sim, atualmente", value: "sim_atende" },
+      { label: "Quero atender", value: "quer_atender" },
+      { label: "Atendo, mas com dúvidas", value: "duvidas" },
       { label: "Quero me especializar", value: "especializar" },
     ],
   },
-];
+};
+
+const REQUIRED_KEYS = ["interesse", "faixa_renda", "preferencia_aprendizado", "momento_atual", "investimento", "contato_ahsd"] as const;
 
 export default function QualificationPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
   const [alreadyDone, setAlreadyDone] = useState<boolean | null>(null);
+  const [phase, setPhase] = useState<"main" | "conditional">("main");
+  const topRef = useRef<HTMLDivElement>(null);
 
-  // Build visible questions based on branching
-  const visibleQuestions = QUESTIONS.filter((q) => {
-    if (!q.condition) return true;
-    return q.condition.includes(answers.interesse ?? "");
-  });
-
-  const totalSteps = visibleQuestions.length;
-
-  // Check if user already filled qualification
   useEffect(() => {
     if (!user) return;
     supabase
@@ -158,43 +164,6 @@ export default function QualificationPage() {
     if (!loading && !user) navigate("/auth", { replace: true });
   }, [user, loading, navigate]);
 
-  const saveAndNavigate = async (finalAnswers: Record<string, string>) => {
-    setSaving(true);
-    try {
-      await supabase.from("qualification_responses").insert({
-        user_id: user!.id,
-        interesse: finalAnswers.interesse ?? "",
-        faixa_renda: finalAnswers.faixa_renda ?? "",
-        preferencia_aprendizado: finalAnswers.preferencia_aprendizado ?? "",
-        momento_atual: finalAnswers.momento_atual ?? "",
-        investimento: finalAnswers.investimento ?? "",
-        contato_ahsd: finalAnswers.contato_ahsd ?? "",
-        pergunta_condicional: finalAnswers.pergunta_condicional ?? null,
-      });
-    } catch {}
-    navigate("/selecionar-teste", { replace: true });
-  };
-
-  // Auto-advance on select
-  const handleSelect = (value: string) => {
-    const updated = { ...answers, [visibleQuestions[step].id]: value };
-    setAnswers(updated);
-
-    // Recompute visible after this answer (branching may change)
-    const nextVisible = QUESTIONS.filter((q) => {
-      if (!q.condition) return true;
-      return q.condition.includes(updated.interesse ?? "");
-    });
-
-    if (step < nextVisible.length - 1) {
-      // Small delay so user sees their selection flash
-      setTimeout(() => setStep(step + 1), 180);
-    } else {
-      // Last question — save immediately
-      setTimeout(() => saveAndNavigate(updated), 180);
-    }
-  };
-
   if (loading || alreadyDone === null) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -203,76 +172,124 @@ export default function QualificationPage() {
     );
   }
 
-  const current = visibleQuestions[step];
-  if (!current) return null;
+  const set = (key: string, value: string) => setAnswers((p) => ({ ...p, [key]: value }));
 
-  const progress = ((step + 1) / totalSteps) * 100;
+  const allMainFilled = REQUIRED_KEYS.every((k) => !!answers[k]);
+  const hasConditional = !!CONDITIONAL[answers.interesse];
+  const conditionalFilled = !hasConditional || !!answers.pergunta_condicional;
+
+  const handleContinue = () => {
+    if (hasConditional && phase === "main") {
+      setPhase("conditional");
+      topRef.current?.scrollIntoView({ behavior: "instant" });
+      return;
+    }
+    handleSave();
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await supabase.from("qualification_responses").insert({
+        user_id: user!.id,
+        interesse: answers.interesse ?? "",
+        faixa_renda: answers.faixa_renda ?? "",
+        preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
+        momento_atual: answers.momento_atual ?? "",
+        investimento: answers.investimento ?? "",
+        contato_ahsd: answers.contato_ahsd ?? "",
+        pergunta_condicional: answers.pergunta_condicional ?? null,
+      });
+    } catch {}
+    navigate("/selecionar-teste", { replace: true });
+  };
+
+  const canProceed = phase === "main" ? allMainFilled : conditionalFilled;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-5 py-12">
-      {/* Progress — minimal */}
-      <div className="w-full max-w-md mb-6">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            {step + 1} de {totalSteps}
-          </span>
-        </div>
-        <div className="h-1 rounded-full bg-secondary overflow-hidden">
-          <motion.div
-            className="h-full rounded-full bg-primary"
-            initial={false}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.15 }}
-          />
-        </div>
-      </div>
-
-      {/* Question — fast transitions */}
-      <AnimatePresence mode="wait">
+    <div className="min-h-screen bg-background flex flex-col items-center px-5 py-8 sm:py-12">
+      <div ref={topRef} className="w-full max-w-lg">
+        {/* Header */}
         <motion.div
-          key={step}
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.15 }}
-          className="w-full max-w-md"
+          transition={{ duration: 0.2 }}
         >
-          <h2 className="text-lg sm:text-xl font-bold text-foreground leading-snug mb-5">
-            {current.title}
-          </h2>
-
-          <div className="space-y-2">
-            {current.options.map((opt) => {
-              const selected = answers[current.id] === opt.value;
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => handleSelect(opt.value)}
-                  className={`w-full text-left px-4 py-3 rounded-xl border transition-all duration-100 text-sm font-medium ${
-                    selected
-                      ? "border-primary bg-primary/10 text-foreground scale-[0.98]"
-                      : "border-border bg-card text-foreground active:scale-[0.98]"
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary mb-2">
+            Perfil rápido · {phase === "main" ? "1/2" : "2/2"}
+          </p>
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground leading-snug mb-1">
+            {phase === "main" ? "Conte um pouco sobre você" : "Mais uma pergunta"}
+          </h1>
+          <p className="text-xs text-muted-foreground mb-6">
+            {phase === "main" ? "Para personalizar sua experiência." : "Quase lá!"}
+          </p>
         </motion.div>
-      </AnimatePresence>
 
-      {/* Back only — no "Next" button needed */}
-      {step > 0 && (
-        <div className="w-full max-w-md mt-6">
-          <button
-            onClick={() => setStep(step - 1)}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ← Voltar
-          </button>
-        </div>
-      )}
+        {/* Questions */}
+        <motion.div
+          key={phase}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.15 }}
+          className="space-y-5"
+        >
+          {phase === "main" ? (
+            <>
+              {Object.entries(Q).map(([key, q]) => (
+                <ChipSelect
+                  key={key}
+                  label={q.label}
+                  options={q.options}
+                  value={answers[key]}
+                  onChange={(v) => set(key, v)}
+                />
+              ))}
+            </>
+          ) : (
+            <ChipSelect
+              label={CONDITIONAL[answers.interesse].label}
+              options={CONDITIONAL[answers.interesse].options}
+              value={answers.pergunta_condicional}
+              onChange={(v) => {
+                set("pergunta_condicional", v);
+                // Auto-save after selecting
+                setTimeout(() => {
+                  setSaving(true);
+                  supabase.from("qualification_responses").insert({
+                    user_id: user!.id,
+                    interesse: answers.interesse ?? "",
+                    faixa_renda: answers.faixa_renda ?? "",
+                    preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
+                    momento_atual: answers.momento_atual ?? "",
+                    investimento: answers.investimento ?? "",
+                    contato_ahsd: answers.contato_ahsd ?? "",
+                    pergunta_condicional: v,
+                  }).then(() => navigate("/selecionar-teste", { replace: true }));
+                }, 200);
+              }}
+            />
+          )}
+        </motion.div>
+
+        {/* CTA — only on main screen */}
+        {phase === "main" && (
+          <div className="mt-8">
+            <button
+              onClick={handleContinue}
+              disabled={!canProceed || saving}
+              className="w-full py-3 rounded-xl font-semibold text-sm bg-primary text-primary-foreground transition-all hover:scale-[1.01] disabled:opacity-40"
+              style={{
+                boxShadow: canProceed
+                  ? "0 0 16px hsl(var(--primary) / 0.2), 0 4px 16px hsl(var(--primary) / 0.25)"
+                  : "none",
+              }}
+            >
+              {saving ? "Salvando..." : hasConditional ? "Continuar →" : "Iniciar rastreios →"}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
