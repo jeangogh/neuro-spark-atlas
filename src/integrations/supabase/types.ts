@@ -161,6 +161,45 @@ export type Database = {
         }
         Relationships: []
       }
+      qualification_responses: {
+        Row: {
+          contato_ahsd: string
+          created_at: string
+          faixa_renda: string
+          id: string
+          interesse: string
+          investimento: string
+          momento_atual: string
+          pergunta_condicional: string | null
+          preferencia_aprendizado: string
+          user_id: string
+        }
+        Insert: {
+          contato_ahsd: string
+          created_at?: string
+          faixa_renda: string
+          id?: string
+          interesse: string
+          investimento: string
+          momento_atual: string
+          pergunta_condicional?: string | null
+          preferencia_aprendizado: string
+          user_id: string
+        }
+        Update: {
+          contato_ahsd?: string
+          created_at?: string
+          faixa_renda?: string
+          id?: string
+          interesse?: string
+          investimento?: string
+          momento_atual?: string
+          pergunta_condicional?: string | null
+          preferencia_aprendizado?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       quiz_results: {
         Row: {
           answers: Json
