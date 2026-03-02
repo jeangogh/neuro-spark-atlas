@@ -45,16 +45,50 @@ export default function AuthPage() {
     });
 
     if (signInError) {
-      // User doesn't exist, create account
+      // User doesn't exist — try to create account
       const { error: signUpError } = await supabase.auth.signUp({
         email: trimmed,
         password: FALLBACK_PASSWORD,
       });
 
       if (signUpError) {
-        setSubmitting(false);
-        setError("Erro ao entrar. Tente novamente.");
-        return;
+        // User exists but with a different password (pre-migration) — reset via edge function
+        if (signUpError.message?.includes("already") || (signUpError as any).code === "user_already_exists") {
+          try {
+            const res = await fetch(
+              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reset-user-password`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
+                body: JSON.stringify({ email: trimmed, password: FALLBACK_PASSWORD }),
+              }
+            );
+            if (res.ok) {
+              // Retry sign in with updated password
+              const { error: retryError } = await supabase.auth.signInWithPassword({
+                email: trimmed,
+                password: FALLBACK_PASSWORD,
+              });
+              if (retryError) {
+                setSubmitting(false);
+                setError("Erro ao entrar. Tente novamente.");
+                return;
+              }
+            } else {
+              setSubmitting(false);
+              setError("Erro ao entrar. Tente novamente.");
+              return;
+            }
+          } catch {
+            setSubmitting(false);
+            setError("Erro ao entrar. Tente novamente.");
+            return;
+          }
+        } else {
+          setSubmitting(false);
+          setError("Erro ao entrar. Tente novamente.");
+          return;
+        }
       }
     }
 
