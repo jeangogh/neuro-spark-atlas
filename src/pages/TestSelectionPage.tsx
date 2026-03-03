@@ -66,7 +66,7 @@ export default function TestSelectionPage() {
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h2 className="font-display font-semibold text-foreground text-base sm:text-lg group-hover:text-primary transition-colors">
+                      <h2 className="font-display font-bold text-foreground text-[17px] sm:text-xl group-hover:text-primary transition-colors leading-snug">
                         {test.title}
                       </h2>
                       {completedTests.has(test.key) && (
@@ -76,15 +76,21 @@ export default function TestSelectionPage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-[12px] text-primary font-medium mt-0.5">{test.subtitle}</p>
-                    <p className="text-[13px] text-muted-foreground mt-2 leading-relaxed">
+                    <p className="text-[11px] uppercase tracking-widest text-primary/80 font-semibold mt-1.5">{test.subtitle}</p>
+                    <p className="text-[13.5px] text-muted-foreground mt-2.5 leading-[1.65]">
                       {completedTests.has(test.key)
                         ? "Clique para ver seu resultado ou refazer o teste."
-                        : test.description}
+                        : test.highlight
+                          ? <>
+                              {test.description.split(test.highlight)[0]}
+                              <strong className="text-foreground font-semibold">{test.highlight}</strong>
+                              {test.description.split(test.highlight)[1]}
+                            </>
+                          : test.description}
                     </p>
                   </div>
                   <div className="shrink-0 mt-1">
-                    <span className="text-primary text-xl group-hover:translate-x-1 transition-transform inline-block">→</span>
+                    <span className="text-primary text-2xl group-hover:translate-x-1 transition-transform inline-block">→</span>
                   </div>
                 </div>
               </div>
