@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import {
   ChevronDown, ArrowRight, Check, Zap, ScanSearch, FileText,
-  Route, TrendingUp, Camera, Film, X, Play, Lock, Headphones,
+  Route, TrendingUp, Camera, Film, X, Play, Pause, Lock, Headphones,
 } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
-import { useToast } from "@/hooks/use-toast";
 import BottomNav from "@/components/BottomNav";
 
 // ── Subscription content (preserved from original) ──
@@ -53,36 +52,34 @@ export default function ExplorePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
   const heroCtaRef = useRef<HTMLButtonElement>(null);
-  const { isLocked, remaining } = useQuota();
-  const { toast } = useToast();
-  const navigate = useNavigate();
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { isLocked, remaining, consume } = useQuota();
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
   const freeLeft = remaining("audios");
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowSticky(!entry.isIntersecting),
-      { threshold: 0 }
-    );
-    if (heroCtaRef.current) observer.observe(heroCtaRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const showPaywall = freeLeft === 0;
 
   const handleCta = () => {
     window.location.href = "https://pay.hotmart.com/P104729957Y?off=ntj8v232";
   };
 
-  const handleOpen = (id: string) => {
-    if (isLocked("audios", id)) {
-      toast({
-        title: "Limite gratuito atingido",
-        description: "Assine o Gifted Lab para desbloquear.",
-      });
+  const handlePlay = (id: string, audioUrl: string) => {
+    if (isLocked("audios", id)) return;
+    consume("audios", id);
+    if (playingId === id && audioRef.current) {
+      if (audioRef.current.paused) audioRef.current.play(); else audioRef.current.pause();
       return;
     }
-    navigate(`/aprender/${id}`);
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+    if (audioUrl) {
+      const a = new Audio(audioUrl);
+      a.play().catch(() => {});
+      a.addEventListener("ended", () => setPlayingId(null));
+      audioRef.current = a;
+    }
+    setPlayingId(id);
   };
 
   return (
@@ -118,54 +115,66 @@ export default function ExplorePage() {
       </div>
 
       {/* Audio cards */}
-      <div className="px-5 max-w-2xl mx-auto space-y-3 mb-12">
+      <div className="px-5 max-w-2xl mx-auto space-y-3 mb-8">
         {AUDIOS.map((ep, i) => {
           const locked = isLocked("audios", ep.id);
+          const isPlaying = playingId === ep.id;
 
           return (
-            <motion.button
+            <motion.div
               key={ep.id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06, duration: 0.35 }}
-              onClick={() => handleOpen(ep.id)}
-              className={`w-full text-left rounded-xl border p-5 transition-all ${
-                locked
-                  ? "bg-card/50 border-border opacity-60"
-                  : "bg-card border-border hover:border-primary/20 hover:shadow-sm"
+              className={`rounded-xl border p-5 transition-all ${
+                locked ? "bg-card/50 border-border opacity-50"
+                : isPlaying ? "bg-card border-primary/30 shadow-sm"
+                : "bg-card border-border"
               }`}
             >
               <div className="flex items-start gap-4">
-                <div
-                  className={`shrink-0 w-11 h-11 rounded-full flex items-center justify-center ${
-                    locked ? "bg-muted" : "bg-primary/10"
+                <button
+                  onClick={() => handlePlay(ep.id, ep.audioUrl)}
+                  disabled={locked}
+                  className={`shrink-0 w-11 h-11 rounded-full flex items-center justify-center transition-all active:scale-95 ${
+                    locked ? "bg-muted" : isPlaying ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary hover:bg-primary/20"
                   }`}
                 >
-                  {locked ? (
-                    <Lock className="w-4 h-4 text-muted-foreground" />
-                  ) : (
-                    <Play className="w-4 h-4 ml-0.5 text-primary" />
-                  )}
-                </div>
+                  {locked ? <Lock className="w-4 h-4 text-muted-foreground" />
+                    : isPlaying ? <Pause className="w-4 h-4" />
+                    : <Play className="w-4 h-4 ml-0.5" />}
+                </button>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-[15px] font-semibold text-foreground mb-1 leading-snug">
-                    {ep.title}
-                  </h3>
-                  <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-2">
-                    {ep.subtitle}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2.5">
-                    <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
-                      {ep.duration}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground">audio + texto</span>
-                  </div>
+                  <h3 className="text-[15px] font-semibold text-foreground mb-1 leading-snug">{ep.title}</h3>
+                  <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-2">{ep.subtitle}</p>
+                  <span className="inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">{ep.duration}</span>
                 </div>
               </div>
-            </motion.button>
+            </motion.div>
           );
         })}
       </div>
+
+      {/* Paywall after 3 audios */}
+      {showPaywall && (
+        <div className="px-5 max-w-2xl mx-auto mb-8">
+          <div className="rounded-2xl border border-primary/20 bg-primary/[0.04] p-6 text-center">
+            <Headphones className="w-8 h-8 text-primary mx-auto mb-3" />
+            <h2 className="font-display text-xl font-bold text-foreground mb-2">Você ouviu seus 3 áudios gratuitos</h2>
+            <p className="text-[14px] text-muted-foreground leading-relaxed mb-5">
+              Para continuar acessando todos os áudios, textos e análises — assine o Gifted Lab.
+            </p>
+            <button
+              onClick={handleCta}
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:scale-[1.02] transition-all"
+              style={{ boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 20px hsl(var(--primary) / 0.35)" }}
+            >
+              Assinar Gifted Lab — R$29,90/mês <ArrowRight className="w-4 h-4" />
+            </button>
+            <p className="text-[11px] text-muted-foreground mt-3">7 dias de garantia · Cancela quando quiser</p>
+          </div>
+        </div>
+      )}
 
       {/* ═══ DIVIDER ═══ */}
       <div className="max-w-2xl mx-auto px-5 mb-8">
