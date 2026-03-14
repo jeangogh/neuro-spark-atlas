@@ -576,23 +576,34 @@ export default function DimensionalQuizPage() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data } = await supabase
-        .from("quiz_results")
-        .select("scores")
-        .eq("test_type", "dimensional")
-        .order("created_at", { ascending: false })
-        .limit(1);
-      if (data && data.length > 0) {
-        const saved = data[0].scores as any;
-        if (saved?.c1Scores) {
-          setC1Scores(saved.c1Scores);
-          setC2Scores(saved.c2Scores ?? {});
-          setSavedScores(saved);
-          setPhase("final");
+      try {
+        const { data, error } = await supabase
+          .from("quiz_results")
+          .select("scores")
+          .eq("user_id", user.id)
+          .eq("test_type", "dimensional")
+          .order("created_at", { ascending: false })
+          .limit(1);
+        if (error) {
+          console.warn("Error loading saved results:", error);
+          setPhase("c1_quiz");
+          return;
+        }
+        if (data && data.length > 0) {
+          const saved = data[0].scores as any;
+          if (saved?.c1Scores) {
+            setC1Scores(saved.c1Scores);
+            setC2Scores(saved.c2Scores ?? {});
+            setSavedScores(saved);
+            setPhase("final");
+          } else {
+            setPhase("c1_quiz");
+          }
         } else {
           setPhase("c1_quiz");
         }
-      } else {
+      } catch (e) {
+        console.warn("Failed to load saved results:", e);
         setPhase("c1_quiz");
       }
     })();
@@ -811,17 +822,18 @@ export default function DimensionalQuizPage() {
           >
             ← Anterior
           </button>
-          {isLastQuestion && allC1Answered ? (
+          {isLastQuestion ? (
             <button
               onClick={handleC1Finish}
-              className="flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all bg-primary text-primary-foreground"
+              disabled={!allC1Answered}
+              className={`flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-40 ${allC1Answered ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
             >
-              Ver Resultado →
+              {allC1Answered ? "Ver Resultado →" : `Faltam ${TOTAL_C1_QUESTIONS - Object.keys(c1Answers).length} respostas`}
             </button>
           ) : (
             <button
               onClick={() => { setCurrentQuestion((c) => Math.min(allC1Questions.length - 1, c + 1)); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-              disabled={currentQuestion >= allC1Questions.length - 1}
+              disabled={c1Answers[currentQ?.id] === undefined}
               className="flex-1 py-2.5 rounded-xl border border-border bg-card text-foreground text-sm font-medium disabled:opacity-30 hover:bg-muted transition-all"
             >
               Próxima →
