@@ -358,7 +358,7 @@ function CrossResultsView({ analysis, neurocog, dimensional, ahsdAdulto }: {
       {analysis.insights.length > 0 && (
         <SectionCard delay={0.1}>
           <h3 className="text-foreground font-semibold mb-1 text-[15px]">Pontes entre Testes</h3>
-          <p className="text-[11px] text-muted-foreground mb-4">Onde suas condições confirmam ou explicam suas dimensões</p>
+          <p className="text-[11px] text-muted-foreground mb-4">Onde suas condições se relacionam com suas dimensões</p>
           <div className="space-y-4">
             {analysis.insights.map((insight, i) => {
               const Icon = insight.severity === "high" ? AlertTriangle

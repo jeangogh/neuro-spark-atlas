@@ -159,7 +159,7 @@ export function generateIntegratedAnalysis(
       const aloNames = elevated.filter(d => dims[d]?.zone === "alostatico").map(d => DIM_LABELS[d]);
 
       insights.push({
-        title: `${condLabel} (${condPct}%) confirma sobrecarga em ${dimLabels.join(" + ")}`,
+        title: `${condLabel} (${condPct}%) aponta sobrecarga em ${dimLabels.join(" + ")}`,
         body: bridge.explanation + (hasAlostatic
           ? ` No seu perfil, ${aloNames.join(" e ")} ${aloNames.length === 1 ? "está" : "estão"} em alostase — custo adaptativo alto.`
           : ` ${dimLabels.join(" e ")} ${elevated.length === 1 ? "está" : "estão"} em zona de atenção.`),
@@ -194,8 +194,8 @@ export function generateIntegratedAnalysis(
   if (ahsdAdulto && neurocog) {
     if (neurocog.ahsd >= 50 && ahsdAdulto.pct >= 60) {
       insights.push({
-        title: "Superdotação confirmada por ambos os testes",
-        body: `O rastreio neurocognitivo indica ${neurocog.ahsd}% de compatibilidade AH/SD, e o teste específico confirma com ${ahsdAdulto.pct}% (percentil ${ahsdAdulto.percentile}). Os dois instrumentos convergem.`,
+        title: "Superdotação altamente apontada por ambos os testes",
+        body: `O rastreio neurocognitivo aponta ${neurocog.ahsd}% de compatibilidade AH/SD, e o teste específico indica ${ahsdAdulto.pct}% (percentil ${ahsdAdulto.percentile}). Os dois instrumentos convergem na mesma direção.`,
         severity: "low", conditions: ["ahsd"], dimensions: [],
       });
     } else if (neurocog.ahsd >= 50 && ahsdAdulto.pct < 40) {
@@ -242,7 +242,7 @@ export function generateIntegratedAnalysis(
   let summary = "";
   if (neurocog && dimensional) {
     if (aloCount > 0 && topConds.length > 0) {
-      summary = `Seu perfil indica ${topConds.join(" e ")} como hipóteses dominantes, com ${aloCount} ${aloCount === 1 ? "dimensão" : "dimensões"} em sobrecarga adaptativa. Os instrumentos convergem — as condições identificadas explicam o custo dimensional observado.`;
+      summary = `Seu perfil aponta ${topConds.join(" e ")} como hipóteses dominantes, com ${aloCount} ${aloCount === 1 ? "dimensão" : "dimensões"} em sobrecarga adaptativa. Os instrumentos apontam na mesma direção — as condições identificadas podem explicar o custo dimensional observado.`;
     } else if (topConds.length > 0) {
       summary = `As hipóteses ${topConds.join(" e ")} aparecem no rastreio, mas suas dimensões operam em faixa regulada. Bom manejo atual ou fase de compensação.`;
     } else {
@@ -254,7 +254,7 @@ export function generateIntegratedAnalysis(
     summary = "Análise parcial — apenas Dimensional. Complete o Neurocognitivo para cruzamento completo.";
   }
   if (ahsdAdulto && ahsdAdulto.pct >= 60) {
-    summary += ` Perfil AH/SD confirmado (${ahsdAdulto.pct}%, percentil ${ahsdAdulto.percentile}).`;
+    summary += ` Perfil AH/SD fortemente apontado por ${ahsdAdulto.pct}% no teste específico (percentil ${ahsdAdulto.percentile}).`;
   }
 
   return {
