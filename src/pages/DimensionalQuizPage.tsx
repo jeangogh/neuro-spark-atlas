@@ -638,10 +638,13 @@ export default function DimensionalQuizPage() {
     setC1Answers((p) => ({ ...p, [id]: val }));
     // Auto-advance after short delay
     setTimeout(() => {
-      if (currentQuestion < allC1Questions.length - 1) {
-        setCurrentQuestion((c) => c + 1);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+      setCurrentQuestion((c) => {
+        if (c < allC1Questions.length - 1) {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return c + 1;
+        }
+        return c;
+      });
     }, 350);
   };
 
