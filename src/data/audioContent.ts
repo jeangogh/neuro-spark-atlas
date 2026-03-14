@@ -15,7 +15,7 @@ export const AUDIO_EPISODES: AudioEpisode[] = [
     subtitle: "A pessoa que te sabota mora dentro de voc\u00ea \u2014 e ela est\u00e1 tentando te proteger",
     duration: "16:13",
     durationSeconds: 973,
-    audioUrl: "", // will be filled with Supabase Storage URL
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/autosabotagem.mp3", // will be filled with Supabase Storage URL
     content: `# A Pessoa Que Te Sabota Mora Dentro de Voc\u00ea \u2014 E Ela Est\u00e1 Tentando Te Proteger
 
 *Autossabotagem, Mecanismos de Defesa e a L\u00f3gica Brutal do Inconsciente que Aprendeu a Te Travar*
@@ -173,7 +173,7 @@ Solta o freio.
     subtitle: "Por que seu esquecimento \u00e9 uma b\u00fassola e n\u00e3o um defeito",
     duration: "16:37",
     durationSeconds: 997,
-    audioUrl: "", // will be filled with Supabase Storage URL
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/o-que-esquecer-uma-reuniao-pela-4-vez-me-revelou.mp3", // will be filled with Supabase Storage URL
     content: `# A Coisa Que Voc\u00ea Esquece Toda Semana \u00c9 a Coisa Que Mais Importa
 
 *TDAH ou Intui\u00e7\u00e3o Negligenciada \u2014 Por Que Seu Esquecimento \u00c9 Uma B\u00fassola e N\u00e3o Um Defeito*
@@ -297,7 +297,7 @@ Sua b\u00fassola n\u00e3o est\u00e1 quebrada. Ela s\u00f3 est\u00e1 cansada de a
     subtitle: "Para m\u00e3es de crian\u00e7as neurodivergentes que ningu\u00e9m escuta",
     duration: "18:02",
     durationSeconds: 1082,
-    audioUrl: "", // will be filled with Supabase Storage URL
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/voce_nao_esta_louca_final.mp3", // will be filled with Supabase Storage URL
     content: `# Voc\u00ea N\u00e3o Est\u00e1 Louca
 
 ---
@@ -474,7 +474,7 @@ O termostato n\u00e3o quebrou. Voc\u00ea s\u00f3 esqueceu que o controle sempre 
     subtitle: "A diferença entre inteligência e profundidade — e por que você nunca se encaixou",
     duration: "26:31",
     durationSeconds: 1591,
-    audioUrl: "",
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/sensacao_estar_em_casa.mp3",
     content: `A Sensação de Estar em Casa
 
 Eu estava conversando com um cara inteligentíssimo outro dia. QI testado, confirmado, número alto, daqueles que impressionam em qualquer mesa. Diz que bateu recordes, que lidera sociedades de alto QI. Pois bem.
@@ -677,7 +677,7 @@ E aí, só então, você sente como é chegar em casa.`
     subtitle: "E isso é a melhor coisa que poderia ter acontecido",
     duration: "21:06",
     durationSeconds: 1266,
-    audioUrl: "",
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/superdotacao_virou_comercio.mp3",
     content: `Superdotação Virou Comércio. E Isso É a Melhor Coisa Que Poderia Ter Acontecido.
 
 Na semana passada, uma mãe me mandou um áudio de sete minutos. Voz tremendo. Ela disse que tinha acabado de sair do consultório de um neurologista. Levou o filho de oito anos. O menino não para quieto, não dorme direito, se entedia com tudo, desmonta brinquedos no primeiro dia, faz perguntas que deixam adultos desconfortáveis. A mãe queria entender o que estava acontecendo. O neurologista olhou pro menino, olhou pra mãe e disse: "faz o teste de QI. Se der acima de 130, a gente conversa."
@@ -860,7 +860,7 @@ Eu escolho o barulho. E quem não gosta de ouvir, sinto muito, vai ter que falar
     subtitle: "O que acontece quando a criança aprende que sentir é errado",
     duration: "21:23",
     durationSeconds: 1283,
-    audioUrl: "",
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/nao_chora.mp3",
     content: `Não Chora
 
 Você tinha dois, talvez três anos. Alguma coisa te assustou. Um barulho, um cachorro, o escuro do corredor. Não importa o quê. O que importa é o que aconteceu depois.
@@ -1069,7 +1069,7 @@ Sempre foi.`
     subtitle: "O que ninguém te contou sobre o que você herdou sem saber",
     duration: "14:11",
     durationSeconds: 851,
-    audioUrl: "",
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/heranca_invisivel.mp3",
     content: `A Herança Invisível
 
 Quando eu era criança, eu fazia perguntas que incomodavam. Não incomodavam porque fossem agressivas ou desrespeitosas. Incomodavam porque ninguém ao meu redor tinha o repertório pra responder. E quando uma criança faz uma pergunta que o adulto não consegue responder, o que acontece? [breve pausa] O adulto não diz "não sei". O adulto diz "para de pensar besteira". Ou muda de assunto. Ou ri. Ou ignora.
@@ -1196,7 +1196,7 @@ A corrente mais pesada não é a que você carrega. É a que você não sabe que
     subtitle: "A máscara que você usa até em casa",
     duration: "22:15",
     durationSeconds: 1335,
-    audioUrl: "",
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/mascara.mp3",
     content: `A Máscara Que Você Usa Até Em Casa
 
 Eu vou te contar uma coisa que me custou uma década de consultório, um casamento quase destruído e uma quantidade incontável de noites em que eu olhava pro espelho e não reconhecia quem estava ali. E vou te contar não porque eu superei, mas porque ninguém me avisou que o problema não era o mundo me exigir uma máscara. O problema era eu ter esquecido que ela estava ali.
@@ -1369,7 +1369,7 @@ O rosto embaixo ainda é seu.`
     subtitle: "O teto invisível que limita quem você pode ser",
     duration: "18:57",
     durationSeconds: 1137,
-    audioUrl: "",
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/o_domo.mp3",
     content: `O Domo
 
 Eu cresci numa cidade de cinco mil habitantes no interior do Rio Grande do Sul. [breve pausa] Cinco mil. [thoughtful] Isso é menos gente do que cabe num estádio de futebol de bairro. O mundo inteiro, pra mim, era aquele perímetro. As mesmas ruas, os mesmos rostos, as mesmas conversas sobre as mesmas coisas.
@@ -1512,7 +1512,7 @@ E não se preocupe. Quando esse domo quebrar, você vai perceber que existem out
     subtitle: "Você foi substituído — e o que isso fez com quem você é",
     duration: "21:15",
     durationSeconds: 1275,
-    audioUrl: "",
+    audioUrl: "https://irljeqyigxfosdjddaez.supabase.co/storage/v1/object/public/audios/caixa_de_papelao_final.mp3",
     content: `A Caixa de Papelão
 Você foi substituído
 
