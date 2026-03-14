@@ -519,9 +519,30 @@ export default function HistoryPage() {
     );
   }, [neurocog, dimensional, ahsdAdulto, canCross]);
 
-  const handleCross = () => {
+  const handleCross = async () => {
     setShowCross(true);
     setTimeout(() => crossRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
+    // Salvar cruzamento no Supabase
+    if (crossAnalysis && user) {
+      try {
+        await supabase.from("quiz_results").upsert({
+          user_id: user.id,
+          test_type: "cross_analysis",
+          scores: {
+            insights: crossAnalysis.insights,
+            priorities: crossAnalysis.priorities,
+            summary: crossAnalysis.summary,
+            hasNeurocog: crossAnalysis.hasNeurocog,
+            hasDimensional: crossAnalysis.hasDimensional,
+            hasAhsdAdulto: crossAnalysis.hasAhsdAdulto,
+            testsUsed: adultTestCount,
+            generatedAt: new Date().toISOString(),
+          },
+        }, { onConflict: "user_id,test_type" });
+      } catch (e) {
+        console.warn("Failed to save cross analysis:", e);
+      }
+    }
   };
 
   if (loading) {
@@ -592,28 +613,48 @@ export default function HistoryPage() {
 
             {/* Missing tests CTA */}
             {adultTestCount < 3 && adultTestCount > 0 && (
-              <div className="rounded-xl border border-dashed border-primary/30 p-4 text-center">
-                <p className="text-[12px] text-muted-foreground mb-2">
-                  Complete mais testes para um cruzamento mais completo:
-                </p>
-                <div className="flex flex-wrap gap-2 justify-center">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="rounded-xl border-2 border-primary/30 bg-primary/[0.04] p-5 sm:p-6"
+              >
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mt-0.5">
+                    <Zap className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-[14px] font-semibold text-foreground mb-1">
+                      {adultTestCount === 1 ? "Falta 1 teste" : `Faltam ${3 - adultTestCount} testes`} para análise completa
+                    </p>
+                    <p className="text-[12px] text-muted-foreground leading-relaxed">
+                      {!neurocog && !dimensional
+                        ? "Complete o Neurocognitivo e o Dimensional para cruzar quais condições impactam quais dimensões do seu funcionamento."
+                        : !neurocog
+                        ? "O Neurocognitivo identifica suas hipóteses (TDAH, TEA, AH/SD...). Sem ele, o cruzamento não sabe quais condições investigar."
+                        : !dimensional
+                        ? "O Dimensional mapeia 7 dimensões do seu funcionamento. Sem ele, não há como ver onde as condições do Neurocognitivo impactam."
+                        : "O teste AH/SD Adulto detalha seu perfil de superdotação por categoria. Adiciona profundidade ao cruzamento."}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
                   {!neurocog && (
-                    <Link to="/triagem" className="text-[11px] font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-                      Neurocognitivo
+                    <Link to="/triagem" className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-[12px] bg-primary text-primary-foreground hover:scale-[1.02] transition-all">
+                      <ArrowRight className="w-3.5 h-3.5" /> Fazer Neurocognitivo
                     </Link>
                   )}
                   {!dimensional && (
-                    <Link to="/triagem/dimensional" className="text-[11px] font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-                      Dimensional
+                    <Link to="/triagem/dimensional" className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-[12px] bg-primary text-primary-foreground hover:scale-[1.02] transition-all">
+                      <ArrowRight className="w-3.5 h-3.5" /> Fazer Dimensional
                     </Link>
                   )}
                   {!ahsdAdulto && (
-                    <Link to="/triagem/ahsd_adulto" className="text-[11px] font-medium px-3 py-1.5 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-                      AH/SD Adulto
+                    <Link to="/triagem/ahsd_adulto" className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-[12px] border-2 border-primary text-primary hover:bg-primary/10 transition-all">
+                      <ArrowRight className="w-3.5 h-3.5" /> Fazer AH/SD Adulto
                     </Link>
                   )}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* CRUZAR RESULTADOS BUTTON */}

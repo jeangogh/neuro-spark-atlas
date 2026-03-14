@@ -272,11 +272,12 @@ export function generateIntegratedAnalysis(
 
 /* ═══ HELPERS FOR UI ═══ */
 
+/* Paleta harmonizada com o tema sage/gold/terracota do site */
 export function getZoneColor(zone: string): string {
   switch (zone) {
-    case "regulado": return "hsl(141, 58%, 54%)";
-    case "atencao": return "hsl(40, 88%, 61%)";
-    case "alostatico": return "hsl(0, 70%, 58%)";
+    case "regulado": return "hsl(154, 24%, 42%)";    /* sage green — alinhado com primary */
+    case "atencao": return "hsl(31, 53%, 58%)";      /* warm gold — alinhado com accent */
+    case "alostatico": return "hsl(12, 50%, 48%)";   /* terracota — orgânico, não vermelho puro */
     default: return "hsl(var(--muted-foreground))";
   }
 }
@@ -292,19 +293,24 @@ export function getZoneLabel(zone: string): string {
 
 export function getSeverityColor(severity: string): string {
   switch (severity) {
-    case "high": return "hsl(0, 70%, 58%)";
-    case "medium": return "hsl(40, 88%, 61%)";
-    case "low": return "hsl(141, 58%, 54%)";
+    case "high": return "hsl(12, 50%, 48%)";       /* terracota */
+    case "medium": return "hsl(31, 53%, 58%)";     /* warm gold */
+    case "low": return "hsl(154, 24%, 42%)";       /* sage green */
     default: return "hsl(var(--muted-foreground))";
   }
 }
 
 export function conditionColor(key: string): string {
-  const hues: Record<string, number> = {
-    ahsd: 154, dupla_exc: 31, tdah: 0, tea: 15,
-    trauma: 340, depressao: 300, ansiedade: 32,
+  const colors: Record<string, string> = {
+    ahsd:      "hsl(154, 24%, 38%)",   /* sage green — primary */
+    dupla_exc: "hsl(31, 53%, 50%)",    /* warm gold — accent */
+    tdah:      "hsl(12, 50%, 48%)",    /* terracota */
+    tea:       "hsl(24, 45%, 45%)",    /* cobre quente */
+    trauma:    "hsl(350, 35%, 45%)",   /* rosewood — discreto */
+    depressao: "hsl(280, 20%, 45%)",   /* malva — suave */
+    ansiedade: "hsl(38, 50%, 50%)",    /* amber quente */
   };
-  return `hsl(${hues[key] ?? 200}, 65%, 45%)`;
+  return colors[key] ?? "hsl(var(--muted-foreground))";
 }
 
 export { AHSD_CAT_LABELS };

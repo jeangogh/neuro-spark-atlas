@@ -86,6 +86,22 @@
     --sidebar-border: 28 12% 22%;
     --sidebar-ring: 154 24% 45%;
   }
+
+  /* Mobile app behavior — no overscroll bounce */
+  html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    height: 100%;
+    overflow-y: auto;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════

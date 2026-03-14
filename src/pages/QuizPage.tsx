@@ -14,6 +14,7 @@ import {
 import {
   MessageCircle, Twitter, Download, RotateCcw, Copy, Check, ChevronDown, Lock, LogOut, History,
 } from "lucide-react";
+import BottomNav from "@/components/BottomNav";
 import {
   questionBlocks,
   likertOptions,
@@ -28,22 +29,20 @@ import {
 /* ────── CONSTANTS ────── */
 const HYPOTHESIS_ORDER = ["ahsd", "dupla_exc", "tdah", "tea", "trauma", "depressao", "ansiedade"];
 
-const CONDITION_COLORS: Record<string, { hue: number; label: string }> = {
-  ahsd:      { hue: 40,  label: "AH/SD" },
-  dupla_exc: { hue: 36,  label: "Dupla Exc." },
-  tdah:      { hue: 0,   label: "TDAH" },
-  tea:       { hue: 15,  label: "Autismo" },
-  trauma:    { hue: 340, label: "Trauma" },
-  depressao: { hue: 300, label: "Depressão" },
-  ansiedade: { hue: 32,  label: "Ansiedade" },
+/* Paleta harmonizada sage/gold/terracota */
+const CONDITION_COLORS: Record<string, { color: string; label: string }> = {
+  ahsd:      { color: "hsl(154, 24%, 38%)",  label: "AH/SD" },        /* sage green */
+  dupla_exc: { color: "hsl(31, 53%, 50%)",   label: "Dupla Exc." },   /* warm gold */
+  tdah:      { color: "hsl(12, 50%, 48%)",   label: "TDAH" },         /* terracota */
+  tea:       { color: "hsl(24, 45%, 45%)",   label: "Autismo" },      /* cobre */
+  trauma:    { color: "hsl(350, 35%, 45%)",  label: "Trauma" },       /* rosewood */
+  depressao: { color: "hsl(280, 20%, 45%)",  label: "Depressão" },    /* malva */
+  ansiedade: { color: "hsl(38, 50%, 50%)",   label: "Ansiedade" },    /* amber */
 };
 
-function conditionColor(id: string, score: number) {
+function conditionColor(id: string, _score: number) {
   const cfg = CONDITION_COLORS[id];
-  if (!cfg) return `hsl(${Math.round(154 - (score / 100) * 10)}, 24%, 38%)`;
-  if (id === "ahsd") return `hsl(154, 24%, 38%)`;
-  if (id === "dupla_exc") return `hsl(31, 53%, 50%)`;
-  return `hsl(${cfg.hue}, 65%, 45%)`;
+  return cfg?.color ?? "hsl(154, 24%, 38%)";
 }
 
 /* ────── Theme colors (result section) ────── */
@@ -813,6 +812,7 @@ export default function QuizPage() {
       <AnimatePresence>
         {motivationalMsg && <MotivationalToast message={motivationalMsg} />}
       </AnimatePresence>
+      <BottomNav />
     </div>
   );
 }

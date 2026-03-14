@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { RotateCcw, History, LogOut, Download, ChevronRight, MessageCircle, Twitter, Copy, Check } from "lucide-react";
+import BottomNav from "@/components/BottomNav";
 import { Textarea } from "@/components/ui/textarea";
 import {
   DIMENSIONS,
@@ -93,7 +94,7 @@ function ScoreBar({ score, max, color, delay = 0 }: { score: number; max: number
 function CostBar({ label, score, max, delay = 0 }: { label: string; score: number; max: number; delay?: number }) {
   const pct = max > 0 ? Math.round((score / max) * 100) : 0;
   const isHighCost = pct >= 70;
-  const color = isHighCost ? "hsl(0, 70%, 58%)" : pct >= 40 ? "hsl(var(--accent))" : "hsl(var(--primary))";
+  const color = isHighCost ? "hsl(12, 50%, 48%)" : pct >= 40 ? "hsl(var(--accent))" : "hsl(var(--primary))";
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-[11px]">
@@ -853,6 +854,7 @@ export default function DimensionalQuizPage() {
           </button>
         </div>
       </main>
+      <BottomNav />
     </div>
   );
 }
