@@ -1,20 +1,35 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Compass, BarChart3 } from "lucide-react";
+import { Home, Headphones, BookOpen, BarChart3 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { label: "Home", path: "/selecionar-teste", icon: Home },
-  { label: "Explorar", path: "/explorar", icon: Compass },
-  { label: "Análises", path: "/historico", icon: BarChart3 },
+  { label: "Home", path: "/", icon: Home },
+  { label: "Explorar", path: "/explorar", icon: Headphones },
+  { label: "Aprender", path: "/aprender", icon: BookOpen },
+  { label: "Análises", path: "/analises", icon: BarChart3 },
+];
+
+const HIDDEN_PATTERNS = [
+  "/auth", "/triagem", "/nef", "/miniteste/", "/resultados",
+  "/compartilhar", "/consentimento", "/teste-bonus", "/qualificacao",
+  "/convite/", "/style-guide", "/admin",
 ];
 
 export default function BottomNav() {
   const { pathname } = useLocation();
 
+  if (HIDDEN_PATTERNS.some((p) => pathname === p || pathname.startsWith(p))) return null;
+  if (pathname.startsWith("/aprender/")) return null;
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-md print:hidden">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur-md print:hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
       <div className="max-w-lg mx-auto flex items-center justify-around h-14">
         {NAV_ITEMS.map((item) => {
-          const active = pathname === item.path;
+          const active = item.path === "/"
+            ? pathname === "/"
+            : pathname.startsWith(item.path);
           return (
             <Link
               key={item.path}

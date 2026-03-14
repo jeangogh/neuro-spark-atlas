@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Headphones, BookOpen, BarChart3, AudioLines } from "lucide-react";
+import BottomNav from "@/components/BottomNav";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
@@ -404,6 +406,58 @@ export default function Index() {
         </div>
       </section>
 
+      {/* ══ 3 PILLARS ══════════════════════════════ */}
+      <section className="py-12 md:py-16 px-5 border-t border-border">
+        <div className="max-w-3xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="text-center mb-8">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-primary mb-3">Plataforma completa</p>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground leading-tight">
+              Ouça, aprenda e se avalie
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                icon: Headphones,
+                title: "Explorar",
+                desc: "Áudios narrados sobre neurodivergência, AHSD e os padrões que ninguém te explicou.",
+                to: "/explorar",
+                accent: "hsl(var(--primary))",
+              },
+              {
+                icon: BookOpen,
+                title: "Aprender",
+                desc: "Textos profundos sobre autossabotagem, mascaramento e os mecanismos invisíveis.",
+                to: "/aprender",
+                accent: "hsl(var(--accent))",
+              },
+              {
+                icon: BarChart3,
+                title: "Análises",
+                desc: "Testes dimensionais, minitestes e inventários de autoconhecimento.",
+                to: "/analises",
+                accent: "hsl(var(--primary))",
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+              >
+                <Link to={item.to} className="block rounded-2xl border border-border bg-card p-5 hover:border-primary/30 transition-all hover:shadow-md">
+                  <item.icon className="w-6 h-6 text-primary mb-3" />
+                  <h3 className="font-display text-base font-semibold text-foreground mb-1.5">{item.title}</h3>
+                  <p className="text-[12px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ══ WHAT YOU DISCOVER ═══════════════════════ */}
       <section className="py-14 md:py-18 px-5 border-t border-border">
         <div className="max-w-3xl mx-auto text-center mb-10">
@@ -582,6 +636,8 @@ export default function Index() {
 
       {/* About Modal */}
       <AboutModal open={showAbout} onClose={() => setShowAbout(false)} />
+
+      <BottomNav />
     </div>
   );
 }
