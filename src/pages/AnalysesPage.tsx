@@ -6,7 +6,6 @@ import { Lock, ClipboardList, Beaker, ChevronRight, ArrowRight } from "lucide-re
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useQuota } from "@/hooks/useQuota";
 import { ALL_MINITESTES, JORNADA_LABELS } from "@/data/minitestes";
-import { trackEvent } from "@/lib/oracle";
 import type { JornadaId } from "@/data/minitestes";
 import BottomNav from "@/components/BottomNav";
 
@@ -59,7 +58,6 @@ export default function AnalysesPage() {
   const handleTestClick = (link: string, testId: string) => {
     if (isLocked("testes", testId)) return;
     consume("testes", testId);
-    trackEvent("assessment_start", { test_id: testId, link });
     navigate(link);
   };
 

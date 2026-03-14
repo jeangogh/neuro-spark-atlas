@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Play, Pause, Volume2, Gauge } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
-import { trackEvent } from "@/lib/oracle";
 
 /** Minimal markdown-to-JSX renderer for article content. */
 function renderMarkdown(md: string): React.ReactNode[] {
@@ -59,8 +58,6 @@ export default function AprenderReadPage() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [speed, setSpeed] = useState(1);
-  const sessionStart = useRef(Date.now());
-  const speedChanges = useRef<{ from: number; to: number; at: number; position: number }[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -82,22 +79,9 @@ export default function AprenderReadPage() {
   const cycleSpeed = useCallback(() => {
     const idx = SPEEDS.indexOf(speed);
     const next = SPEEDS[(idx + 1) % SPEEDS.length];
-    const prevSpeed = speed;
     setSpeed(next);
     if (audioRef.current) audioRef.current.playbackRate = next;
-    speedChanges.current.push({
-      from: prevSpeed,
-      to: next,
-      at: Date.now(),
-      position: audioRef.current?.currentTime || 0,
-    });
-    trackEvent("playback_speed_change", {
-      content_id: id,
-      from: prevSpeed,
-      to: next,
-      position_s: Math.round(audioRef.current?.currentTime || 0),
-    });
-  }, [speed, id]);
+  }, [speed]);
 
   const togglePlay = () => {
     if (!episode?.audioUrl) return;
@@ -106,29 +90,15 @@ export default function AprenderReadPage() {
       audio.playbackRate = speed;
       audio.addEventListener("timeupdate", () => setCurrentTime(audio.currentTime));
       audio.addEventListener("loadedmetadata", () => setDuration(audio.duration));
-      audio.addEventListener("ended", () => {
-        setPlaying(false);
-        setCurrentTime(0);
-        trackEvent("playback_complete", {
-          content_id: id,
-          duration_s: Math.round(audio.duration),
-          time_spent_ms: Date.now() - sessionStart.current,
-          avg_speed: speedChanges.current.length > 0
-            ? speedChanges.current.reduce((s, c) => s + c.to, speed) / (speedChanges.current.length + 1)
-            : speed,
-          speed_changes: speedChanges.current.length,
-        });
-      });
+      audio.addEventListener("ended", () => { setPlaying(false); setCurrentTime(0); });
       audioRef.current = audio;
     }
     if (playing) {
       audioRef.current.pause();
       setPlaying(false);
-      trackEvent("playback_pause", { content_id: id, position_s: Math.round(audioRef.current.currentTime) });
     } else {
       audioRef.current.play().catch(() => {});
       setPlaying(true);
-      trackEvent("playback_start", { content_id: id, position_s: Math.round(audioRef.current.currentTime), speed });
     }
   };
 
