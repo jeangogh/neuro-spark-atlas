@@ -1,15 +1,20 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BookOpen, Lock, Clock } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import BottomNav from "@/components/BottomNav";
 
 const TEXTS = AUDIO_EPISODES;
 
 export default function AprenderPage() {
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+  if (!user) return <Navigate to="/auth" replace />;
   const { isLocked, remaining } = useQuota();
   const { toast } = useToast();
   const freeLeft = remaining("textos");

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import {
   ChevronDown, ArrowRight, Check, Zap, ScanSearch, FileText,
   Route, TrendingUp, Camera, Film, X, Play, Lock, Headphones,
@@ -48,12 +49,16 @@ const FAQS = [
 const AUDIOS = AUDIO_EPISODES;
 
 export default function ExplorePage() {
+  const { user, loading } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
   const heroCtaRef = useRef<HTMLButtonElement>(null);
   const { isLocked, remaining } = useQuota();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+  if (!user) return <Navigate to="/auth" replace />;
   const freeLeft = remaining("audios");
 
   useEffect(() => {

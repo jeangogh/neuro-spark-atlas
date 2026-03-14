@@ -636,8 +636,6 @@ export default function Index() {
 
       {/* About Modal */}
       <AboutModal open={showAbout} onClose={() => setShowAbout(false)} />
-
-      <BottomNav />
     </div>
   );
 }

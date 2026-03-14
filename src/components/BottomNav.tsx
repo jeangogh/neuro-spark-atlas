@@ -17,6 +17,8 @@ const HIDDEN_PATTERNS = [
 export default function BottomNav() {
   const { pathname } = useLocation();
 
+  // Hide on landing page (unauthenticated) and specific routes
+  if (pathname === "/") return null;
   if (HIDDEN_PATTERNS.some((p) => pathname === p || pathname.startsWith(p))) return null;
   if (pathname.startsWith("/aprender/")) return null;
 

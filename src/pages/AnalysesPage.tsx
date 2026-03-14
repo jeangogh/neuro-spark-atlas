@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import { Lock, ClipboardList, Beaker, ChevronRight } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -45,9 +46,13 @@ const INVENTARIOS = [
 const JORNADA_IDS: JornadaId[] = ["J1", "J2", "J3", "J4", "J5", "J6"];
 
 export default function AnalysesPage() {
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { isLocked, remaining } = useQuota();
   const { toast } = useToast();
+
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+  if (!user) return <Navigate to="/auth" replace />;
   const freeLeft = remaining("testes");
   const [jornadaFilter, setJornadaFilter] = useState<JornadaId | "all">("all");
 
