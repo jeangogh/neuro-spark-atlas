@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
+import { trackEvent } from "@/lib/oracle";
 import BottomNav from "@/components/BottomNav";
 
 // ── Subscription content (preserved from original) ──
@@ -80,6 +81,7 @@ export default function ExplorePage() {
       audioRef.current = a;
     }
     setPlayingId(id);
+    trackEvent("playback_start", { content_id: id, context: "explorar" });
   };
 
   return (

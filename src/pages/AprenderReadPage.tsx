@@ -1,9 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Play, Pause, Volume2 } from "lucide-react";
+import { ArrowLeft, Play, Pause, Volume2, Gauge } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
+import { trackEvent } from "@/lib/oracle";
 
 /** Minimal markdown-to-JSX renderer for article content. */
 function renderMarkdown(md: string): React.ReactNode[] {
@@ -52,10 +53,14 @@ export default function AprenderReadPage() {
 
   const episode = useMemo(() => AUDIO_EPISODES.find((ep) => ep.id === id), [id]);
 
+  const SPEEDS = [1, 1.25, 1.5, 2, 2.5, 3, 4];
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [speed, setSpeed] = useState(1);
+  const sessionStart = useRef(Date.now());
+  const speedChanges = useRef<{ from: number; to: number; at: number; position: number }[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -74,21 +79,56 @@ export default function AprenderReadPage() {
     };
   }, []);
 
+  const cycleSpeed = useCallback(() => {
+    const idx = SPEEDS.indexOf(speed);
+    const next = SPEEDS[(idx + 1) % SPEEDS.length];
+    const prevSpeed = speed;
+    setSpeed(next);
+    if (audioRef.current) audioRef.current.playbackRate = next;
+    speedChanges.current.push({
+      from: prevSpeed,
+      to: next,
+      at: Date.now(),
+      position: audioRef.current?.currentTime || 0,
+    });
+    trackEvent("playback_speed_change", {
+      content_id: id,
+      from: prevSpeed,
+      to: next,
+      position_s: Math.round(audioRef.current?.currentTime || 0),
+    });
+  }, [speed, id]);
+
   const togglePlay = () => {
     if (!episode?.audioUrl) return;
     if (!audioRef.current) {
       const audio = new Audio(episode.audioUrl);
+      audio.playbackRate = speed;
       audio.addEventListener("timeupdate", () => setCurrentTime(audio.currentTime));
       audio.addEventListener("loadedmetadata", () => setDuration(audio.duration));
-      audio.addEventListener("ended", () => { setPlaying(false); setCurrentTime(0); });
+      audio.addEventListener("ended", () => {
+        setPlaying(false);
+        setCurrentTime(0);
+        trackEvent("playback_complete", {
+          content_id: id,
+          duration_s: Math.round(audio.duration),
+          time_spent_ms: Date.now() - sessionStart.current,
+          avg_speed: speedChanges.current.length > 0
+            ? speedChanges.current.reduce((s, c) => s + c.to, speed) / (speedChanges.current.length + 1)
+            : speed,
+          speed_changes: speedChanges.current.length,
+        });
+      });
       audioRef.current = audio;
     }
     if (playing) {
       audioRef.current.pause();
       setPlaying(false);
+      trackEvent("playback_pause", { content_id: id, position_s: Math.round(audioRef.current.currentTime) });
     } else {
       audioRef.current.play().catch(() => {});
       setPlaying(true);
+      trackEvent("playback_start", { content_id: id, position_s: Math.round(audioRef.current.currentTime), speed });
     }
   };
 
@@ -171,8 +211,13 @@ export default function AprenderReadPage() {
               </p>
             </div>
 
-            {/* Volume indicator */}
-            <Volume2 className="w-4 h-4 text-muted-foreground shrink-0" />
+            {/* Speed button */}
+            <button
+              onClick={cycleSpeed}
+              className="shrink-0 px-2 py-1 rounded-lg bg-muted text-foreground font-mono text-[12px] font-bold tabular-nums active:scale-95 transition-transform min-w-[44px]"
+            >
+              {speed}x
+            </button>
           </div>
 
           {/* Seek slider */}
