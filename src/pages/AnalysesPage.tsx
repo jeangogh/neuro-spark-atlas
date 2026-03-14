@@ -2,10 +2,9 @@ import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
-import { Lock, ClipboardList, Beaker, ChevronRight } from "lucide-react";
+import { Lock, ClipboardList, Beaker, ChevronRight, ArrowRight } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useQuota } from "@/hooks/useQuota";
-import { useToast } from "@/hooks/use-toast";
 import { ALL_MINITESTES, JORNADA_LABELS } from "@/data/minitestes";
 import type { JornadaId } from "@/data/minitestes";
 import BottomNav from "@/components/BottomNav";
@@ -48,22 +47,17 @@ const JORNADA_IDS: JornadaId[] = ["J1", "J2", "J3", "J4", "J5", "J6"];
 export default function AnalysesPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const { isLocked, remaining } = useQuota();
-  const { toast } = useToast();
+  const { isLocked, remaining, consume } = useQuota();
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
   const freeLeft = remaining("testes");
+  const showPaywall = freeLeft === 0;
   const [jornadaFilter, setJornadaFilter] = useState<JornadaId | "all">("all");
 
   const handleTestClick = (link: string, testId: string) => {
-    if (isLocked("testes", testId)) {
-      toast({
-        title: "Limite gratuito atingido",
-        description: "Assine o Gifted Lab para acessar mais testes.",
-      });
-      return;
-    }
+    if (isLocked("testes", testId)) return;
+    consume("testes", testId);
     navigate(link);
   };
 
@@ -94,14 +88,16 @@ export default function AnalysesPage() {
       </header>
 
       {/* Quota badge */}
-      <div className="px-5 max-w-2xl mx-auto mb-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-          <ClipboardList className="w-3.5 h-3.5 text-primary" />
-          <span className="text-[12px] font-medium text-primary">
-            {freeLeft} {freeLeft === 1 ? "teste gratis restante" : "testes gratis restantes"}
-          </span>
+      {!showPaywall && (
+        <div className="px-5 max-w-2xl mx-auto mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+            <ClipboardList className="w-3.5 h-3.5 text-primary" />
+            <span className="text-[12px] font-medium text-primary">
+              {freeLeft} {freeLeft === 1 ? "teste grátis restante" : "testes grátis restantes"}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Tabs */}
       <div className="px-5 max-w-2xl mx-auto">
@@ -243,6 +239,27 @@ export default function AnalysesPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Paywall after 3 tests */}
+      {showPaywall && (
+        <div className="px-5 max-w-2xl mx-auto mt-8">
+          <div className="rounded-2xl border border-primary/20 bg-primary/[0.04] p-6 text-center">
+            <ClipboardList className="w-8 h-8 text-primary mx-auto mb-3" />
+            <h2 className="font-display text-xl font-bold text-foreground mb-2">Você fez seus 3 testes gratuitos</h2>
+            <p className="text-[14px] text-muted-foreground leading-relaxed mb-5">
+              Para continuar acessando todos os testes, áudios e textos — assine o Gifted Lab.
+            </p>
+            <a
+              href="https://pay.hotmart.com/P104729957Y?off=ntj8v232"
+              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:scale-[1.02] transition-all"
+              style={{ boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 20px hsl(var(--primary) / 0.35)" }}
+            >
+              Assinar Gifted Lab — R$29,90/mês <ArrowRight className="w-4 h-4" />
+            </a>
+            <p className="text-[11px] text-muted-foreground mt-3">7 dias de garantia · Cancela quando quiser</p>
+          </div>
+        </div>
+      )}
 
       <BottomNav />
     </div>
