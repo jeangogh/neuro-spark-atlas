@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ArrowRight, Check, Zap, BarChart3, Brain, Target, RefreshCw } from "lucide-react";
+import { ChevronDown, ArrowRight, Check, Zap, ScanSearch, FileText, Route, TrendingUp, Camera, Film, X } from "lucide-react";
 // BottomNav removido — página de venda standalone
 
 const STEPS = [
-  { icon: BarChart3, num: "01", title: "Análise", text: "A plataforma investiga uma dimensão do seu funcionamento por semana. Cruza com o que o rastreio já revelou. Resultado: um retrato preciso do que está acontecendo com você agora." },
-  { icon: Brain, num: "02", title: "Relatório", text: "O que está regulado. O que está em sobrecarga. Onde está o travamento. Sem jargão. Sem teoria. Sobre você." },
-  { icon: Target, num: "03", title: "Plano", text: "Com base no resultado, a IA monta seu plano. Conteúdo direcionado — aulas, protocolos, exercícios — pra resolver o que foi identificado. Não o que é popular. O que você precisa." },
-  { icon: RefreshCw, num: "04", title: "Evolução", text: "Na semana seguinte, mede o que mudou. Ajusta. Evolui. A IA já conhece seu rastreio. Em 3 meses, a precisão é outra." },
+  { icon: ScanSearch, num: "01", title: "Análise", text: "A plataforma investiga uma dimensão do seu funcionamento por semana. Cruza com o que o rastreio já revelou. Resultado: um retrato preciso do que está acontecendo com você agora." },
+  { icon: FileText, num: "02", title: "Relatório", text: "O que está regulado. O que está em sobrecarga. Onde está o travamento. Sem jargão. Sem teoria. Sobre você." },
+  { icon: Route, num: "03", title: "Plano", text: "Com base no resultado, a IA monta seu plano. Conteúdo direcionado — aulas, protocolos, exercícios — pra resolver o que foi identificado. Não o que é popular. O que você precisa." },
+  { icon: TrendingUp, num: "04", title: "Evolução", text: "Na semana seguinte, mede o que mudou. Ajusta. Evolui. A IA já conhece seu rastreio. Em 3 meses, a precisão é outra." },
 ];
 
 const INCLUDES = [
@@ -20,10 +20,12 @@ const INCLUDES = [
 ];
 
 const COMPARISONS = [
-  ["Rastreio", "Você sabe que é superdotado", "Gifted Lab", "Você sabe COMO funciona — e o que fazer com isso"],
-  ["Rastreio", "Um resultado estático", "Gifted Lab", "Análise que evolui toda semana"],
-  ["Rastreio", "Informação genérica sobre AHSD", "Gifted Lab", "Plano personalizado pro SEU padrão"],
-  ["Rastreio", "Alívio de saber o nome", "Gifted Lab", "Ferramenta pra mudar o que trava"],
+  { rastreio: "Um resultado estático", giftedlab: "Análise que evolui toda semana" },
+  { rastreio: "Você sabe que é superdotado", giftedlab: "Você sabe COMO funciona — e o que fazer" },
+  { rastreio: "Informação genérica sobre AHSD", giftedlab: "Plano personalizado pro SEU padrão" },
+  { rastreio: "Alívio de saber o nome", giftedlab: "Ferramenta pra mudar o que trava" },
+  { rastreio: "Mesma resposta pra todo mundo", giftedlab: "IA que já conhece seu rastreio e adapta" },
+  { rastreio: "Foto do momento", giftedlab: "Filme em tempo real" },
 ];
 
 const FAQS = [
@@ -115,22 +117,37 @@ export default function ExplorePage() {
       <section className="px-5 py-10 max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-4">O que muda</p>
-          <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-6">De foto parada pra filme em tempo real.</h2>
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-8">De foto parada pra filme em tempo real.</h2>
 
-          <div className="space-y-3">
-            {COMPARISONS.map(([labelA, textA, labelB, textB], i) => (
+          {/* Headers */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted/50 border border-border">
+              <Camera className="w-4 h-4 text-muted-foreground shrink-0" />
+              <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">Rastreio</span>
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary/[0.06] border border-primary/20">
+              <Film className="w-4 h-4 text-primary shrink-0" />
+              <span className="text-[11px] font-semibold uppercase tracking-widest text-primary">Gifted Lab</span>
+            </div>
+          </div>
+
+          {/* Rows */}
+          <div className="space-y-2.5">
+            {COMPARISONS.map((row, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                className="rounded-xl border bg-card p-4"
+                viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="grid grid-cols-2 gap-3"
               >
-                <div className="flex items-start gap-3 mb-2.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mt-0.5 shrink-0 w-14">{labelA}</span>
-                  <p className="text-[13px] text-muted-foreground">{textA}</p>
+                {/* Left — Rastreio */}
+                <div className="rounded-xl border border-border bg-card p-4 flex items-start gap-2.5">
+                  <X className="w-3.5 h-3.5 text-muted-foreground/40 shrink-0 mt-0.5" />
+                  <p className="text-[12px] sm:text-[13px] text-muted-foreground leading-relaxed">{row.rastreio}</p>
                 </div>
-                <div className="flex items-start gap-3">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-primary mt-0.5 shrink-0 w-14">{labelB}</span>
-                  <p className="text-[13px] text-foreground font-medium">{textB}</p>
+                {/* Right — Gifted Lab */}
+                <div className="rounded-xl border border-primary/15 bg-primary/[0.03] p-4 flex items-start gap-2.5">
+                  <Check className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                  <p className="text-[12px] sm:text-[13px] text-foreground font-medium leading-relaxed">{row.giftedlab}</p>
                 </div>
               </motion.div>
             ))}
