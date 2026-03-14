@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   ChevronDown, ArrowRight, Check, Zap, ScanSearch, FileText,
-  Route, TrendingUp, Camera, Film, X, Play, Pause, Lock, Headphones,
+  Route, TrendingUp, Camera, Film, X, Play, Lock, Headphones,
 } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
@@ -44,16 +45,15 @@ const FAQS = [
   { q: "E se nao fizer sentido?", a: "7 dias de garantia. Pede reembolso. Sem atrito." },
 ];
 
-const AUDIOS = AUDIO_EPISODES.slice(0, 3);
+const AUDIOS = AUDIO_EPISODES;
 
 export default function ExplorePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showSticky, setShowSticky] = useState(false);
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const heroCtaRef = useRef<HTMLButtonElement>(null);
-  const { isLocked, remaining, consume } = useQuota();
+  const { isLocked, remaining } = useQuota();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const freeLeft = remaining("audios");
 
   useEffect(() => {
@@ -69,53 +69,16 @@ export default function ExplorePage() {
     window.location.href = "https://pay.hotmart.com/P104729957Y?off=ntj8v232";
   };
 
-  const handlePlay = (id: string, audioUrl: string) => {
+  const handleOpen = (id: string) => {
     if (isLocked("audios", id)) {
       toast({
         title: "Limite gratuito atingido",
-        description: "Assine o Gifted Lab para ouvir mais audios.",
+        description: "Assine o Gifted Lab para desbloquear.",
       });
       return;
     }
-
-    consume("audios", id);
-
-    if (playingId === id) {
-      // Toggle pause/play
-      if (audioRef.current) {
-        if (audioRef.current.paused) {
-          audioRef.current.play();
-        } else {
-          audioRef.current.pause();
-        }
-      }
-      return;
-    }
-
-    // Stop current
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-
-    if (audioUrl) {
-      const audio = new Audio(audioUrl);
-      audio.play().catch(() => {});
-      audio.addEventListener("ended", () => setPlayingId(null));
-      audioRef.current = audio;
-    }
-    setPlayingId(id);
+    navigate(`/aprender/${id}`);
   };
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -153,44 +116,32 @@ export default function ExplorePage() {
       <div className="px-5 max-w-2xl mx-auto space-y-3 mb-12">
         {AUDIOS.map((ep, i) => {
           const locked = isLocked("audios", ep.id);
-          const isPlaying = playingId === ep.id;
 
           return (
-            <motion.div
+            <motion.button
               key={ep.id}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.08, duration: 0.35 }}
-              className={`rounded-xl border p-5 transition-all ${
+              transition={{ delay: i * 0.06, duration: 0.35 }}
+              onClick={() => handleOpen(ep.id)}
+              className={`w-full text-left rounded-xl border p-5 transition-all ${
                 locked
                   ? "bg-card/50 border-border opacity-60"
-                  : isPlaying
-                    ? "bg-card border-primary/30 shadow-sm"
-                    : "bg-card border-border hover:border-primary/20"
+                  : "bg-card border-border hover:border-primary/20 hover:shadow-sm"
               }`}
             >
               <div className="flex items-start gap-4">
-                {/* Play button */}
-                <button
-                  onClick={() => handlePlay(ep.id, ep.audioUrl)}
-                  className={`shrink-0 w-11 h-11 rounded-full flex items-center justify-center transition-all ${
-                    locked
-                      ? "bg-muted"
-                      : isPlaying
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-primary/10 text-primary hover:bg-primary/20"
+                <div
+                  className={`shrink-0 w-11 h-11 rounded-full flex items-center justify-center ${
+                    locked ? "bg-muted" : "bg-primary/10"
                   }`}
                 >
                   {locked ? (
                     <Lock className="w-4 h-4 text-muted-foreground" />
-                  ) : isPlaying ? (
-                    <Pause className="w-4 h-4" />
                   ) : (
-                    <Play className="w-4 h-4 ml-0.5" />
+                    <Play className="w-4 h-4 ml-0.5 text-primary" />
                   )}
-                </button>
-
-                {/* Info */}
+                </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[15px] font-semibold text-foreground mb-1 leading-snug">
                     {ep.title}
@@ -202,35 +153,11 @@ export default function ExplorePage() {
                     <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
                       {ep.duration}
                     </span>
+                    <span className="text-[10px] text-muted-foreground">audio + texto</span>
                   </div>
                 </div>
               </div>
-
-              {/* Inline audio player for playing item */}
-              {isPlaying && ep.audioUrl && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  className="mt-4 pt-4 border-t border-border"
-                >
-                  <audio
-                    controls
-                    src={ep.audioUrl}
-                    className="w-full h-10 rounded-lg"
-                    autoPlay
-                  />
-                </motion.div>
-              )}
-
-              {/* Locked message */}
-              {locked && (
-                <div className="mt-3 pt-3 border-t border-border">
-                  <p className="text-[12px] text-muted-foreground">
-                    Assine o Gifted Lab para desbloquear todos os audios.
-                  </p>
-                </div>
-              )}
-            </motion.div>
+            </motion.button>
           );
         })}
       </div>

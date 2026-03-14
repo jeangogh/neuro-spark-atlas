@@ -6,7 +6,7 @@ import { useQuota } from "@/hooks/useQuota";
 import { useToast } from "@/hooks/use-toast";
 import BottomNav from "@/components/BottomNav";
 
-const TEXTS = AUDIO_EPISODES.slice(0, 3);
+const TEXTS = AUDIO_EPISODES;
 
 export default function AprenderPage() {
   const navigate = useNavigate();
