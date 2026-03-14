@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Headphones, BookOpen, BarChart3, AudioLines } from "lucide-react";
-import BottomNav from "@/components/BottomNav";
+import { Headphones, BookOpen, BarChart3 } from "lucide-react";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid,
@@ -217,7 +216,7 @@ function AboutModal({ open, onClose }: { open: boolean; onClose: () => void }) {
               </div>
 
               <div className="mt-7 pt-5 border-t border-border text-center">
-                <Link to="/triagem" onClick={onClose}>
+                <Link to="/selecionar-teste" onClick={onClose}>
                   <button className="px-8 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] bg-primary text-primary-foreground shadow-lg">
                     Iniciar Rastreio
                   </button>
@@ -276,7 +275,7 @@ function ShimmerButton({ to, children }: { to: string; children: React.ReactNode
 function SendFriendButton() {
   const [copied, setCopied] = useState(false);
   const handleShare = async () => {
-    const url = window.location.origin + "/triagem";
+    const url = window.location.origin + "/selecionar-teste";
     const text = "Você precisa fazer esse rastreio de altas habilidades e neurodivergência. Leva apenas 7 minutos.";
     if (navigator.share) {
       try { await navigator.share({ title: "Rastreio de Altas Habilidades", text, url }); return; } catch {}
@@ -628,7 +627,7 @@ export default function Index() {
           <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
             Resultado imediato, baixável em PDF e no seu e-mail.
           </p>
-          <ShimmerButton to="/triagem">
+          <ShimmerButton to="/selecionar-teste">
             Começar agora — 7 minutos
           </ShimmerButton>
         </motion.div>

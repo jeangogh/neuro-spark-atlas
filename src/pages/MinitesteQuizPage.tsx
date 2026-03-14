@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Navigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -25,6 +26,11 @@ export default function MinitesteQuizPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  // ── Auth guard ──
+  const { user, loading: authLoading } = useAuth();
+  if (authLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+  if (!user) return <Navigate to="/auth" replace />;
 
   // ── Not found ──
   if (!miniteste) {

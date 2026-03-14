@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Lock, ClipboardList, Beaker, ChevronRight, ArrowRight } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useQuota } from "@/hooks/useQuota";
+import { HOTMART_URL } from "@/lib/constants";
 import { ALL_MINITESTES, JORNADA_LABELS } from "@/data/minitestes";
 import type { JornadaId } from "@/data/minitestes";
 import BottomNav from "@/components/BottomNav";
@@ -250,7 +251,7 @@ export default function AnalysesPage() {
               Para continuar acessando todos os testes, áudios e textos — assine o Gifted Lab.
             </p>
             <a
-              href="https://pay.hotmart.com/P104729957Y?off=ntj8v232"
+              href={HOTMART_URL}
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:scale-[1.02] transition-all"
               style={{ boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 20px hsl(var(--primary) / 0.35)" }}
             >

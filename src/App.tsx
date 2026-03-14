@@ -13,7 +13,6 @@ const QuizPage = lazy(() => import("./pages/QuizPage"));
 const AhsdQuizPage = lazy(() => import("./pages/AhsdQuizPage"));
 const DimensionalQuizPage = lazy(() => import("./pages/DimensionalQuizPage"));
 const TestSelectionPage = lazy(() => import("./pages/TestSelectionPage"));
-const ResultsPage = lazy(() => import("./pages/ResultsPage"));
 const ExplorePage = lazy(() => import("./pages/ExplorePage"));
 const AprenderPage = lazy(() => import("./pages/AprenderPage"));
 const AprenderReadPage = lazy(() => import("./pages/AprenderReadPage"));
@@ -56,7 +55,6 @@ const App = () => (
                 <Route path="/triagem" element={<QuizPage />} />
                 <Route path="/triagem/dimensional" element={<DimensionalQuizPage />} />
                 <Route path="/triagem/:testKey" element={<AhsdQuizPage />} />
-                <Route path="/resultados" element={<ResultsPage />} />
                 <Route path="/explorar" element={<ExplorePage />} />
                 <Route path="/aprender" element={<AprenderPage />} />
                 <Route path="/aprender/:id" element={<AprenderReadPage />} />

@@ -118,16 +118,26 @@ export function useFunnelTracking(totalSteps = 53) {
         page:         window.location.pathname,
       });
       const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/funnel_events`;
-      navigator.sendBeacon(
-        url,
-        new Blob([payload], { type: "application/json" })
-      );
+      const apikey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      fetch(url, {
+        method: "POST",
+        keepalive: true,
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": apikey,
+          "Authorization": `Bearer ${apikey}`,
+          "Prefer": "return=minimal",
+        },
+        body: payload,
+      }).catch(() => {});
     };
-    window.addEventListener("visibilitychange", () => {
+    const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") handleLeave();
-    });
+    };
+    window.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("beforeunload", handleLeave);
     return () => {
+      window.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("beforeunload", handleLeave);
     };
   }, [totalSteps]);

@@ -6,6 +6,7 @@ import { ALL_TESTS } from "@/data/testRegistry";
 import BottomNav from "@/components/BottomNav";
 import { useGuestInviteClaim } from "@/hooks/useGuestInviteClaim";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function TestSelectionPage() {
   const { user, loading, signOut } = useAuth();
@@ -16,6 +17,20 @@ export default function TestSelectionPage() {
   useEffect(() => {
     localStorage.removeItem("ahsd_user_email");
   }, []);
+
+  // Populate completedTests from Supabase
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("quiz_results")
+      .select("test_type")
+      .eq("user_id", user.id)
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          setCompletedTests(new Set(data.map((r) => r.test_type)));
+        }
+      });
+  }, [user]);
 
   if (loading) {
     return (

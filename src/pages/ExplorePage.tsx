@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
+import { HOTMART_URL } from "@/lib/constants";
 import BottomNav from "@/components/BottomNav";
 
 // ── Subscription content (preserved from original) ──
@@ -56,13 +57,25 @@ export default function ExplorePage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { isLocked, remaining, consume } = useQuota();
 
+  // Observe heroCtaRef to show/hide sticky CTA
+  useEffect(() => {
+    const el = heroCtaRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowSticky(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
   const freeLeft = remaining("audios");
   const showPaywall = freeLeft === 0;
 
   const handleCta = () => {
-    window.location.href = "https://pay.hotmart.com/P104729957Y?off=ntj8v232";
+    window.location.href = HOTMART_URL;
   };
 
   const handlePlay = (id: string, audioUrl: string) => {
@@ -420,7 +433,7 @@ export default function ExplorePage() {
 
       {/* ═══ FOOTER ═══ */}
       <footer className="px-5 py-6 text-center border-t mb-14">
-        <p className="text-[11px] text-muted-foreground">Gifted Lab · giftedlab.app</p>
+        <p className="text-[11px] text-muted-foreground">Gifted Lab · teste-superdotacao.com</p>
       </footer>
 
       {/* ═══ STICKY CTA ═══ */}

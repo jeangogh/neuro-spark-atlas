@@ -4,6 +4,7 @@ import { BookOpen, Lock, Clock, ArrowRight } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
 import { useAuth } from "@/hooks/useAuth";
+import { HOTMART_URL } from "@/lib/constants";
 import BottomNav from "@/components/BottomNav";
 
 export default function AprenderPage() {
@@ -93,7 +94,7 @@ export default function AprenderPage() {
               Para continuar acessando todos os textos, áudios e análises — assine o Gifted Lab.
             </p>
             <a
-              href="https://pay.hotmart.com/P104729957Y?off=ntj8v232"
+              href={HOTMART_URL}
               className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm bg-primary text-primary-foreground hover:scale-[1.02] transition-all"
               style={{ boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 20px hsl(var(--primary) / 0.35)" }}
             >

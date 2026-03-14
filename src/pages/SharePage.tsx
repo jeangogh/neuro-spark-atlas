@@ -1,8 +1,14 @@
+import { Navigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Share2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 import BottomNav from "@/components/BottomNav";
 
 export default function SharePage() {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+  if (!user) return <Navigate to="/auth" replace />;
+
   return (
     <div className="min-h-screen bg-background">
       <main className="flex flex-col items-center justify-center px-5 py-20 text-center min-h-[80vh]">

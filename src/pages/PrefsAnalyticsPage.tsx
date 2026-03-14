@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 /* ────── Types ────── */
 type PrefRow = { value: string; count: number };
@@ -162,6 +163,7 @@ function VariantTable({ title, variants, metrics }: { title: string; variants: V
 
 /* ────── Main Page ────── */
 export default function PrefsAnalyticsPage() {
+  const { user, loading: authLoading } = useAuth();
   const [tab, setTab] = useState<Tab>("funil");
   const [themes, setThemes]     = useState<PrefRow[]>([]);
   const [fonts, setFonts]       = useState<PrefRow[]>([]);
@@ -169,6 +171,7 @@ export default function PrefsAnalyticsPage() {
   const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
+    if (authLoading || !user) return;
     async function load() {
       const [{ data: prefData }, { data: funnelData }] = await Promise.all([
         supabase.from("preference_events").select("event_type, value"),
@@ -191,7 +194,17 @@ export default function PrefsAnalyticsPage() {
       setLoading(false);
     }
     load();
-  }, []);
+  }, [authLoading, user]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) return <Navigate to="/auth" replace />;
 
   /* ── Funnel global stats ── */
   const sessions = [...new Set(funnelRows.filter(r => r.event_type === "quiz_start").map(r => r.session_id))];

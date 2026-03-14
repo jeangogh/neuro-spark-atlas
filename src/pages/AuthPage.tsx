@@ -4,14 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
-const FALLBACK_PASSWORD = "ahsd-lab-access-2024-x7k";
-
 export default function AuthPage() {
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, loading, signInWithOtp } = useAuth();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
 
   useEffect(() => {
     if (!loading && user) {
@@ -50,62 +49,17 @@ export default function AuthPage() {
       });
     } catch {}
 
-    // Try sign in first, then sign up if user doesn't exist
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: trimmed,
-      password: FALLBACK_PASSWORD,
-    });
+    // Send OTP magic link
+    const { error: otpError } = await signInWithOtp(trimmed);
 
-    if (signInError) {
-      // User doesn't exist — try to create account
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: trimmed,
-        password: FALLBACK_PASSWORD,
-      });
-
-      if (signUpError) {
-        // User exists but with a different password (pre-migration) — reset via edge function
-        if (signUpError.message?.includes("already") || (signUpError as any).code === "user_already_exists") {
-          try {
-            const res = await fetch(
-              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reset-user-password`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
-                body: JSON.stringify({ email: trimmed, password: FALLBACK_PASSWORD }),
-              }
-            );
-            if (res.ok) {
-              // Retry sign in with updated password
-              const { error: retryError } = await supabase.auth.signInWithPassword({
-                email: trimmed,
-                password: FALLBACK_PASSWORD,
-              });
-              if (retryError) {
-                setSubmitting(false);
-                setError("Erro ao entrar. Tente novamente.");
-                return;
-              }
-            } else {
-              setSubmitting(false);
-              setError("Erro ao entrar. Tente novamente.");
-              return;
-            }
-          } catch {
-            setSubmitting(false);
-            setError("Erro ao entrar. Tente novamente.");
-            return;
-          }
-        } else {
-          setSubmitting(false);
-          setError("Erro ao entrar. Tente novamente.");
-          return;
-        }
-      }
+    if (otpError) {
+      setSubmitting(false);
+      setError("Erro ao enviar o link. Tente novamente.");
+      return;
     }
 
-    // onAuthStateChange will handle redirect via useEffect
     setSubmitting(false);
+    setOtpSent(true);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -132,55 +86,76 @@ export default function AuthPage() {
           AHSD Lab
         </p>
 
-        <h1 className="text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-3 text-center">
-          Entre com seu <span className="text-primary">e-mail</span>
-        </h1>
-        <p className="text-muted-foreground text-sm text-center mb-8 leading-relaxed">
-          Informe seu e-mail para acessar os rastreios.
-        </p>
-
-        <div className="space-y-5">
-          <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
-              E-mail
-            </label>
-            <input
-              autoFocus
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="seu@email.com"
-              className="w-full text-base bg-transparent border-0 border-b-2 border-border pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200 focus:border-primary"
-            />
-          </div>
-
-          <AnimatePresence>
-            {error && (
-              <motion.p
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                className="text-[12px] text-destructive"
+        {otpSent ? (
+          <>
+            <h1 className="text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-3 text-center">
+              Verifique seu <span className="text-primary">e-mail</span>
+            </h1>
+            <p className="text-muted-foreground text-sm text-center mb-8 leading-relaxed">
+              Enviamos um link de acesso para <strong className="text-foreground">{email}</strong>. Clique no link para entrar.
+            </p>
+            <div className="pt-3">
+              <button
+                onClick={() => { setOtpSent(false); setEmail(""); }}
+                className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.01] hover:opacity-95 bg-muted text-foreground"
               >
-                {error}
-              </motion.p>
-            )}
-          </AnimatePresence>
+                Usar outro e-mail
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-3 text-center">
+              Entre com seu <span className="text-primary">e-mail</span>
+            </h1>
+            <p className="text-muted-foreground text-sm text-center mb-8 leading-relaxed">
+              Informe seu e-mail para receber um link de acesso.
+            </p>
 
-          <div className="pt-3">
-            <button
-              onClick={handleLogin}
-              disabled={submitting}
-              className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.01] hover:opacity-95 disabled:opacity-50 bg-primary text-primary-foreground"
-              style={{
-                boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 24px hsl(var(--primary) / 0.35)",
-              }}
-            >
-              {submitting ? "Entrando..." : "Entrar"}
-            </button>
-          </div>
-        </div>
+            <div className="space-y-5">
+              <div>
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5 block">
+                  E-mail
+                </label>
+                <input
+                  autoFocus
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="seu@email.com"
+                  className="w-full text-base bg-transparent border-0 border-b-2 border-border pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200 focus:border-primary"
+                />
+              </div>
+
+              <AnimatePresence>
+                {error && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    className="text-[12px] text-destructive"
+                  >
+                    {error}
+                  </motion.p>
+                )}
+              </AnimatePresence>
+
+              <div className="pt-3">
+                <button
+                  onClick={handleLogin}
+                  disabled={submitting}
+                  className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.01] hover:opacity-95 disabled:opacity-50 bg-primary text-primary-foreground"
+                  style={{
+                    boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 24px hsl(var(--primary) / 0.35)",
+                  }}
+                >
+                  {submitting ? "Enviando..." : "Enviar link de acesso"}
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </motion.div>
     </div>
   );

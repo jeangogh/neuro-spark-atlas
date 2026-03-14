@@ -5,11 +5,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigate, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Cell, Tooltip, LineChart, Line, ReferenceLine, Label, AreaChart, Area,
+  ResponsiveContainer, XAxis, YAxis, CartesianGrid,
+  Tooltip, LineChart, Line, ReferenceLine, Label,
 } from "recharts";
 import {
   MessageCircle, Twitter, Download, RotateCcw, Copy, Check, ChevronDown, Lock, LogOut, History,

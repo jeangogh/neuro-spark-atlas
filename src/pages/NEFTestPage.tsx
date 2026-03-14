@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronDown, ChevronUp, Brain, Target, ArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -117,6 +118,11 @@ export default function NEFTestPage() {
   }, [phase, intensityAnswers, hierarchyAnswers]);
 
   const primaryNef = results[0] ?? null;
+
+  // ── Auth guard ──
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+  if (!user) return <Navigate to="/auth" replace />;
 
   // ═══════════════════════════════════════
   // RENDER

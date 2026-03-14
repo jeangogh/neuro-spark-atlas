@@ -1,7 +1,8 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
-import { ArrowLeft, Play, Pause, Volume2, Gauge } from "lucide-react";
+import { ArrowLeft, Play, Pause, Volume2 } from "lucide-react";
 import { AUDIO_EPISODES } from "@/data/audioContent";
 import { useQuota } from "@/hooks/useQuota";
 
@@ -109,6 +110,11 @@ export default function AprenderReadPage() {
       setCurrentTime(val);
     }
   };
+
+  // ── Auth guard ──
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+  if (!user) return <Navigate to="/auth" replace />;
 
   if (!episode) {
     return (

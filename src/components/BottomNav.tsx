@@ -9,7 +9,7 @@ const NAV_ITEMS = [
 ];
 
 const HIDDEN_PATTERNS = [
-  "/auth", "/triagem", "/nef", "/miniteste/", "/resultados",
+  "/auth", "/triagem", "/nef", "/miniteste/",
   "/compartilhar", "/consentimento", "/teste-bonus", "/qualificacao",
   "/convite/", "/style-guide", "/admin",
 ];
