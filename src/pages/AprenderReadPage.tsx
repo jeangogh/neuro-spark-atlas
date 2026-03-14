@@ -53,7 +53,7 @@ export default function AprenderReadPage() {
 
   const episode = useMemo(() => AUDIO_EPISODES.find((ep) => ep.id === id), [id]);
 
-  const SPEEDS = [1, 1.25, 1.5, 2, 2.5, 3, 4];
+  const SPEEDS = [1, 1.25, 1.5, 2];
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
