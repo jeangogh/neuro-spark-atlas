@@ -525,10 +525,11 @@ export default function HistoryPage() {
     // Salvar cruzamento no Supabase
     if (crossAnalysis && user) {
       try {
-        await supabase.from("quiz_results").upsert({
+        await supabase.from("quiz_results").upsert([{
           user_id: user.id,
           test_type: "cross_analysis",
-          scores: {
+          answers: {} as any,
+          scores: JSON.parse(JSON.stringify({
             insights: crossAnalysis.insights,
             priorities: crossAnalysis.priorities,
             summary: crossAnalysis.summary,
@@ -537,8 +538,8 @@ export default function HistoryPage() {
             hasAhsdAdulto: crossAnalysis.hasAhsdAdulto,
             testsUsed: adultTestCount,
             generatedAt: new Date().toISOString(),
-          },
-        }, { onConflict: "user_id,test_type" });
+          })),
+        }], { onConflict: "user_id,test_type" });
       } catch (e) {
         console.warn("Failed to save cross analysis:", e);
       }
