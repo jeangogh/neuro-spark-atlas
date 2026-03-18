@@ -1,8 +1,9 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigate, Link, useNavigate } from "react-router-dom";
+import { exportElementAsPdf } from "@/lib/exportPdf";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   ResponsiveContainer,
@@ -399,6 +400,8 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
   const alostaticDims = c1Scores.alostatic.map((k) => DIMENSIONS.find((d) => d.key === k)!);
   const regulatedDims = DIMENSIONS.filter((d) => c1Scores.dimensions[d.key]?.zone === "regulado");
 
+  const resultRef = useRef<HTMLDivElement>(null);
+
   // Find dominant cost across alostatic dims
   const costSummary: string[] = [];
   for (const dim of alostaticDims) {
@@ -416,7 +419,7 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
   }
 
   return (
-    <div className="min-h-screen bg-background print:bg-white">
+    <div ref={resultRef} className="min-h-screen bg-background print:bg-white">
       <header className="pt-10 pb-6 md:pt-14 md:pb-8 px-5 text-center">
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="max-w-xl mx-auto">
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-2">Painel Dimensional de Adaptação</p>
@@ -522,7 +525,7 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
 
         {/* Actions */}
         <div className="flex gap-3 justify-center flex-wrap print:hidden">
-          <button onClick={() => window.print()} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]">
+          <button onClick={async () => { if (resultRef.current) await exportElementAsPdf(resultRef.current, "painel-dimensional.pdf"); }} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]">
             <Download className="w-4 h-4" /> Exportar PDF
           </button>
           <button onClick={onRestart} className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]">

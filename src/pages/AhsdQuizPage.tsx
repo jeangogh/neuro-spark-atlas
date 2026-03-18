@@ -1,8 +1,9 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigate, Link, useParams, useNavigate } from "react-router-dom";
+import { exportElementAsPdf } from "@/lib/exportPdf";
 import { Button } from "@/components/ui/button";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
@@ -137,6 +138,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
 }) {
   const classification = classifyResult(test, scores.pct);
   const dimensionMessages = evaluateDimensionRules(test, scores.categoryScores);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const radarData = test.categories.map((cat) => ({
     subject: cat.label,
@@ -151,7 +153,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
   }, test.categories[0]);
 
   return (
-    <div className="min-h-screen bg-background print:bg-white">
+    <div ref={resultRef} className="min-h-screen bg-background print:bg-white">
       <header className="pt-10 pb-6 md:pt-14 md:pb-8 px-5 text-center">
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-xl mx-auto">
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-2">{test.title}</p>
@@ -248,7 +250,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
         {/* Actions */}
         <div className="flex gap-3 justify-center flex-wrap print:hidden">
           <button
-            onClick={() => window.print()}
+            onClick={async () => { if (resultRef.current) await exportElementAsPdf(resultRef.current, `rastreio-${test.key}.pdf`); }}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]"
           >
             <Download className="w-4 h-4" />

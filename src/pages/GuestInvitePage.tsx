@@ -41,7 +41,10 @@ export default function GuestInvitePage() {
     setSubmitting(true);
 
     // Sign up guest with OTP
-    const { error: authError } = await supabase.auth.signInWithOtp({ email: email.trim() });
+    const { error: authError } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: window.location.origin + "/selecionar-teste" },
+    });
     if (authError) {
       toast.error("Erro ao criar conta: " + authError.message);
       setSubmitting(false);

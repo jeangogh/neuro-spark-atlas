@@ -16,11 +16,17 @@ export function useAuth() {
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    // If URL has auth fragment (#access_token=...), let onAuthStateChange
+    // handle session — getSession() would return null before fragment is parsed,
+    // causing auth guards to redirect back to /auth and lose the token.
+    const hasAuthFragment = window.location.hash.includes("access_token");
+    if (!hasAuthFragment) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      });
+    }
 
     return () => subscription.unsubscribe();
   }, []);

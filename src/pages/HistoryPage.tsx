@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigate, Link } from "react-router-dom";
+import { exportElementAsPdf } from "@/lib/exportPdf";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
@@ -297,6 +298,7 @@ function CrossResultsView({ analysis, neurocog, dimensional, ahsdAdulto }: {
         .map(([k, v]) => ({ subject: CONDITION_LABELS[k], score: v, fullMark: 100 }))
     : [];
 
+  const crossRef = useRef<HTMLDivElement>(null);
   const dimRadarData = dimensional
     ? Object.entries(dimensional.c1Scores.dimensions).map(([k, d]) => ({
         subject: DIM_SHORT[k] ?? k,
@@ -306,7 +308,7 @@ function CrossResultsView({ analysis, neurocog, dimensional, ahsdAdulto }: {
     : [];
 
   return (
-    <div className="space-y-6">
+    <div ref={crossRef} className="space-y-6">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="text-center">
         <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-2">Análise Integrada</p>
@@ -441,7 +443,7 @@ function CrossResultsView({ analysis, neurocog, dimensional, ahsdAdulto }: {
 
       {/* Export */}
       <div className="flex justify-center print:hidden">
-        <button onClick={() => window.print()}
+        <button onClick={async () => { if (crossRef.current) await exportElementAsPdf(crossRef.current, "analise-integrada.pdf"); }}
           className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]">
           <Download className="w-4 h-4" /> Exportar PDF
         </button>

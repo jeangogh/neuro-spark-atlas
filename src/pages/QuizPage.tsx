@@ -4,6 +4,7 @@ import { useFunnelTracking, getLayoutVariant, getLeadVariant } from "@/hooks/use
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Navigate, Link, useNavigate } from "react-router-dom";
+import { exportElementAsPdf } from "@/lib/exportPdf";
 import { Button } from "@/components/ui/button";
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
@@ -395,6 +396,7 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
   const results = useMemo(() => interpretResults(scores), [scores]);
   const [showRefs, setShowRefs] = useState(false);
   const [printMode, setPrintMode] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const sortedHypotheses = useMemo(() => {
     return [...results.hypotheses].sort((a, b) => {
@@ -415,7 +417,7 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
   };
 
   return (
-    <div className="min-h-screen bg-background print:bg-white">
+    <div ref={resultRef} className="min-h-screen bg-background print:bg-white">
       {/* Header */}
       <header className="pt-10 pb-6 md:pt-14 md:pb-8 px-5 text-center">
         <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="max-w-xl mx-auto">
@@ -537,12 +539,10 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
         {/* Actions row */}
         <div className="flex gap-3 justify-center flex-wrap print:hidden">
           <button
-            onClick={() => {
-              setPrintMode(true);
-              setTimeout(() => {
-                window.print();
-                setTimeout(() => setPrintMode(false), 500);
-              }, 300);
+            onClick={async () => {
+              if (resultRef.current) {
+                await exportElementAsPdf(resultRef.current, "rastreio-neurocognitivo.pdf");
+              }
             }}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]"
           >
