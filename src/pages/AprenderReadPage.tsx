@@ -120,7 +120,7 @@ export default function AprenderReadPage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center px-5">
-          <p className="text-muted-foreground mb-4">Conteudo nao encontrado.</p>
+          <p className="text-muted-foreground mb-4">Conteúdo não encontrado.</p>
           <button onClick={() => navigate(-1)} className="text-primary text-sm font-medium hover:underline">Voltar</button>
         </div>
       </div>

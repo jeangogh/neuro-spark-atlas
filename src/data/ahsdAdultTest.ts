@@ -160,7 +160,7 @@ A probabilidade de configuração estrutural de AHSD é significativa.`,
       label: "Indicadores moderados (perfil misto)",
       description: `O resultado aponta presença parcial de características associadas a altas habilidades.
 
-Há traços compatíveis com aceleração cognitiva ou criatividade diferenciada, porém sem padrão homogêneo e consistente nas quatro dimensões.
+Há traços compatíveis com aceleração cognitiva ou criatividade diferenciada, porém sem padrão homogêneo e consistente nas cinco dimensões.
 
 Esse perfil pode indicar:
 • Desenvolvimento assimétrico

@@ -189,7 +189,7 @@ export interface HypothesisResult {
 const conditionExplanations: Record<string, { name: string; full: string }> = {
   tdah: {
     name: "TDAH — Déficit de Atenção/Hiperatividade",
-    full: `O Transtorno de Déficit de Atenção e Hiperatividade (TDAH) é uma condição neurodesenvolvimentalista que afeta a regulação executiva — a capacidade do cérebro de gerenciar atenção, iniciar tarefas, manter foco e controlar impulsos.
+    full: `O Transtorno de Déficit de Atenção e Hiperatividade (TDAH) é uma condição neurodesenvolvimentar que afeta a regulação executiva — a capacidade do cérebro de gerenciar atenção, iniciar tarefas, manter foco e controlar impulsos.
 
 Não se trata de falta de inteligência ou preguiça. No TDAH, o cérebro funciona com um sistema de priorização baseado em **estímulo e interesse**, não em importância racional. Isso significa que tarefas consideradas importantes podem ser negligenciadas se não forem suficientemente estimulantes, enquanto atividades interessantes podem gerar hiperfoco intenso.
 
@@ -203,7 +203,7 @@ Quando associado a altas habilidades, o TDAH pode ser mascarado — a pessoa com
   },
   tea: {
     name: "TEA Nível 1 — Autismo",
-    full: `O Transtorno do Espectro Autista (TEA) Nível 1 é uma condição neurodesenvolvimentalista que afeta principalmente a cognição social — a maneira como o cérebro processa interações, emoções alheias e regras sociais implícitas.
+    full: `O Transtorno do Espectro Autista (TEA) Nível 1 é uma condição neurodesenvolvimentar que afeta principalmente a cognição social — a maneira como o cérebro processa interações, emoções alheias e regras sociais implícitas.
 
 Não significa falta de empatia ou desinteresse por pessoas. No TEA nível 1, a pessoa pode ter grande sensibilidade emocional, mas precisa de **processamento consciente** para interpretar o que a maioria das pessoas processa automaticamente: tom de voz, expressões faciais, intenções implícitas e duplo sentido.
 
@@ -250,7 +250,7 @@ Em pessoas com altas habilidades, o trauma pode ser especialmente complexo: a in
     name: "Ansiedade — Hipervigilância Cognitiva",
     full: `A ansiedade, como condição, vai além de "ficar nervoso". É um estado de hipervigilância cognitiva em que o cérebro opera constantemente em modo de antecipação de ameaças — mesmo quando não há perigo real.
 
-A mente ansiosa funciona como um sistema de radar super-sensível que detecta riscos em praticamente tudo: conversas, decisões, futuro, relações. Isso consome enorme energia mental e limita a capacidade de estar presente.
+A mente ansiosa funciona como um sistema de radar supersensível que detecta riscos em praticamente tudo: conversas, decisões, futuro, relações. Isso consome enorme energia mental e limita a capacidade de estar presente.
 
 Características:
 • Antecipação constante de problemas futuros
@@ -400,7 +400,7 @@ export function interpretResults(scores: ScoreResult): {
 
   let summary = "";
   if (neurodevHigh.length > 0 && highTraco && highTemp) {
-    summary += `Seus resultados apontam padrões compatíveis com funcionamento neurodesenvolvimentalista (${neurodevHigh.map((h) => h.id.toUpperCase()).join(", ")}), com persistência ao longo da vida e independência de contexto emocional. `;
+    summary += `Seus resultados apontam padrões compatíveis com funcionamento neurodesenvolvimentar (${neurodevHigh.map((h) => h.id.toUpperCase()).join(", ")}), com persistência ao longo da vida e independência de contexto emocional. `;
   }
   if (acquiredHigh.length > 0 && !highTemp) {
     summary += `Também foram identificados padrões emocionais adquiridos (${acquiredHigh.map((h) => h.label.split(" — ")[0]).join(", ")}), possivelmente ligados a experiências e contextos específicos. `;

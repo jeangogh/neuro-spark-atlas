@@ -155,12 +155,12 @@ export default function NEFTestPage() {
           </div>
 
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-4">
-            Inventario de Nucleos Emocionais
+            Inventário de Núcleos Emocionais
           </h1>
 
           <p className="text-[14px] text-muted-foreground leading-relaxed mb-8 max-w-md mx-auto">
             Identifica qual significado emocional central organiza seu sofrimento
-            — e como seus padroes se conectam.
+            — e como seus padrões se conectam.
           </p>
 
           {/* Stats */}
@@ -185,7 +185,7 @@ export default function NEFTestPage() {
             onClick={handleStart}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] bg-primary text-primary-foreground"
           >
-            Comecar
+            Começar
             <ArrowRight className="w-4 h-4" />
           </button>
         </motion.div>
@@ -312,7 +312,7 @@ export default function NEFTestPage() {
           Seu resultado
         </p>
         <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-8">
-          Nucleos Emocionais
+          Núcleos Emocionais
         </h1>
 
         {/* ── Primary NEF (always expanded) ── */}
@@ -333,7 +333,7 @@ export default function NEFTestPage() {
               </div>
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                  Nucleo primario
+                  Núcleo primário
                 </p>
                 <h2 className="text-[18px] font-bold text-foreground">
                   {primaryNef.name}
@@ -364,7 +364,7 @@ export default function NEFTestPage() {
 
             <div className="rounded-lg border bg-background p-4 mb-4">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">
-                O que esta por baixo
+                O que está por baixo
               </p>
               <p className="text-[13px] text-foreground/90 leading-relaxed">
                 {primaryNef.deep}
@@ -373,7 +373,7 @@ export default function NEFTestPage() {
 
             <div className="rounded-lg border border-primary/20 bg-primary/[0.04] p-4">
               <p className="text-[10px] font-semibold uppercase tracking-widest text-primary mb-2">
-                Direcao
+                Direção
               </p>
               <p className="text-[13px] text-foreground/90 leading-relaxed">
                 {primaryNef.direction}
@@ -384,7 +384,7 @@ export default function NEFTestPage() {
 
         {/* ── All NEFs ranked ── */}
         <h3 className="text-[14px] font-semibold text-foreground mb-4">
-          Todos os nucleos (por intensidade)
+          Todos os núcleos (por intensidade)
         </h3>
 
         <div className="space-y-2.5 mb-10">
@@ -415,7 +415,7 @@ export default function NEFTestPage() {
                       </span>
                       {isPrimary && (
                         <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-bold uppercase">
-                          Primario
+                          Primário
                         </span>
                       )}
                     </div>
@@ -456,7 +456,7 @@ export default function NEFTestPage() {
                         </p>
                         <div className="rounded-lg border bg-background p-3">
                           <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">
-                            O que esta por baixo
+                            O que está por baixo
                           </p>
                           <p className="text-[12px] text-foreground/85 leading-relaxed">
                             {nef.deep}
@@ -464,7 +464,7 @@ export default function NEFTestPage() {
                         </div>
                         <div className="rounded-lg border border-primary/20 bg-primary/[0.04] p-3">
                           <p className="text-[10px] font-semibold uppercase tracking-widest text-primary mb-1.5">
-                            Direcao
+                            Direção
                           </p>
                           <p className="text-[12px] text-foreground/85 leading-relaxed">
                             {nef.direction}
@@ -488,13 +488,13 @@ export default function NEFTestPage() {
             className="rounded-xl border bg-card p-5 sm:p-6 mb-8"
           >
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground mb-3">
-              Conexao entre nucleos
+              Conexão entre núcleos
             </p>
             <p className="text-[13px] text-foreground/90 leading-relaxed">
-              Seu nucleo primario ({results[0].name}) esta conectado com{" "}
+              Seu núcleo primário ({results[0].name}) está conectado com{" "}
               {results[1].name}. Isso significa que um alimenta o outro —
               quando um se ativa, o segundo tende a acompanhar. Entender essa
-              dinamica e o primeiro passo para interromper o ciclo.
+              dinâmica é o primeiro passo para interromper o ciclo.
             </p>
           </motion.div>
         )}
@@ -507,10 +507,10 @@ export default function NEFTestPage() {
           className="rounded-xl border border-primary/20 bg-primary/[0.04] p-6 text-center"
         >
           <h3 className="text-[16px] font-bold text-foreground mb-2">
-            Proximo passo
+            Próximo passo
           </h3>
           <p className="text-[13px] text-muted-foreground leading-relaxed mb-5 max-w-md mx-auto">
-            Agora que voce sabe quais nucleos organizam seu funcionamento,
+            Agora que você sabe quais núcleos organizam seu funcionamento,
             o Gifted Lab investiga cada um deles em profundidade — toda semana,
             com plano personalizado.
           </p>

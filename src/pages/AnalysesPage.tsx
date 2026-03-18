@@ -13,7 +13,7 @@ import BottomNav from "@/components/BottomNav";
 const INVENTARIOS = [
   {
     title: "Painel Dimensional",
-    description: "7 dimensoes de funcionamento, 2 camadas",
+    description: "7 dimensões de funcionamento, 2 camadas",
     items: 56,
     link: "/triagem/dimensional",
   },
@@ -25,19 +25,19 @@ const INVENTARIOS = [
   },
   {
     title: "AHSD Adulto",
-    description: "Rastreio completo de superdotacao",
+    description: "Rastreio completo de superdotação",
     items: 60,
     link: "/triagem/ahsd-adulto",
   },
   {
     title: "AHSD Infantil",
-    description: "Rastreio para criancas (pais respondem)",
+    description: "Rastreio para crianças (pais respondem)",
     items: 50,
     link: "/triagem/ahsd-infantil",
   },
   {
     title: "Nucleos Emocionais (NEF)",
-    description: "7 padroes emocionais dominantes",
+    description: "7 padrões emocionais dominantes",
     items: 35,
     link: "/nef",
   },
@@ -80,7 +80,7 @@ export default function AnalysesPage() {
             Testes
           </p>
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-2">
-            Analises
+            Análises
           </h1>
           <p className="text-[14px] text-muted-foreground leading-relaxed">
             Testes de rastreio e autoconhecimento
@@ -106,7 +106,7 @@ export default function AnalysesPage() {
           <TabsList className="w-full">
             <TabsTrigger value="inventarios" className="flex-1">
               <ClipboardList className="w-3.5 h-3.5 mr-1.5" />
-              Inventarios
+              Inventários
             </TabsTrigger>
             <TabsTrigger value="minitestes" className="flex-1">
               <Beaker className="w-3.5 h-3.5 mr-1.5" />

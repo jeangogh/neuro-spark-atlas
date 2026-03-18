@@ -38,10 +38,10 @@ export default function MinitesteQuizPage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center px-5">
           <p className="text-[16px] font-semibold text-foreground mb-2">
-            Teste nao encontrado
+            Teste não encontrado
           </p>
           <p className="text-[13px] text-muted-foreground mb-6">
-            O miniteste "{id}" nao existe ou foi removido.
+            O miniteste "{id}" não existe ou foi removido.
           </p>
           <button
             onClick={() => navigate("/analises")}
@@ -100,10 +100,10 @@ export default function MinitesteQuizPage() {
 
   const interpretation = useMemo(() => {
     if (score <= 30)
-      return { label: "Baixa identificacao", colorClass: "text-primary" };
+      return { label: "Baixa identificação", colorClass: "text-primary" };
     if (score <= 60)
-      return { label: "Identificacao moderada", colorClass: "text-accent" };
-    return { label: "Alta identificacao", colorClass: "text-destructive" };
+      return { label: "Identificação moderada", colorClass: "text-accent" };
+    return { label: "Alta identificação", colorClass: "text-destructive" };
   }, [score]);
 
   // ── Circular progress ring ──

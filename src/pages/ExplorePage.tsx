@@ -14,36 +14,36 @@ import BottomNav from "@/components/BottomNav";
 // ── Subscription content (preserved from original) ──
 
 const STEPS = [
-  { icon: ScanSearch, num: "01", title: "Analise", text: "A plataforma investiga uma dimensao do seu funcionamento por semana. Cruza com o que o rastreio ja revelou. Resultado: um retrato preciso do que esta acontecendo com voce agora." },
-  { icon: FileText, num: "02", title: "Relatorio", text: "O que esta regulado. O que esta em sobrecarga. Onde esta o travamento. Sem jargao. Sem teoria. Sobre voce." },
-  { icon: Route, num: "03", title: "Plano", text: "Com base no resultado, a IA monta seu plano. Conteudo direcionado — aulas, protocolos, exercicios — pra resolver o que foi identificado. Nao o que e popular. O que voce precisa." },
-  { icon: TrendingUp, num: "04", title: "Evolucao", text: "Na semana seguinte, mede o que mudou. Ajusta. Evolui. A IA ja conhece seu rastreio. Em 3 meses, a precisao e outra." },
+  { icon: ScanSearch, num: "01", title: "Análise", text: "A plataforma investiga uma dimensão do seu funcionamento por semana. Cruza com o que o rastreio já revelou. Resultado: um retrato preciso do que está acontecendo com você agora." },
+  { icon: FileText, num: "02", title: "Relatório", text: "O que está regulado. O que está em sobrecarga. Onde está o travamento. Sem jargão. Sem teoria. Sobre você." },
+  { icon: Route, num: "03", title: "Plano", text: "Com base no resultado, a IA monta seu plano. Conteúdo direcionado — aulas, protocolos, exercícios — pra resolver o que foi identificado. Não o que é popular. O que você precisa." },
+  { icon: TrendingUp, num: "04", title: "Evolução", text: "Na semana seguinte, mede o que mudou. Ajusta. Evolui. A IA já conhece seu rastreio. Em 3 meses, a precisão é outra." },
 ];
 
 const INCLUDES = [
-  "Teste dimensional completo — 7 dimensoes, perfil molecular, assinatura de funcionamento",
-  "Analises semanais com IA — relatorio personalizado toda semana",
-  "Monitoramento diario — check-in de 2-3 minutos, dashboard em tempo real",
+  "Teste dimensional completo — 7 dimensões, perfil molecular, assinatura de funcionamento",
+  "Análises semanais com IA — relatório personalizado toda semana",
+  "Monitoramento diário — check-in de 2-3 minutos, dashboard em tempo real",
   "Plano personalizado semanal — atualizado com base no que apareceu",
-  "Conteudo de intervencao — nao aula generica, material pra trabalhar padroes",
-  "Relatorio mensal — o que mudou, o que travou, comparativo com o rastreio",
+  "Conteúdo de intervenção — não aula genérica, material pra trabalhar padrões",
+  "Relatório mensal — o que mudou, o que travou, comparativo com o rastreio",
 ];
 
 const COMPARISONS = [
-  { rastreio: "Um resultado estatico", giftedlab: "Analise que evolui toda semana" },
-  { rastreio: "Voce sabe que e superdotado", giftedlab: "Voce sabe COMO funciona — e o que fazer" },
-  { rastreio: "Informacao generica sobre AHSD", giftedlab: "Plano personalizado pro SEU padrao" },
-  { rastreio: "Alivio de saber o nome", giftedlab: "Ferramenta pra mudar o que trava" },
-  { rastreio: "Mesma resposta pra todo mundo", giftedlab: "IA que ja conhece seu rastreio e adapta" },
+  { rastreio: "Um resultado estático", giftedlab: "Análise que evolui toda semana" },
+  { rastreio: "Você sabe que é superdotado", giftedlab: "Você sabe COMO funciona — e o que fazer" },
+  { rastreio: "Informação genérica sobre AHSD", giftedlab: "Plano personalizado pro SEU padrão" },
+  { rastreio: "Alívio de saber o nome", giftedlab: "Ferramenta pra mudar o que trava" },
+  { rastreio: "Mesma resposta pra todo mundo", giftedlab: "IA que já conhece seu rastreio e adapta" },
   { rastreio: "Foto do momento", giftedlab: "Filme em tempo real" },
 ];
 
 const FAQS = [
-  { q: "Ja fiz o rastreio. Qual a diferenca?", a: "O rastreio e uma foto. O Gifted Lab e um filme. Ele pega o que o rastreio revelou e investiga toda semana — medindo evolucao, identificando padroes e ajustando seu plano." },
-  { q: "Preciso refazer o teste?", a: "Nao. A plataforma ja parte do seu resultado. Tudo que o rastreio mapeou e ponto de partida pro ciclo semanal." },
-  { q: "Quanto tempo por dia?", a: "2-3 minutos no check-in diario. 15-20 minutos nas analises semanais." },
+  { q: "Já fiz o rastreio. Qual a diferença?", a: "O rastreio é uma foto. O Gifted Lab é um filme. Ele pega o que o rastreio revelou e investiga toda semana — medindo evolução, identificando padrões e ajustando seu plano." },
+  { q: "Preciso refazer o teste?", a: "Não. A plataforma já parte do seu resultado. Tudo que o rastreio mapeou é ponto de partida pro ciclo semanal." },
+  { q: "Quanto tempo por dia?", a: "2-3 minutos no check-in diário. 15-20 minutos nas análises semanais." },
   { q: "Posso cancelar quando quiser?", a: "Sim. Mensal sem fidelidade. Cancela pelo app." },
-  { q: "E se nao fizer sentido?", a: "7 dias de garantia. Pede reembolso. Sem atrito." },
+  { q: "E se não fizer sentido?", a: "7 dias de garantia. Pede reembolso. Sem atrito." },
 ];
 
 const AUDIOS = AUDIO_EPISODES;
@@ -106,13 +106,13 @@ export default function ExplorePage() {
           transition={{ duration: 0.4 }}
         >
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-2">
-            Conteudo
+            Conteúdo
           </p>
           <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-2">
             Explorar
           </h1>
           <p className="text-[14px] text-muted-foreground leading-relaxed">
-            Audios narrados por Peter
+            Áudios narrados por Peter
           </p>
         </motion.div>
       </header>
@@ -122,7 +122,7 @@ export default function ExplorePage() {
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
           <Headphones className="w-3.5 h-3.5 text-primary" />
           <span className="text-[12px] font-medium text-primary">
-            {freeLeft} {freeLeft === 1 ? "audio gratis restante" : "audios gratis restantes"}
+            {freeLeft} {freeLeft === 1 ? "áudio grátis restante" : "áudios grátis restantes"}
           </span>
         </div>
       </div>
@@ -194,7 +194,7 @@ export default function ExplorePage() {
         <div className="flex items-center gap-4">
           <div className="flex-1 h-px bg-border" />
           <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-muted-foreground">
-            Proximo passo
+            Próximo passo
           </span>
           <div className="flex-1 h-px bg-border" />
         </div>
@@ -205,20 +205,20 @@ export default function ExplorePage() {
         <motion.div initial={{ opacity: 0, y: -16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-4">Gifted Lab</p>
           <h2 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-[1.1] mb-6">
-            Voce fez o rastreio.
+            Você fez o rastreio.
             <br />
-            Sabe que e superdotado.
+            Sabe que é superdotado.
             <br />
             <span className="text-muted-foreground">E agora?</span>
           </h2>
 
           <div className="space-y-3 text-[15px] text-muted-foreground leading-relaxed max-w-lg mx-auto mb-8">
-            <p>Saber o nome nao muda nada sozinho.</p>
+            <p>Saber o nome não muda nada sozinho.</p>
             <p>
-              Voce precisa de mapa. Precisa de ferramenta. Precisa de algo que investigue o que esta acontecendo com voce toda semana e te diga:{" "}
-              <span className="text-foreground font-medium">aqui e onde trava. Aqui e o que fazer.</span>
+              Você precisa de mapa. Precisa de ferramenta. Precisa de algo que investigue o que está acontecendo com você toda semana e te diga:{" "}
+              <span className="text-foreground font-medium">aqui é onde trava. Aqui é o que fazer.</span>
             </p>
-            <p>O rastreio te deu o nome. O Gifted Lab te da o caminho.</p>
+            <p>O rastreio te deu o nome. O Gifted Lab te dá o caminho.</p>
           </div>
 
           <button
@@ -227,7 +227,7 @@ export default function ExplorePage() {
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] bg-primary text-primary-foreground"
             style={{ boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 20px hsl(var(--primary) / 0.35)" }}
           >
-            Assinar o Gifted Lab — R$29,90/mes
+            Assinar o Gifted Lab — R$29,90/mês
             <ArrowRight className="w-4 h-4" />
           </button>
           <p className="text-[11px] text-muted-foreground mt-3">
@@ -241,17 +241,17 @@ export default function ExplorePage() {
         <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
           <p className="text-primary text-[10px] font-semibold uppercase tracking-[0.18em] mb-4">O problema</p>
           <div className="rounded-xl border bg-card p-5 sm:p-6 space-y-4 text-[14px] text-muted-foreground leading-relaxed">
-            <p>Voce descobriu que e superdotado. Sentiu alivio. Talvez euforia.</p>
+            <p>Você descobriu que é superdotado. Sentiu alívio. Talvez euforia.</p>
             <p className="text-foreground font-medium">E depois veio o vazio.</p>
             <p>
-              Porque saber que seu motor e diferente nao conserta a pista. Saber que sua mente funciona em 7 dimensoes nao regula nenhuma delas.
-              Saber que voce tem assinatura de Camaleao Exausto nao faz o mascaramento parar.
+              Porque saber que seu motor é diferente não conserta a pista. Saber que sua mente funciona em 7 dimensões não regula nenhuma delas.
+              Saber que você tem assinatura de Camaleão Exausto não faz o mascaramento parar.
             </p>
             <p>
-              Informacao sem personalizacao e ruido. Saber que superdotados tem dificuldade com perfeccionismo nao resolve o{" "}
+              Informação sem personalização é ruído. Saber que superdotados têm dificuldade com perfeccionismo não resolve o{" "}
               <span className="text-foreground font-medium">seu</span> perfeccionismo.
             </p>
-            <p className="text-foreground font-medium">Voce precisa de investigacao continua. Nao de mais conteudo generico.</p>
+            <p className="text-foreground font-medium">Você precisa de investigação contínua. Não de mais conteúdo genérico.</p>
           </div>
         </motion.div>
       </section>
@@ -366,7 +366,7 @@ export default function ExplorePage() {
             Assinar agora
           </button>
           <p className="text-[11px] text-muted-foreground mt-3">
-            7 dias pra testar. Nao fez sentido, pede reembolso.
+            7 dias pra testar. Não fez sentido, pede reembolso.
           </p>
         </motion.div>
       </section>
@@ -412,9 +412,9 @@ export default function ExplorePage() {
       <section className="px-5 py-12 max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.45 }}>
           <div className="space-y-3 text-[15px] text-muted-foreground leading-relaxed max-w-lg mx-auto text-center mb-8">
-            <p>Voce ja deu o passo mais dificil: olhou pra dentro e descobriu como funciona.</p>
-            <p className="text-foreground font-medium">Agora a pergunta e: vai fazer o que com isso?</p>
-            <p>A IA ja tem seu rastreio. Esta pronta pra continuar.</p>
+            <p>Você já deu o passo mais difícil: olhou pra dentro e descobriu como funciona.</p>
+            <p className="text-foreground font-medium">Agora a pergunta é: vai fazer o que com isso?</p>
+            <p>A IA já tem seu rastreio. Está pronta pra continuar.</p>
           </div>
 
           <div className="text-center">
@@ -423,7 +423,7 @@ export default function ExplorePage() {
               className="inline-flex items-center gap-2 px-10 py-4 rounded-xl font-bold text-sm transition-all hover:scale-[1.02] bg-primary text-primary-foreground"
               style={{ boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 4px 20px hsl(var(--primary) / 0.35)" }}
             >
-              Assinar agora — R$29,90/mes
+              Assinar agora — R$29,90/mês
               <ArrowRight className="w-4 h-4" />
             </button>
             <p className="text-[11px] text-muted-foreground mt-3">7 dias de garantia</p>
@@ -454,7 +454,7 @@ export default function ExplorePage() {
           >
             <div>
               <span className="font-semibold text-foreground text-sm">Gifted Lab</span>
-              <span className="text-[11px] text-muted-foreground ml-2">R$29,90/mes</span>
+              <span className="text-[11px] text-muted-foreground ml-2">R$29,90/mês</span>
             </div>
             <button
               onClick={handleCta}

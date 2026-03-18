@@ -125,10 +125,10 @@ export const HIERARCHY_ITEMS: HierarchyItem[] = [
 ];
 
 export const PAIN_LABELS: PainLabel[] = [
-  { val: 1, label: "Nao me atinge" },
+  { val: 1, label: "Não me atinge" },
   { val: 2, label: "Pouco" },
   { val: 3, label: "Incomoda" },
-  { val: 4, label: "Doi" },
+  { val: 4, label: "Dói" },
   { val: 5, label: "Me define" },
 ];
 
