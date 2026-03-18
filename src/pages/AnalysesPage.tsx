@@ -49,12 +49,12 @@ export default function AnalysesPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const { isLocked, remaining, consume } = useQuota();
+  const [jornadaFilter, setJornadaFilter] = useState<JornadaId | "all">("all");
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
   const freeLeft = remaining("testes");
   const showPaywall = freeLeft === 0;
-  const [jornadaFilter, setJornadaFilter] = useState<JornadaId | "all">("all");
 
   const handleTestClick = (link: string, testId: string) => {
     if (isLocked("testes", testId)) return;

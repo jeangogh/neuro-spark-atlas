@@ -11,6 +11,7 @@ export default function MinitesteQuizPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { consume } = useQuota();
+  const { user, loading: authLoading } = useAuth();
 
   const miniteste = useMemo(() => getMiniTeste(id ?? ""), [id]);
 
@@ -28,7 +29,6 @@ export default function MinitesteQuizPage() {
   }, [id]);
 
   // ── Auth guard ──
-  const { user, loading: authLoading } = useAuth();
   if (authLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
 
