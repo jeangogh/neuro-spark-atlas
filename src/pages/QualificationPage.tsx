@@ -124,10 +124,18 @@ const CONDITIONAL: Record<string, { label: string; options: { label: string; val
 
 const REQUIRED_KEYS = ["interesse", "faixa_renda", "preferencia_aprendizado", "momento_atual", "contato_ahsd"] as const;
 
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 export default function QualificationPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [telefone, setTelefone] = useState("");
   const [saving, setSaving] = useState(false);
   const [alreadyDone, setAlreadyDone] = useState<boolean | null>(null);
   const [phase, setPhase] = useState<"main" | "conditional">("main");
@@ -164,7 +172,7 @@ export default function QualificationPage() {
 
   const set = (key: string, value: string) => setAnswers((p) => ({ ...p, [key]: value }));
 
-  const allMainFilled = REQUIRED_KEYS.every((k) => !!answers[k]);
+  const allMainFilled = REQUIRED_KEYS.every((k) => !!answers[k]) && telefone.replace(/\D/g, "").length >= 10;
   const hasConditional = !!CONDITIONAL[answers.interesse];
   const conditionalFilled = !hasConditional || !!answers.pergunta_condicional;
 
@@ -179,17 +187,21 @@ export default function QualificationPage() {
 
   const handleSave = async () => {
     setSaving(true);
+    const phoneDigits = telefone.replace(/\D/g, "");
     try {
-      await supabase.from("qualification_responses").insert({
-        user_id: user!.id,
-        interesse: answers.interesse ?? "",
-        faixa_renda: answers.faixa_renda ?? "",
-        preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
-        momento_atual: answers.momento_atual ?? "",
-        investimento: answers.investimento ?? "",
-        contato_ahsd: answers.contato_ahsd ?? "",
-        pergunta_condicional: answers.pergunta_condicional ?? null,
-      });
+      await Promise.all([
+        supabase.from("qualification_responses").insert({
+          user_id: user!.id,
+          interesse: answers.interesse ?? "",
+          faixa_renda: answers.faixa_renda ?? "",
+          preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
+          momento_atual: answers.momento_atual ?? "",
+          investimento: answers.investimento ?? "",
+          contato_ahsd: answers.contato_ahsd ?? "",
+          pergunta_condicional: answers.pergunta_condicional ?? null,
+        }),
+        supabase.from("profiles").update({ telefone: phoneDigits }).eq("user_id", user!.id),
+      ]);
     } catch {}
     navigate("/selecionar-teste", { replace: true });
   };
@@ -235,6 +247,19 @@ export default function QualificationPage() {
                   onChange={(v) => set(key, v)}
                 />
               ))}
+
+              {/* WhatsApp field */}
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-foreground">Seu WhatsApp (com DDD)</p>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  value={telefone}
+                  onChange={(e) => setTelefone(formatPhone(e.target.value))}
+                  placeholder="(11) 99999-9999"
+                  className="w-full text-sm bg-transparent border-0 border-b-2 border-border pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200 focus:border-primary"
+                />
+              </div>
             </>
           ) : (
             <ChipSelect
@@ -243,19 +268,22 @@ export default function QualificationPage() {
               value={answers.pergunta_condicional}
               onChange={(v) => {
                 set("pergunta_condicional", v);
-                // Auto-save after selecting
+                const phoneDigits = telefone.replace(/\D/g, "");
                 setTimeout(() => {
                   setSaving(true);
-                  supabase.from("qualification_responses").insert({
-                    user_id: user!.id,
-                    interesse: answers.interesse ?? "",
-                    faixa_renda: answers.faixa_renda ?? "",
-                    preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
-                    momento_atual: answers.momento_atual ?? "",
-                    investimento: answers.investimento ?? "",
-                    contato_ahsd: answers.contato_ahsd ?? "",
-                    pergunta_condicional: v,
-                  }).then(() => navigate("/selecionar-teste", { replace: true }));
+                  Promise.all([
+                    supabase.from("qualification_responses").insert({
+                      user_id: user!.id,
+                      interesse: answers.interesse ?? "",
+                      faixa_renda: answers.faixa_renda ?? "",
+                      preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
+                      momento_atual: answers.momento_atual ?? "",
+                      investimento: answers.investimento ?? "",
+                      contato_ahsd: answers.contato_ahsd ?? "",
+                      pergunta_condicional: v,
+                    }),
+                    supabase.from("profiles").update({ telefone: phoneDigits }).eq("user_id", user!.id),
+                  ]).then(() => navigate("/selecionar-teste", { replace: true }));
                 }, 200);
               }}
             />
