@@ -124,6 +124,13 @@ const CONDITIONAL: Record<string, { label: string; options: { label: string; val
 
 const REQUIRED_KEYS = ["interesse", "faixa_renda", "preferencia_aprendizado", "momento_atual", "contato_ahsd"] as const;
 
+function formatPhone(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 export default function QualificationPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
