@@ -2,3 +2,6 @@ project_id = "ckvbxqmixbjrfpcofimc"
 
 [functions.process-email-queue]
 verify_jwt = true
+
+[functions.import-legacy-data]
+verify_jwt = false
