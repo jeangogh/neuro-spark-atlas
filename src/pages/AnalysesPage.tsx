@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
-import { Lock, ClipboardList, Beaker, ChevronRight, ArrowRight } from "lucide-react";
+import { Lock, ClipboardList, Beaker, FlaskConical, ChevronRight, ArrowRight } from "lucide-react";
+import { NOVOPSYCH_TESTS } from "@/data/novopsychTests";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useQuota } from "@/hooks/useQuota";
 import { HOTMART_URL } from "@/lib/constants";
@@ -112,6 +113,10 @@ export default function AnalysesPage() {
               <Beaker className="w-3.5 h-3.5 mr-1.5" />
               Minitestes
             </TabsTrigger>
+            <TabsTrigger value="cientificos" className="flex-1">
+              <FlaskConical className="w-3.5 h-3.5 mr-1.5" />
+              Científicos
+            </TabsTrigger>
           </TabsList>
 
           {/* ── Inventarios tab ── */}
@@ -145,6 +150,59 @@ export default function AnalysesPage() {
                         <span className="inline-block mt-2 text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
                           {inv.items} itens
                         </span>
+                      </div>
+                      {locked ? (
+                        <Lock className="w-4 h-4 text-muted-foreground shrink-0" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
+                      )}
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </TabsContent>
+
+          {/* ── Científicos tab ── */}
+          <TabsContent value="cientificos">
+            <div className="mt-4 mb-3">
+              <p className="text-[12px] text-muted-foreground leading-relaxed">
+                13 instrumentos psicológicos validados internacionalmente. Licença livre para uso clínico e pesquisa.
+              </p>
+            </div>
+            <div className="space-y-3">
+              {NOVOPSYCH_TESTS.map((test, i) => {
+                const testId = `psych-${test.key}`;
+                const locked = isLocked("testes", testId);
+                return (
+                  <motion.button
+                    key={test.key}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04, duration: 0.3 }}
+                    onClick={() => handleTestClick(`/psych/${test.key}`, testId)}
+                    className={`w-full text-left rounded-xl border p-4 transition-all ${
+                      locked
+                        ? "bg-card/50 border-border opacity-60"
+                        : "bg-card border-border hover:border-primary/30 hover:shadow-sm"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-[14px] font-semibold text-foreground mb-0.5">
+                          {test.title}
+                        </h3>
+                        <p className="text-[12px] text-muted-foreground leading-relaxed line-clamp-2">
+                          {test.description}
+                        </p>
+                        <div className="flex gap-2 mt-2">
+                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                            {test.items} itens
+                          </span>
+                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                            ~{test.estimatedMinutes} min
+                          </span>
+                        </div>
                       </div>
                       {locked ? (
                         <Lock className="w-4 h-4 text-muted-foreground shrink-0" />

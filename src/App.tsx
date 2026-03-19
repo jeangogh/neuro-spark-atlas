@@ -29,6 +29,7 @@ const ConsentPage = lazy(() => import("./pages/ConsentPage"));
 const BonusReportPage = lazy(() => import("./pages/BonusReportPage"));
 const QualificationPage = lazy(() => import("./pages/QualificationPage"));
 const StyleGuidePage = lazy(() => import("./pages/StyleGuidePage"));
+const NovoPsychQuizPage = lazy(() => import("./pages/NovoPsychQuizPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -61,6 +62,7 @@ const App = () => (
                 <Route path="/analises" element={<AnalysesPage />} />
                 <Route path="/nef" element={<NEFTestPage />} />
                 <Route path="/miniteste/:id" element={<MinitesteQuizPage />} />
+                <Route path="/psych/:testKey" element={<NovoPsychQuizPage />} />
                 <Route path="/historico" element={<HistoryPage />} />
                 <Route path="/compartilhar" element={<SharePage />} />
                 <Route path="/convite/:code" element={<GuestInvitePage />} />
