@@ -576,18 +576,22 @@ export default function DimensionalQuizPage() {
   const c1Progress = TOTAL_C1_QUESTIONS > 0 ? Math.round((Object.keys(c1Answers).length / TOTAL_C1_QUESTIONS) * 100) : 0;
   const currentQ = allC1Questions[currentQuestion];
 
-  // Check for saved result on mount
+  // Check for saved result on mount (with 5s timeout)
   useEffect(() => {
     if (!user) return;
     (async () => {
       try {
-        const { data, error } = await supabase
+        const query = supabase
           .from("quiz_results")
           .select("scores")
           .eq("user_id", user.id)
           .eq("test_type", "dimensional")
           .order("created_at", { ascending: false })
           .limit(1);
+        const timeout = new Promise<{ data: null; error: { message: string } }>((resolve) =>
+          setTimeout(() => resolve({ data: null, error: { message: "timeout" } }), 5000)
+        );
+        const { data, error } = await Promise.race([query, timeout]);
         if (error) {
           console.warn("Error loading saved results:", error);
           setPhase("c1_quiz");

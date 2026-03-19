@@ -541,7 +541,10 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
           <button
             onClick={async () => {
               if (resultRef.current) {
+                setPrintMode(true);
+                await new Promise((r) => setTimeout(r, 400));
                 await exportElementAsPdf(resultRef.current, "rastreio-neurocognitivo.pdf");
+                setPrintMode(false);
               }
             }}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted transition-all text-[12px] font-medium text-foreground hover:scale-[1.02]"
@@ -610,20 +613,29 @@ export default function QuizPage() {
   const blockComplete = block?.questions.every((q) => answers[q.id] !== undefined);
   const isLast = currentBlock === questionBlocks.length - 1;
 
-  // On mount: check if user has a saved result
+  // On mount: check if user has a saved result (with 5s timeout)
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data } = await supabase
-        .from("quiz_results")
-        .select("scores")
-        .eq("test_type", "neurocognitivo")
-        .order("created_at", { ascending: false })
-        .limit(1);
-      if (data && data.length > 0) {
-        setSavedScores(data[0].scores as any);
-        setPhase("results");
-      } else {
+      try {
+        const query = supabase
+          .from("quiz_results")
+          .select("scores")
+          .eq("test_type", "neurocognitivo")
+          .order("created_at", { ascending: false })
+          .limit(1);
+        const timeout = new Promise<{ data: null }>((resolve) =>
+          setTimeout(() => resolve({ data: null }), 5000)
+        );
+        const { data } = await Promise.race([query, timeout]);
+        if (data && data.length > 0) {
+          setSavedScores(data[0].scores as any);
+          setPhase("results");
+        } else {
+          setPhase("quiz");
+          trackStart();
+        }
+      } catch {
         setPhase("quiz");
         trackStart();
       }

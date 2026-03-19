@@ -9,31 +9,39 @@ export async function exportElementAsPdf(
   element: HTMLElement,
   filename = "resultado.pdf"
 ): Promise<void> {
-  const canvas = await html2canvas(element, {
-    scale: 2,
-    useCORS: true,
-    backgroundColor: "#1a1a2e", // dark background
-    logging: false,
-  });
+  // Wait for framer-motion animations to finish rendering
+  await new Promise((r) => setTimeout(r, 800));
 
-  const imgData = canvas.toDataURL("image/png");
-  const imgWidth = 210; // A4 width in mm
-  const pageHeight = 297; // A4 height in mm
-  const imgHeight = (canvas.height * imgWidth) / canvas.width;
+  try {
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#1a1a2e", // dark background
+      logging: false,
+    });
 
-  const pdf = new jsPDF("p", "mm", "a4");
-  let heightLeft = imgHeight;
-  let position = 0;
+    const imgData = canvas.toDataURL("image/png");
+    const imgWidth = 210; // A4 width in mm
+    const pageHeight = 297; // A4 height in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-  heightLeft -= pageHeight;
+    const pdf = new jsPDF("p", "mm", "a4");
+    let heightLeft = imgHeight;
+    let position = 0;
 
-  while (heightLeft > 0) {
-    position -= pageHeight;
-    pdf.addPage();
     pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
-  }
 
-  pdf.save(filename);
+    while (heightLeft > 0) {
+      position -= pageHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    pdf.save(filename);
+  } catch (e) {
+    console.error("PDF export failed:", e);
+    alert("Erro ao gerar PDF. Tente novamente.");
+  }
 }

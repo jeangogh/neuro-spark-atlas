@@ -8,24 +8,42 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let resolved = false;
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        resolved = true;
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        // Clean magic link token from URL so it doesn't leak in history/referer
+        if (window.location.hash.includes("access_token")) {
+          window.history.replaceState({}, "", window.location.pathname);
+        }
       }
     );
 
-    // If URL has auth fragment (#access_token=...), let onAuthStateChange
-    // handle session — getSession() would return null before fragment is parsed,
-    // causing auth guards to redirect back to /auth and lose the token.
     const hasAuthFragment = window.location.hash.includes("access_token");
     if (!hasAuthFragment) {
+      // No magic link — safe to check existing session immediately
       supabase.auth.getSession().then(({ data: { session } }) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
+        if (!resolved) {
+          setSession(session);
+          setUser(session?.user ?? null);
+          setLoading(false);
+        }
       });
+    } else {
+      // Magic link present — give onAuthStateChange 3s to resolve, then fallback
+      setTimeout(() => {
+        if (!resolved) {
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            setSession(session);
+            setUser(session?.user ?? null);
+            setLoading(false);
+          });
+        }
+      }, 3000);
     }
 
     return () => subscription.unsubscribe();

@@ -311,20 +311,28 @@ export default function AhsdQuizPage() {
   const blockComplete = block?.questions.every((q) => answers[q.id] !== undefined);
   const isLast = test ? currentBlock === test.questionBlocks.length - 1 : false;
 
-  // Check for saved result on mount
+  // Check for saved result on mount (with 5s timeout)
   useEffect(() => {
     if (!user || !test) return;
     (async () => {
-      const { data } = await supabase
-        .from("quiz_results")
-        .select("scores")
-        .eq("test_type", test.key)
-        .order("created_at", { ascending: false })
-        .limit(1);
-      if (data && data.length > 0) {
-        setSavedScores(data[0].scores);
-        setPhase("results");
-      } else {
+      try {
+        const query = supabase
+          .from("quiz_results")
+          .select("scores")
+          .eq("test_type", test.key)
+          .order("created_at", { ascending: false })
+          .limit(1);
+        const timeout = new Promise<{ data: null }>((resolve) =>
+          setTimeout(() => resolve({ data: null }), 5000)
+        );
+        const { data } = await Promise.race([query, timeout]);
+        if (data && data.length > 0) {
+          setSavedScores(data[0].scores);
+          setPhase("results");
+        } else {
+          setPhase("quiz");
+        }
+      } catch {
         setPhase("quiz");
       }
     })();
