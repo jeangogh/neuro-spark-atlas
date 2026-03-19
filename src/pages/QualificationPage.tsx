@@ -268,19 +268,22 @@ export default function QualificationPage() {
               value={answers.pergunta_condicional}
               onChange={(v) => {
                 set("pergunta_condicional", v);
-                // Auto-save after selecting
+                const phoneDigits = telefone.replace(/\D/g, "");
                 setTimeout(() => {
                   setSaving(true);
-                  supabase.from("qualification_responses").insert({
-                    user_id: user!.id,
-                    interesse: answers.interesse ?? "",
-                    faixa_renda: answers.faixa_renda ?? "",
-                    preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
-                    momento_atual: answers.momento_atual ?? "",
-                    investimento: answers.investimento ?? "",
-                    contato_ahsd: answers.contato_ahsd ?? "",
-                    pergunta_condicional: v,
-                  }).then(() => navigate("/selecionar-teste", { replace: true }));
+                  Promise.all([
+                    supabase.from("qualification_responses").insert({
+                      user_id: user!.id,
+                      interesse: answers.interesse ?? "",
+                      faixa_renda: answers.faixa_renda ?? "",
+                      preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
+                      momento_atual: answers.momento_atual ?? "",
+                      investimento: answers.investimento ?? "",
+                      contato_ahsd: answers.contato_ahsd ?? "",
+                      pergunta_condicional: v,
+                    }),
+                    supabase.from("profiles").update({ telefone: phoneDigits }).eq("user_id", user!.id),
+                  ]).then(() => navigate("/selecionar-teste", { replace: true }));
                 }, 200);
               }}
             />
