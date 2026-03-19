@@ -247,6 +247,19 @@ export default function QualificationPage() {
                   onChange={(v) => set(key, v)}
                 />
               ))}
+
+              {/* WhatsApp field */}
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-foreground">Seu WhatsApp (com DDD)</p>
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  value={telefone}
+                  onChange={(e) => setTelefone(formatPhone(e.target.value))}
+                  placeholder="(11) 99999-9999"
+                  className="w-full text-sm bg-transparent border-0 border-b-2 border-border pb-2 outline-none text-foreground placeholder:text-muted-foreground/40 transition-colors duration-200 focus:border-primary"
+                />
+              </div>
             </>
           ) : (
             <ChipSelect
