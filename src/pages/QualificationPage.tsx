@@ -135,6 +135,7 @@ export default function QualificationPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [telefone, setTelefone] = useState("");
   const [saving, setSaving] = useState(false);
   const [alreadyDone, setAlreadyDone] = useState<boolean | null>(null);
   const [phase, setPhase] = useState<"main" | "conditional">("main");
