@@ -187,17 +187,21 @@ export default function QualificationPage() {
 
   const handleSave = async () => {
     setSaving(true);
+    const phoneDigits = telefone.replace(/\D/g, "");
     try {
-      await supabase.from("qualification_responses").insert({
-        user_id: user!.id,
-        interesse: answers.interesse ?? "",
-        faixa_renda: answers.faixa_renda ?? "",
-        preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
-        momento_atual: answers.momento_atual ?? "",
-        investimento: answers.investimento ?? "",
-        contato_ahsd: answers.contato_ahsd ?? "",
-        pergunta_condicional: answers.pergunta_condicional ?? null,
-      });
+      await Promise.all([
+        supabase.from("qualification_responses").insert({
+          user_id: user!.id,
+          interesse: answers.interesse ?? "",
+          faixa_renda: answers.faixa_renda ?? "",
+          preferencia_aprendizado: answers.preferencia_aprendizado ?? "",
+          momento_atual: answers.momento_atual ?? "",
+          investimento: answers.investimento ?? "",
+          contato_ahsd: answers.contato_ahsd ?? "",
+          pergunta_condicional: answers.pergunta_condicional ?? null,
+        }),
+        supabase.from("profiles").update({ telefone: phoneDigits }).eq("user_id", user!.id),
+      ]);
     } catch {}
     navigate("/selecionar-teste", { replace: true });
   };
