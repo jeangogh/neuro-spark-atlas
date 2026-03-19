@@ -172,7 +172,7 @@ export default function QualificationPage() {
 
   const set = (key: string, value: string) => setAnswers((p) => ({ ...p, [key]: value }));
 
-  const allMainFilled = REQUIRED_KEYS.every((k) => !!answers[k]);
+  const allMainFilled = REQUIRED_KEYS.every((k) => !!answers[k]) && telefone.replace(/\D/g, "").length >= 10;
   const hasConditional = !!CONDITIONAL[answers.interesse];
   const conditionalFilled = !hasConditional || !!answers.pergunta_condicional;
 
