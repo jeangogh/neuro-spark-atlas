@@ -76,6 +76,7 @@ const App = () => (
               </Routes>
             </Suspense>
             <AmbientSoundFab />
+            <FeedbackFab />
           </AmbientSoundProvider>
         </ThemeProvider>
       </BrowserRouter>
