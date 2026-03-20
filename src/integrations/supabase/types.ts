@@ -152,6 +152,36 @@ export type Database = {
         }
         Relationships: []
       }
+      feedbacks: {
+        Row: {
+          criado_em: string
+          id: string
+          o_que_esta_bom: string | null
+          o_que_esta_ruim: string | null
+          o_que_quer: string | null
+          pagina: string
+          user_id: string
+        }
+        Insert: {
+          criado_em?: string
+          id?: string
+          o_que_esta_bom?: string | null
+          o_que_esta_ruim?: string | null
+          o_que_quer?: string | null
+          pagina: string
+          user_id: string
+        }
+        Update: {
+          criado_em?: string
+          id?: string
+          o_que_esta_bom?: string | null
+          o_que_esta_ruim?: string | null
+          o_que_quer?: string | null
+          pagina?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       funnel_events: {
         Row: {
           color_theme: string
