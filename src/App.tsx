@@ -7,6 +7,7 @@ import { lazy, Suspense } from "react";
 import { usePreferences } from "@/hooks/usePreferences";
 import { AmbientSoundProvider } from "@/contexts/AmbientSoundContext";
 import AmbientSoundFab from "@/components/AmbientSoundFab";
+import FeedbackFab from "@/components/FeedbackFab";
 
 const Index = lazy(() => import("./pages/Index"));
 const QuizPage = lazy(() => import("./pages/QuizPage"));
