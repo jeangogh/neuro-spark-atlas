@@ -9,9 +9,16 @@ export function useAuth() {
 
   useEffect(() => {
     let resolved = false;
+    const hasAuthFragment = window.location.hash.includes("access_token");
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (event, session) => {
+        // When a magic link token is in the URL, ignore the initial null-session event
+        // — Supabase fires INITIAL_SESSION before processing the hash fragment.
+        // Wait for the real SIGNED_IN / TOKEN_REFRESHED event instead.
+        if (hasAuthFragment && !session && event === "INITIAL_SESSION") {
+          return;
+        }
         resolved = true;
         setSession(session);
         setUser(session?.user ?? null);
@@ -23,7 +30,6 @@ export function useAuth() {
       }
     );
 
-    const hasAuthFragment = window.location.hash.includes("access_token");
     if (!hasAuthFragment) {
       // No magic link — safe to check existing session immediately
       supabase.auth.getSession().then(({ data: { session } }) => {
@@ -34,16 +40,17 @@ export function useAuth() {
         }
       });
     } else {
-      // Magic link present — give onAuthStateChange 3s to resolve, then fallback
+      // Magic link present — give onAuthStateChange 5s to resolve, then fallback
       setTimeout(() => {
         if (!resolved) {
           supabase.auth.getSession().then(({ data: { session } }) => {
+            resolved = true;
             setSession(session);
             setUser(session?.user ?? null);
             setLoading(false);
           });
         }
-      }, 3000);
+      }, 5000);
     }
 
     return () => subscription.unsubscribe();
