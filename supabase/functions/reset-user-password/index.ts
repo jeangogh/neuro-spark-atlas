@@ -25,11 +25,18 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // Find user by email
-    const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers();
-    if (listError) throw listError;
-
-    const user = users.find((u) => u.email === email);
+    // Find user by email with pagination
+    let user = null;
+    let page = 1;
+    const perPage = 1000;
+    while (!user) {
+      const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers({ page, perPage });
+      if (listError) throw listError;
+      if (!users || users.length === 0) break;
+      user = users.find((u) => u.email === email);
+      if (users.length < perPage) break;
+      page++;
+    }
     if (!user) {
       return new Response(JSON.stringify({ error: "User not found" }), {
         status: 404,
