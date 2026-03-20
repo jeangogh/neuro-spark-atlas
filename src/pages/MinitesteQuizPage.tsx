@@ -28,7 +28,55 @@ export default function MinitesteQuizPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // ── Auth guard ──
+  const perguntas = miniteste?.perguntas ?? [];
+  const totalPerguntas = perguntas.length;
+  const progressPct = totalPerguntas > 0 ? Math.round((questionIdx / totalPerguntas) * 100) : 0;
+
+  const handleAnswer = useCallback(
+    (valor: number) => {
+      if (isAdvancing || !perguntas.length) return;
+      const pergunta = perguntas[questionIdx];
+      setRespostas((prev) => ({ ...prev, [pergunta.id]: valor }));
+      setIsAdvancing(true);
+
+      setTimeout(() => {
+        if (questionIdx + 1 < totalPerguntas) {
+          setQuestionIdx((i) => i + 1);
+        } else {
+          setShowResult(true);
+        }
+        setIsAdvancing(false);
+      }, 300);
+    },
+    [questionIdx, perguntas, totalPerguntas, isAdvancing]
+  );
+
+  const handleBack = useCallback(() => {
+    if (questionIdx > 0) {
+      setQuestionIdx((i) => i - 1);
+    }
+  }, [questionIdx]);
+
+  const handleReset = useCallback(() => {
+    setQuestionIdx(0);
+    setRespostas({});
+    setShowResult(false);
+  }, []);
+
+  const score = useMemo(() => {
+    if (!showResult) return 0;
+    return computeMiniTesteScore(respostas, totalPerguntas);
+  }, [showResult, respostas, totalPerguntas]);
+
+  const interpretation = useMemo(() => {
+    if (score <= 30)
+      return { label: "Baixa identificação", colorClass: "text-primary" };
+    if (score <= 60)
+      return { label: "Identificação moderada", colorClass: "text-accent" };
+    return { label: "Alta identificação", colorClass: "text-destructive" };
+  }, [score]);
+
+  // ── Auth guard (after all hooks) ──
   if (authLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
 
@@ -54,57 +102,6 @@ export default function MinitesteQuizPage() {
       </div>
     );
   }
-
-  const perguntas = miniteste.perguntas;
-  const totalPerguntas = perguntas.length;
-  const progressPct = Math.round((questionIdx / totalPerguntas) * 100);
-
-  // ── Handlers ──
-
-  const handleAnswer = useCallback(
-    (valor: number) => {
-      if (isAdvancing) return;
-      const pergunta = perguntas[questionIdx];
-      setRespostas((prev) => ({ ...prev, [pergunta.id]: valor }));
-      setIsAdvancing(true);
-
-      setTimeout(() => {
-        if (questionIdx + 1 < totalPerguntas) {
-          setQuestionIdx((i) => i + 1);
-        } else {
-          setShowResult(true);
-        }
-        setIsAdvancing(false);
-      }, 300);
-    },
-    [questionIdx, perguntas, totalPerguntas, isAdvancing]
-  );
-
-  const handleBack = () => {
-    if (questionIdx > 0) {
-      setQuestionIdx((i) => i - 1);
-    }
-  };
-
-  const handleReset = () => {
-    setQuestionIdx(0);
-    setRespostas({});
-    setShowResult(false);
-  };
-
-  // ── Score computation ──
-  const score = useMemo(() => {
-    if (!showResult) return 0;
-    return computeMiniTesteScore(respostas, totalPerguntas);
-  }, [showResult, respostas, totalPerguntas]);
-
-  const interpretation = useMemo(() => {
-    if (score <= 30)
-      return { label: "Baixa identificação", colorClass: "text-primary" };
-    if (score <= 60)
-      return { label: "Identificação moderada", colorClass: "text-accent" };
-    return { label: "Alta identificação", colorClass: "text-destructive" };
-  }, [score]);
 
   // ── Circular progress ring ──
   const ringSize = 160;
