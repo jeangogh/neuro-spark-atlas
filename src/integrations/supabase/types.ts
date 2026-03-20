@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      auth_access_attempts: {
+        Row: {
+          criado_em: string
+          email: string
+          id: string
+          pagina: string
+        }
+        Insert: {
+          criado_em?: string
+          email: string
+          id?: string
+          pagina?: string
+        }
+        Update: {
+          criado_em?: string
+          email?: string
+          id?: string
+          pagina?: string
+        }
+        Relationships: []
+      }
       bonus_requests: {
         Row: {
           analysis_result: Json | null
