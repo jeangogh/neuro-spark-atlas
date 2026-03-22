@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import PostResultFeedback from "@/components/PostResultFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFunnelTracking, getLayoutVariant, getLeadVariant } from "@/hooks/useFunnelTracking";
 import { useAuth } from "@/hooks/useAuth";
@@ -516,6 +517,9 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
             O ponto de inflexão aos 35 anos representa o momento em que intervenção adequada pode reverter a curva descendente.
           </p>
         </motion.section>
+
+        {/* Post-result feedback */}
+        <PostResultFeedback testType="neurocognitivo" />
 
         {/* Disclaimer */}
         <div className="rounded-xl border border-accent/20 bg-accent/[0.03] p-4 sm:p-5">

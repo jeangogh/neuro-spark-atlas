@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import PostResultFeedback from "@/components/PostResultFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -235,6 +236,9 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
             Essa foi a dimensão com maior pontuação no seu perfil ({scores.categoryScores[highestCat.key]?.pct}%). Considere investigar mais a fundo com um profissional especializado.
           </p>
         </motion.section>
+
+        {/* Post-result feedback */}
+        <PostResultFeedback testType={test.key} />
 
         {/* Disclaimer */}
         <div className="rounded-xl border border-accent/20 bg-accent/[0.03] p-4 sm:p-5">

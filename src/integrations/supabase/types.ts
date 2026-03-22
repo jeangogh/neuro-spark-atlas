@@ -86,6 +86,39 @@ export type Database = {
         }
         Relationships: []
       }
+      eficacia: {
+        Row: {
+          contato_ahsd: string | null
+          created_at: string
+          id: string
+          sentiu_entendeu: boolean
+          tem_laudo: boolean
+          test_type: string
+          user_id: string
+          variante_pergunta: string | null
+        }
+        Insert: {
+          contato_ahsd?: string | null
+          created_at?: string
+          id?: string
+          sentiu_entendeu: boolean
+          tem_laudo?: boolean
+          test_type: string
+          user_id: string
+          variante_pergunta?: string | null
+        }
+        Update: {
+          contato_ahsd?: string | null
+          created_at?: string
+          id?: string
+          sentiu_entendeu?: boolean
+          tem_laudo?: boolean
+          test_type?: string
+          user_id?: string
+          variante_pergunta?: string | null
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string

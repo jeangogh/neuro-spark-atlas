@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
+import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
@@ -498,6 +499,9 @@ export default function NEFTestPage() {
             </p>
           </motion.div>
         )}
+
+        {/* Post-result feedback */}
+        <PostResultFeedback testType="nef" />
 
         {/* ── Next step CTA ── */}
         <motion.div

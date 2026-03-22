@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import PostResultFeedback from "@/components/PostResultFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -511,6 +512,9 @@ function FinalResultsView({ c1Scores, c2Scores, onRestart, onSignOut }: {
             )}
           </div>
         </motion.section>
+
+        {/* Post-result feedback */}
+        <PostResultFeedback testType="dimensional" />
 
         {/* Disclaimer */}
         <div className="rounded-xl border border-accent/20 bg-accent/[0.03] p-4 sm:p-5">

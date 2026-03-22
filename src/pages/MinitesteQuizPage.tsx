@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
@@ -194,6 +195,11 @@ export default function MinitesteQuizPage() {
           >
             {interpretation.label}
           </motion.p>
+
+          {/* Post-result feedback */}
+          <div className="mt-6 text-left">
+            <PostResultFeedback testType={`miniteste-${id}`} />
+          </div>
 
           {/* Test name */}
           <motion.h2

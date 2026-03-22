@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
@@ -191,6 +192,9 @@ function ResultView({ test, answers }: { test: NovoPsychTest; answers: Record<st
           <BookOpen className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
           <p className="text-[11px] text-muted-foreground leading-relaxed">{test.reference}</p>
         </motion.div>
+
+        {/* Post-result feedback */}
+        <PostResultFeedback testType={test.key} />
 
         {/* Disclaimer */}
         <div className="px-4 py-3 rounded-xl border border-border bg-card/30">
