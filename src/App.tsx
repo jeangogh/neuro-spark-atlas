@@ -31,7 +31,6 @@ const BonusReportPage = lazy(() => import("./pages/BonusReportPage"));
 const QualificationPage = lazy(() => import("./pages/QualificationPage"));
 const StyleGuidePage = lazy(() => import("./pages/StyleGuidePage"));
 const NovoPsychQuizPage = lazy(() => import("./pages/NovoPsychQuizPage"));
-const MiniQuizPage = lazy(() => import("./pages/MiniQuizPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -73,7 +72,6 @@ const App = () => (
                 <Route path="/teste-bonus/relatorio" element={<BonusReportPage />} />
                 <Route path="/admin/preferencias" element={<PrefsAnalyticsPage />} />
                 <Route path="/style-guide" element={<StyleGuidePage />} />
-                <Route path="/mini-quiz" element={<MiniQuizPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
