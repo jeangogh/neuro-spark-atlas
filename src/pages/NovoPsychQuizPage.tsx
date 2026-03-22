@@ -192,6 +192,9 @@ function ResultView({ test, answers }: { test: NovoPsychTest; answers: Record<st
           <p className="text-[11px] text-muted-foreground leading-relaxed">{test.reference}</p>
         </motion.div>
 
+        {/* Post-result feedback */}
+        <PostResultFeedback testType={test.key} />
+
         {/* Disclaimer */}
         <div className="px-4 py-3 rounded-xl border border-border bg-card/30">
           <p className="text-[11px] text-muted-foreground leading-relaxed">

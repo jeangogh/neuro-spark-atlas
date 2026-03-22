@@ -236,6 +236,9 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
           </p>
         </motion.section>
 
+        {/* Post-result feedback */}
+        <PostResultFeedback testType={test.key} />
+
         {/* Disclaimer */}
         <div className="rounded-xl border border-accent/20 bg-accent/[0.03] p-4 sm:p-5">
           <h3 className="text-foreground mb-1">Nota Importante</h3>

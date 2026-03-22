@@ -195,6 +195,11 @@ export default function MinitesteQuizPage() {
             {interpretation.label}
           </motion.p>
 
+          {/* Post-result feedback */}
+          <div className="mt-6 text-left">
+            <PostResultFeedback testType={`miniteste-${id}`} />
+          </div>
+
           {/* Test name */}
           <motion.h2
             initial={{ opacity: 0, y: 8 }}

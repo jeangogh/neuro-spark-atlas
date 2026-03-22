@@ -499,6 +499,9 @@ export default function NEFTestPage() {
           </motion.div>
         )}
 
+        {/* Post-result feedback */}
+        <PostResultFeedback testType="nef" />
+
         {/* ── Next step CTA ── */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
