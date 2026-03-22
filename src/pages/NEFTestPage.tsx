@@ -1,8 +1,9 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useDropoutTracking } from "@/hooks/useDropoutTracking";
 import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronDown, ChevronUp, Brain, Target, ArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -123,6 +124,25 @@ export default function NEFTestPage() {
 
   // ── Auth guard ──
   const { user, loading } = useAuth();
+
+  // ── Save results to DB ──
+  const savedRef = useRef(false);
+  useEffect(() => {
+    if (phase !== "results" || !user || savedRef.current || results.length === 0) return;
+    savedRef.current = true;
+
+    const scores: Record<string, number> = {};
+    results.forEach((r) => { scores[r.id] = r.score; });
+
+    supabase.from("quiz_results").insert({
+      user_id: user.id,
+      test_type: "nef",
+      answers: { intensity: intensityAnswers, hierarchy: hierarchyAnswers } as any,
+      scores: scores as any,
+    }).then(({ error }) => {
+      if (error) console.error("Erro ao salvar NEF:", error);
+    });
+  }, [phase, user, results, intensityAnswers, hierarchyAnswers]);
 
   // ── Dropout tracking ──
   useDropoutTracking("nef", totalQuestions, user?.id, answeredCount, phase === "results");
