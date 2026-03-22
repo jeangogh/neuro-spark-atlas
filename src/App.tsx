@@ -73,6 +73,7 @@ const App = () => (
                 <Route path="/teste-bonus/relatorio" element={<BonusReportPage />} />
                 <Route path="/admin/preferencias" element={<PrefsAnalyticsPage />} />
                 <Route path="/style-guide" element={<StyleGuidePage />} />
+                <Route path="/mini-quiz" element={<MiniQuizPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
