@@ -19,14 +19,17 @@ export const likertOptions = [
 ];
 
 /**
- * Blocks are ordered so that contextual blocks (trait, temporality, impact)
- * follow immediately after the mechanism blocks they relate to.
- * 
- * Flow: AHSD → TDAH → TEA → 2e → Traço(neurodev) → Temporalidade(neurodev)
- *       → Trauma → Ansiedade → Depressão → Traço(adquirido) → Impacto
+ * Blocks reordered for engagement:
+ * 1. AH/SD first (94%+ concordance — user sees themselves immediately)
+ * 2. TDAH (93% concordance — high resonance)
+ * 3. TEA
+ * 4. 2e
+ * 5. Trait + Temporality (neurodev context — kept together)
+ * 6. Emotional block unbroken: Trauma → Ansiedade → Depressão → Traço adquirido
+ * 7. Impacto (bureaucratic, last)
  */
 export const questionBlocks: QuestionBlock[] = [
-  // --- Neurodev mechanisms ---
+  // ── High-concordance openers ──
   {
     id: "ahsd",
     questions: [
@@ -72,7 +75,7 @@ export const questionBlocks: QuestionBlock[] = [
       { id: "2e_4", text: "Meu desempenho é inconsistente." },
     ],
   },
-  // Trait & temporality for neurodev
+  // ── Neurodev context (trait + temporality together) ──
   {
     id: "traco_neuro",
     relatesTo: ["ahsd", "tdah", "tea", "dupla_exc"],
@@ -93,7 +96,7 @@ export const questionBlocks: QuestionBlock[] = [
       { id: "temp_4", text: "Não surgiram apenas na vida adulta." },
     ],
   },
-  // --- Acquired mechanisms ---
+  // ── Emotional block — NEVER interrupted ──
   {
     id: "trauma",
     questions: [
@@ -121,7 +124,6 @@ export const questionBlocks: QuestionBlock[] = [
       { id: "dep_4", text: "Minha percepção de futuro tende a ser pouco animadora." },
     ],
   },
-  // Trait for acquired + impact
   {
     id: "traco_adq",
     relatesTo: ["trauma", "ansiedade", "depressao"],
@@ -132,6 +134,7 @@ export const questionBlocks: QuestionBlock[] = [
       { id: "traco_adq_4", text: "São reações recorrentes, não pontuais." },
     ],
   },
+  // ── Bureaucratic — always last ──
   {
     id: "impacto",
     questions: [
