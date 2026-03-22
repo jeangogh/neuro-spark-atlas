@@ -667,19 +667,26 @@ export default function QuizPage() {
     }
   };
 
+  // Block-transition micro-rewards
+  const BLOCK_REWARDS = [
+    null, // block 0 → no reward on first
+    "Ótimo começo! Suas respostas já começam a revelar padrões únicos. 🧠",
+    "Você está indo muito bem. Cada resposta refina seu perfil. ✨",
+    "Metade do caminho! Seu mapa cognitivo está tomando forma. 🗺️",
+    "Entrando no bloco emocional — respire e responda com calma. 💜",
+    "Faltam poucas perguntas. Seu resultado está quase pronto. 🎯",
+    "Últimas perguntas — cada uma conta para a precisão final. 🔬",
+  ];
+
   useEffect(() => {
-    let msg: string | null = null;
-    if (progress >= 80 && progress < 85) msg = "Quase lá — faltam poucas perguntas.";
-    else if (progress >= 40 && progress < 45) {
-      const secs = (TOTAL_QUESTIONS - answeredCount) * 8;
-      msg = `Metade concluída. Faltam ~${Math.ceil(secs / 60)} min.`;
-    } else if (progress >= 95) msg = "Últimas perguntas. Seu resultado está quase pronto.";
-    if (msg) {
-      setMotivationalMsg(msg);
+    // Show reward when transitioning between blocks
+    const reward = BLOCK_REWARDS[Math.min(currentBlock, BLOCK_REWARDS.length - 1)];
+    if (reward && currentBlock > 0) {
+      setMotivationalMsg(reward);
       const t = setTimeout(() => setMotivationalMsg(null), 3500);
       return () => clearTimeout(t);
     }
-  }, [progress, answeredCount]);
+  }, [currentBlock]);
 
   // Redirect to auth if not logged in
   if (!loading && !user) {
