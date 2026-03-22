@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import PostResultFeedback from "@/components/PostResultFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFunnelTracking, getLayoutVariant, getLeadVariant } from "@/hooks/useFunnelTracking";
 import { useAuth } from "@/hooks/useAuth";

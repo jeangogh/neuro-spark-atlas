@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
