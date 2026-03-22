@@ -54,7 +54,7 @@ const questionsMap: Record<number, string> = {
 };
 
 // Presentation order: highest concordance first
-const DISPLAY_ORDER = [44,20,41,38,10,45,14,32,3,5,43,11,30,35,26,42,13,6,40,25,33,17,22,46,2,23,7,21,27,47,50,48,37,39,49,16,15,9,18,28,8,34,19,31,51,4,52,53,29,36,24,12,1];
+const DISPLAY_ORDER = [44,20,41,38,10,45,14,32,3,5,43,11,30,35,26,42,13,6,40,25,33,17,22,46,2,23,7,21,27,47,50,48,37,39,49,16,15,9,18,28,8,34,19,31,4,29,36,24,12,1];
 
 // Cyclic 5-category assignment based on ORIGINAL index
 const catKeys = ["cognicao", "criatividade", "sensibilidade", "socioemocional", "motivacao"];
