@@ -612,6 +612,9 @@ export default function QuizPage() {
   // ── Funil tracking ──
   const { trackStart, trackStep, trackComplete } = useFunnelTracking(TOTAL_QUESTIONS);
 
+  // ── Dropout tracking ──
+  useDropoutTracking("neurocognitivo", TOTAL_QUESTIONS, user?.id, answeredCount, phase === "results");
+
   const block = questionBlocks[currentBlock];
   const answeredCount = Object.keys(answers).length;
   const progress = Math.round((answeredCount / TOTAL_QUESTIONS) * 100);

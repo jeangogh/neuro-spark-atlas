@@ -316,6 +316,9 @@ export default function AhsdQuizPage() {
   const blockComplete = block?.questions.every((q) => answers[q.id] !== undefined);
   const isLast = test ? currentBlock === test.questionBlocks.length - 1 : false;
 
+  // ── Dropout tracking ──
+  useDropoutTracking(test?.key ?? "unknown", totalQuestions, user?.id, answeredCount, phase === "results");
+
   // Check for saved result on mount (with 5s timeout)
   useEffect(() => {
     if (!user || !test) return;
