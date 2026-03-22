@@ -1,85 +1,88 @@
 import type { TestDefinition } from "./testDefinitions";
 
-const questions = [
-  "Aprendo conceitos complexos com pouca repetição.",
-  "Conecto ideias distantes com facilidade.",
-  "Percebo padrões que outros não notam.",
-  "Questiono explicações superficiais.",
-  "Tenho raciocínio rápido sob pressão.",
-  "Tenho curiosidade intensa e constante.",
-  "Busco compreender sistemas em profundidade.",
-  "Prefiro complexidade a simplicidade excessiva.",
-  "Aprendo sozinho com facilidade.",
-  "Tenho facilidade para abstração.",
-  "Fico entediado com tarefas simples.",
-  "Preciso de desafio para manter engajamento.",
-  "Minha produtividade depende de sentido.",
-  "Alterno entre hiperfoco e dispersão.",
-  "Mergulho intensamente quando algo me interessa.",
-  "Tenho dificuldade com repetição mecânica.",
-  "Inicio vários projetos ao mesmo tempo.",
-  "Frustro-me com ambientes lentos.",
-  "Procrastino tarefas sem significado.",
-  "Tenho dificuldade em finalizar tarefas pouco estimulantes.",
-  "Tenho sensibilidade emocional intensa.",
-  "Reajo fortemente a injustiças.",
-  "Tenho empatia profunda.",
-  "Sou altamente autocrítico.",
-  "Tenho padrões elevados comigo mesmo.",
-  "Oscilo entre confiança e dúvida intensa.",
-  "Tenho dificuldade de desligar a mente.",
-  "Sinto frustração por não usar meu potencial.",
-  "Penso demais antes de agir.",
-  "Tenho tendência a overthinking.",
-  "Senti-me diferente desde a infância.",
-  "Tive interesses incomuns para minha idade.",
-  "Preferia conversar com adultos.",
-  "Questionava regras sem sentido.",
-  "Sentia tédio frequente na escola.",
-  "Aprendia mais rápido que colegas.",
-  "Era visto como intenso ou exagerado.",
-  "Tinha imaginação muito ativa.",
-  "Era perfeccionista desde cedo.",
-  "Tinha dificuldade de pertencimento.",
-  "Tenho múltiplos interesses profundos.",
-  "Mudo de área com facilidade.",
-  "Vejo conexões entre áreas distintas.",
-  "Gosto de debates intelectuais profundos.",
-  "Prefiro conversas profundas a superficiais.",
-  "Busco excelência constantemente.",
-  "Fico frustrado com mediocridade.",
-  "Tenho necessidade forte de autonomia.",
-  "Sinto desconforto com hierarquias rígidas.",
-  "Preciso de liberdade para produzir bem.",
-  "Já me sabotei por medo de falhar.",
-  "Tenho dificuldade em ambientes muito controladores.",
-  "Minha energia criativa é intensa.",
-  "Meu humor varia conforme estímulo intelectual.",
-  "Tenho dificuldade com tarefas burocráticas.",
-  "Sinto que penso mais rápido que o ambiente.",
-  "Tenho facilidade para formular estratégias.",
-  "Analiso cenários complexos mentalmente.",
-  "Tenho sensação de potencial não utilizado.",
-  "Sinto que poderia produzir muito mais do que produzo.",
-];
+const questionsMap: Record<number, string> = {
+  1: "Aprendo conceitos complexos com pouca repetição.",
+  2: "Conecto ideias distantes com facilidade.",
+  3: "Percebo padrões que outros não notam.",
+  4: "Questiono explicações superficiais.",
+  5: "Tenho raciocínio rápido sob pressão.",
+  6: "Tenho curiosidade intensa e constante.",
+  7: "Busco compreender sistemas em profundidade.",
+  8: "Prefiro complexidade a simplicidade excessiva.",
+  9: "Aprendo sozinho com facilidade.",
+  10: "Tenho facilidade para abstração.",
+  11: "Fico entediado com tarefas simples.",
+  12: "Preciso de desafio para manter engajamento.",
+  13: "Minha produtividade depende de sentido.",
+  14: "Alterno entre hiperfoco e dispersão.",
+  15: "Mergulho intensamente quando algo me interessa.",
+  16: "Tenho dificuldade com repetição mecânica.",
+  17: "Inicio vários projetos ao mesmo tempo.",
+  18: "Frustro-me com ambientes lentos.",
+  19: "Procrastino tarefas sem significado.",
+  20: "Tenho dificuldade em finalizar tarefas pouco estimulantes.",
+  21: "Tenho sensibilidade emocional intensa.",
+  22: "Reajo fortemente a injustiças.",
+  23: "Tenho empatia profunda.",
+  24: "Sou altamente autocrítico.",
+  25: "Tenho padrões elevados comigo mesmo.",
+  26: "Oscilo entre confiança e dúvida intensa.",
+  27: "Tenho dificuldade de desligar a mente.",
+  28: "Sinto frustração por não usar meu potencial.",
+  29: "Penso demais antes de agir.",
+  30: "Tenho tendência a overthinking.",
+  31: "Senti-me diferente desde a infância.",
+  32: "Tive interesses incomuns para minha idade.",
+  33: "Preferia conversar com adultos.",
+  34: "Questionava regras sem sentido.",
+  35: "Sentia tédio frequente na escola.",
+  36: "Aprendia mais rápido que colegas.",
+  37: "Era visto como intenso ou exagerado.",
+  38: "Tinha imaginação muito ativa.",
+  39: "Era perfeccionista desde cedo.",
+  40: "Tinha dificuldade de pertencimento.",
+  41: "Tenho múltiplos interesses profundos.",
+  42: "Mudo de área com facilidade.",
+  43: "Vejo conexões entre áreas distintas.",
+  44: "Gosto de debates intelectuais profundos.",
+  45: "Prefiro conversas profundas a superficiais.",
+  46: "Busco excelência constantemente.",
+  47: "Fico frustrado com mediocridade.",
+  48: "Tenho necessidade forte de autonomia.",
+  49: "Sinto desconforto com hierarquias rígidas.",
+  50: "Preciso de liberdade para produzir bem.",
+  51: "Já me sabotei por medo de falhar.",
+  52: "Tenho dificuldade em ambientes muito controladores.",
+  53: "Minha energia criativa é intensa.",
+  54: "Meu humor varia conforme estímulo intelectual.",
+  55: "Tenho dificuldade com tarefas burocráticas.",
+  56: "Sinto que penso mais rápido que o ambiente.",
+  57: "Tenho facilidade para formular estratégias.",
+  58: "Analiso cenários complexos mentalmente.",
+  59: "Tenho sensação de potencial não utilizado.",
+  60: "Sinto que poderia produzir muito mais do que produzo.",
+};
 
-// Category assignment by question index ranges
+// Presentation order: highest concordance first
+const DISPLAY_ORDER = [15,60,24,25,27,45,48,28,59,13,47,6,30,19,22,4,50,23,20,14,7,9,44,56,53,26,57,11,29,1,21,8,2,10,3,58,54,12,31,46,51,41,17,38,34,33,49,52,43,18,42,36,32,39,40,5,35,55,37,16];
+
+// Category assignment by original question number (stable IDs)
 const cognicaoIds = [1,2,3,4,5,6,7,8,9,10,41,42,43,44,57,58].map(n => `ahsd_adult_${n}`);
 const motivacaoIds = [11,12,13,14,15,16,17,18,19,20,53,54,55,56].map(n => `ahsd_adult_${n}`);
 const intensidadeIds = [21,22,23,24,25,26,27,28,29,30].map(n => `ahsd_adult_${n}`);
 const historicoIds = [31,32,33,34,35,36,37,38,39,40].map(n => `ahsd_adult_${n}`);
 const autonomiaIds = [45,46,47,48,49,50,51,52,59,60].map(n => `ahsd_adult_${n}`);
 
-// Split into blocks of 10
+// Split into blocks of 10 using display order
 function makeBlocks() {
   const blocks = [];
-  for (let i = 0; i < questions.length; i += 10) {
-    const slice = questions.slice(i, i + 10);
+  for (let i = 0; i < DISPLAY_ORDER.length; i += 10) {
+    const slice = DISPLAY_ORDER.slice(i, i + 10);
     blocks.push({
       id: `ahsd_adult_block_${Math.floor(i / 10) + 1}`,
-      questions: slice.map((text, j) => ({
-        id: `ahsd_adult_${i + j + 1}`,
-        text,
+      questions: slice.map((num) => ({
+        id: `ahsd_adult_${num}`,
+        text: questionsMap[num],
       })),
     });
   }
