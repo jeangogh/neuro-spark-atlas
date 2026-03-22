@@ -95,6 +95,7 @@ export type Database = {
           tem_laudo: boolean
           test_type: string
           user_id: string
+          variante_pergunta: string | null
         }
         Insert: {
           contato_ahsd?: string | null
@@ -104,6 +105,7 @@ export type Database = {
           tem_laudo?: boolean
           test_type: string
           user_id: string
+          variante_pergunta?: string | null
         }
         Update: {
           contato_ahsd?: string | null
@@ -113,6 +115,7 @@ export type Database = {
           tem_laudo?: boolean
           test_type?: string
           user_id?: string
+          variante_pergunta?: string | null
         }
         Relationships: []
       }

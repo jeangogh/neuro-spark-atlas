@@ -1,0 +1,1 @@
+ALTER TABLE public.eficacia ADD COLUMN IF NOT EXISTS variante_pergunta text DEFAULT 'A';
