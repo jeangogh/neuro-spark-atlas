@@ -122,6 +122,9 @@ export default function NEFTestPage() {
 
   const primaryNef = results[0] ?? null;
 
+  // ── Auth guard ──
+  const { user, loading } = useAuth();
+
   // ── Save results to DB ──
   const savedRef = useRef(false);
   useEffect(() => {
@@ -140,9 +143,6 @@ export default function NEFTestPage() {
       if (error) console.error("Erro ao salvar NEF:", error);
     });
   }, [phase, user, results, intensityAnswers, hierarchyAnswers]);
-
-  // ── Auth guard ──
-  const { user, loading } = useAuth();
 
   // ── Dropout tracking ──
   useDropoutTracking("nef", totalQuestions, user?.id, answeredCount, phase === "results");
