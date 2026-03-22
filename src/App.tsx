@@ -31,6 +31,7 @@ const BonusReportPage = lazy(() => import("./pages/BonusReportPage"));
 const QualificationPage = lazy(() => import("./pages/QualificationPage"));
 const StyleGuidePage = lazy(() => import("./pages/StyleGuidePage"));
 const NovoPsychQuizPage = lazy(() => import("./pages/NovoPsychQuizPage"));
+const MiniQuizPage = lazy(() => import("./pages/MiniQuizPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
