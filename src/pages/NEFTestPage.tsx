@@ -122,6 +122,25 @@ export default function NEFTestPage() {
 
   const primaryNef = results[0] ?? null;
 
+  // ── Save results to DB ──
+  const savedRef = useRef(false);
+  useEffect(() => {
+    if (phase !== "results" || !user || savedRef.current || results.length === 0) return;
+    savedRef.current = true;
+
+    const scores: Record<string, number> = {};
+    results.forEach((r) => { scores[r.id] = r.score; });
+
+    supabase.from("quiz_results").insert({
+      user_id: user.id,
+      test_type: "nef",
+      answers: { intensity: intensityAnswers, hierarchy: hierarchyAnswers } as any,
+      scores: scores as any,
+    }).then(({ error }) => {
+      if (error) console.error("Erro ao salvar NEF:", error);
+    });
+  }, [phase, user, results, intensityAnswers, hierarchyAnswers]);
+
   // ── Auth guard ──
   const { user, loading } = useAuth();
 
