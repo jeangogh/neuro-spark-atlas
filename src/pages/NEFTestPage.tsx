@@ -123,6 +123,10 @@ export default function NEFTestPage() {
 
   // ── Auth guard ──
   const { user, loading } = useAuth();
+
+  // ── Dropout tracking ──
+  useDropoutTracking("nef", totalQuestions, user?.id, answeredCount, phase === "results");
+
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
 

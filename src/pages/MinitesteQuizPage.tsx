@@ -34,6 +34,9 @@ export default function MinitesteQuizPage() {
   const totalPerguntas = perguntas.length;
   const progressPct = totalPerguntas > 0 ? Math.round((questionIdx / totalPerguntas) * 100) : 0;
 
+  // ── Dropout tracking ──
+  useDropoutTracking(id ?? "miniteste", totalPerguntas, user?.id, Object.keys(respostas).length, showResult);
+
   const handleAnswer = useCallback(
     (valor: number) => {
       if (isAdvancing || !perguntas.length) return;

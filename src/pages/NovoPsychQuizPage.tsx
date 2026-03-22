@@ -233,6 +233,9 @@ export default function NovoPsychQuizPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [questionIdx]);
 
+  // ── Dropout tracking ──
+  useDropoutTracking(test?.key ?? "unknown", test?.questions.length ?? 0, user?.id, questionIdx, showResult);
+
   if (authLoading) return (
     <div className="min-h-screen bg-background flex items-center justify-center">
       <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
