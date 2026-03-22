@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import { useDropoutTracking } from "@/hooks/useDropoutTracking";
 import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -231,6 +232,9 @@ export default function NovoPsychQuizPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [questionIdx]);
+
+  // ── Dropout tracking ──
+  useDropoutTracking(test?.key ?? "unknown", test?.questions.length ?? 0, user?.id, questionIdx, showResult);
 
   if (authLoading) return (
     <div className="min-h-screen bg-background flex items-center justify-center">

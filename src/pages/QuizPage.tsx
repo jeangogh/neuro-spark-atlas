@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useDropoutTracking } from "@/hooks/useDropoutTracking";
 import PostResultFeedback from "@/components/PostResultFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFunnelTracking, getLayoutVariant, getLeadVariant } from "@/hooks/useFunnelTracking";
@@ -616,6 +617,9 @@ export default function QuizPage() {
   const progress = Math.round((answeredCount / TOTAL_QUESTIONS) * 100);
   const blockComplete = block?.questions.every((q) => answers[q.id] !== undefined);
   const isLast = currentBlock === questionBlocks.length - 1;
+
+  // ── Dropout tracking ──
+  useDropoutTracking("neurocognitivo", TOTAL_QUESTIONS, user?.id, answeredCount, phase === "results");
 
   // On mount: check if user has a saved result (with 5s timeout)
   useEffect(() => {

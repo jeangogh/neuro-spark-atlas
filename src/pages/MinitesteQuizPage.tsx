@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useDropoutTracking } from "@/hooks/useDropoutTracking";
 import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -32,6 +33,9 @@ export default function MinitesteQuizPage() {
   const perguntas = miniteste?.perguntas ?? [];
   const totalPerguntas = perguntas.length;
   const progressPct = totalPerguntas > 0 ? Math.round((questionIdx / totalPerguntas) * 100) : 0;
+
+  // ── Dropout tracking ──
+  useDropoutTracking(id ?? "miniteste", totalPerguntas, user?.id, Object.keys(respostas).length, showResult);
 
   const handleAnswer = useCallback(
     (valor: number) => {

@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
+import { useDropoutTracking } from "@/hooks/useDropoutTracking";
 import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -122,6 +123,10 @@ export default function NEFTestPage() {
 
   // ── Auth guard ──
   const { user, loading } = useAuth();
+
+  // ── Dropout tracking ──
+  useDropoutTracking("nef", totalQuestions, user?.id, answeredCount, phase === "results");
+
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
 

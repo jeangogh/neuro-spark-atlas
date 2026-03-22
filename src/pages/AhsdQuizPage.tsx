@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useDropoutTracking } from "@/hooks/useDropoutTracking";
 import PostResultFeedback from "@/components/PostResultFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -314,6 +315,9 @@ export default function AhsdQuizPage() {
   const progress = totalQuestions > 0 ? Math.round((answeredCount / totalQuestions) * 100) : 0;
   const blockComplete = block?.questions.every((q) => answers[q.id] !== undefined);
   const isLast = test ? currentBlock === test.questionBlocks.length - 1 : false;
+
+  // ── Dropout tracking ──
+  useDropoutTracking(test?.key ?? "unknown", totalQuestions, user?.id, answeredCount, phase === "results");
 
   // Check for saved result on mount (with 5s timeout)
   useEffect(() => {

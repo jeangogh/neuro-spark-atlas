@@ -374,6 +374,36 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_dropouts: {
+        Row: {
+          created_at: string
+          id: string
+          last_question_id: string | null
+          last_question_index: number
+          test_type: string
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_question_id?: string | null
+          last_question_index: number
+          test_type: string
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_question_id?: string | null
+          last_question_index?: number
+          test_type?: string
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       quiz_results: {
         Row: {
           answers: Json

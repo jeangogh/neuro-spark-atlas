@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useDropoutTracking } from "@/hooks/useDropoutTracking";
 import PostResultFeedback from "@/components/PostResultFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -579,6 +580,9 @@ export default function DimensionalQuizPage() {
 
   const c1Progress = TOTAL_C1_QUESTIONS > 0 ? Math.round((Object.keys(c1Answers).length / TOTAL_C1_QUESTIONS) * 100) : 0;
   const currentQ = allC1Questions[currentQuestion];
+
+  // ── Dropout tracking ──
+  useDropoutTracking("dimensional", TOTAL_C1_QUESTIONS, user?.id, Object.keys(c1Answers).length, phase === "final");
 
   // Check for saved result on mount (with 5s timeout)
   useEffect(() => {
