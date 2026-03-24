@@ -222,6 +222,22 @@ export default function MinitesteQuizPage() {
             transition={{ delay: 1, duration: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-3"
           >
+            {/* E agora? — CTA pós-resultado */}
+            <div className="w-full max-w-md mx-auto mb-4 rounded-2xl p-5" style={{ background: "linear-gradient(135deg, #2a3530, #1a2520)", border: "1px solid rgba(74,122,101,0.3)" }}>
+              <h3 className="text-lg font-bold text-white mb-2">E agora?</h3>
+              <p className="text-sm text-white/70 mb-4 leading-relaxed">
+                Seu resultado é o começo. O próximo passo é entender por que funciona assim — com acompanhamento, testes aprofundados e trilhas guiadas.
+              </p>
+              <div className="flex flex-col gap-2">
+                <a href="https://pay.hotmart.com/P104729957Y?off=ntj8v232" target="_blank" rel="noopener noreferrer" className="w-full py-3 rounded-xl text-center text-sm font-semibold text-white transition-all hover:scale-[1.02]" style={{ background: "#d4a574" }}>
+                  Assinar GiftedLab — R$348/ano
+                </a>
+                <a href="https://api.whatsapp.com/send/?phone=5547992513522&text=Oi%2C%20fiz%20o%20rastreio%20e%20quero%20saber%20sobre%20testagem&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer" className="w-full py-3 rounded-xl text-center text-sm font-semibold transition-all hover:scale-[1.02]" style={{ background: "#4a7a65", color: "white" }}>
+                  Falar com a clínica
+                </a>
+              </div>
+            </div>
+
             <button
               onClick={() => navigate("/analises")}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02] bg-primary text-primary-foreground"
