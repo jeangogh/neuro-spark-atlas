@@ -31,7 +31,8 @@ const BonusReportPage = lazy(() => import("./pages/BonusReportPage"));
 const QualificationPage = lazy(() => import("./pages/QualificationPage"));
 const StyleGuidePage = lazy(() => import("./pages/StyleGuidePage"));
 const NovoPsychQuizPage = lazy(() => import("./pages/NovoPsychQuizPage"));
-const DropoutAnalyticsPage = lazy(() => import("./pages/DropoutAnalyticsPage"));
+const MegaReportPage = lazy(() => import("./pages/MegaReportPage"));
+const BundlePage = lazy(() => import("./pages/BundlePage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -71,9 +72,10 @@ const App = () => (
                 <Route path="/teste-bonus" element={<BonusTestPage />} />
                 <Route path="/consentimento" element={<ConsentPage />} />
                 <Route path="/teste-bonus/relatorio" element={<BonusReportPage />} />
+                <Route path="/mega-relatorio" element={<MegaReportPage />} />
                 <Route path="/admin/preferencias" element={<PrefsAnalyticsPage />} />
-                <Route path="/admin/dropout" element={<DropoutAnalyticsPage />} />
                 <Route path="/style-guide" element={<StyleGuidePage />} />
+                <Route path="/oferta" element={<BundlePage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

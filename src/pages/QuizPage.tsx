@@ -288,10 +288,13 @@ function HypothesisCard({ hypothesis, index, forceExpanded = false }: { hypothes
             )}
           </div>
           <span
-            className="text-[11px] font-bold px-2.5 py-1 rounded-md shrink-0 tabular-nums"
-            style={{ backgroundColor: `${color}18`, color }}
+            className="flex flex-col items-end shrink-0 px-2.5 py-1 rounded-md"
+            style={{ backgroundColor: `${color}18` }}
           >
-            {hypothesis.score}%
+            <span className="text-[9px] text-muted-foreground leading-none mb-0.5">Probabilidade</span>
+            <span className="text-[13px] font-bold tabular-nums leading-none" style={{ color }}>
+              {hypothesis.score}%
+            </span>
           </span>
         </div>
         <ScoreBar score={hypothesis.score} id={hypothesis.id} delay={0.1 + index * 0.035} />
@@ -457,7 +460,10 @@ function ResultsView({ answers, scores: scoresProp, onRestart, onSignOut }: {
                 <div key={h.id}>
                   <div className="flex justify-between items-baseline text-[12px] mb-1">
                     <span className="font-medium text-foreground">{CONDITION_COLORS[h.id]?.label ?? h.label.split(" — ")[0]}</span>
-                    <span className="font-bold tabular-nums text-[13px]" style={{ color }}>{h.score}%</span>
+                    <span className="flex items-baseline gap-1.5">
+                      <span className="text-[10px] text-muted-foreground">Probabilidade</span>
+                      <span className="font-bold tabular-nums text-[13px]" style={{ color }}>{h.score}%</span>
+                    </span>
                   </div>
                   <ScoreBar score={h.score} id={h.id} delay={0.08 + i * 0.03} />
                 </div>

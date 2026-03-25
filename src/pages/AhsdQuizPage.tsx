@@ -171,6 +171,7 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
       <main className="max-w-2xl mx-auto px-5 pb-24 space-y-6">
         {/* Overall Score */}
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl border border-primary/15 bg-primary/[0.03] p-5 sm:p-6 text-center">
+          <p className="text-[11px] text-muted-foreground uppercase tracking-widest mb-1">Probabilidade</p>
           <div className="text-5xl font-bold text-primary mb-1 tabular-nums">{scores.pct}%</div>
           <p className="text-[11px] text-muted-foreground mb-3">Percentil estimado: {scores.percentile}</p>
           <h2 className="text-foreground">{classification.label}</h2>
@@ -206,7 +207,10 @@ function AhsdResultsView({ test, scores, onRestart, onSignOut }: {
                 <div key={cat.key}>
                   <div className="flex justify-between items-baseline text-[12px] mb-1">
                     <span className="font-medium text-foreground">{cat.label}</span>
-                    <span className="font-bold tabular-nums text-[13px]" style={{ color }}>{pct}%</span>
+                    <span className="flex items-baseline gap-1.5">
+                      <span className="text-[10px] text-muted-foreground">Probabilidade</span>
+                      <span className="font-bold tabular-nums text-[13px]" style={{ color }}>{pct}%</span>
+                    </span>
                   </div>
                   <ScoreBar score={pct} color={color} delay={0.08 + i * 0.03} />
                 </div>

@@ -1,6 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useDropoutTracking } from "@/hooks/useDropoutTracking";
-import PostResultFeedback from "@/components/PostResultFeedback";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useNavigate, useParams, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +6,7 @@ import { ArrowLeft, RotateCcw } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useQuota } from "@/hooks/useQuota";
 import { getMiniTeste, MT_OPCOES, computeMiniTesteScore } from "@/data/minitestes";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function MinitesteQuizPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,9 +32,6 @@ export default function MinitesteQuizPage() {
   const perguntas = miniteste?.perguntas ?? [];
   const totalPerguntas = perguntas.length;
   const progressPct = totalPerguntas > 0 ? Math.round((questionIdx / totalPerguntas) * 100) : 0;
-
-  // ── Dropout tracking ──
-  useDropoutTracking(id ?? "miniteste", totalPerguntas, user?.id, Object.keys(respostas).length, showResult);
 
   const handleAnswer = useCallback(
     (valor: number) => {
@@ -80,6 +76,28 @@ export default function MinitesteQuizPage() {
       return { label: "Identificação moderada", colorClass: "text-accent" };
     return { label: "Alta identificação", colorClass: "text-destructive" };
   }, [score]);
+
+  // ── Persist miniteste result to Supabase ──
+  const savedRef = useRef(false);
+  useEffect(() => {
+    if (!showResult || savedRef.current || !user || !miniteste) return;
+    savedRef.current = true;
+
+    supabase.from("quiz_results").insert({
+      user_id: user.id,
+      test_type: `miniteste_${miniteste.id}`,
+      answers: respostas as any,
+      scores: {
+        score,
+        interpretation: interpretation.label,
+        miniTesteId: miniteste.id,
+        jornada: miniteste.jornada,
+        nome: miniteste.nome,
+      } as any,
+    }).then(({ error }) => {
+      if (error) console.error("Failed to save miniteste result:", error);
+    });
+  }, [showResult, user, miniteste, score, interpretation.label, respostas]);
 
   // ── Auth guard (after all hooks) ──
   if (authLoading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
@@ -199,11 +217,6 @@ export default function MinitesteQuizPage() {
           >
             {interpretation.label}
           </motion.p>
-
-          {/* Post-result feedback */}
-          <div className="mt-6 text-left">
-            <PostResultFeedback testType={`miniteste-${id}`} />
-          </div>
 
           {/* Test name */}
           <motion.h2

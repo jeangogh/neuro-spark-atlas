@@ -600,6 +600,22 @@ export default function HistoryPage() {
           </div>
         ) : (
           <div className="space-y-6">
+            {/* Mega Report CTA */}
+            <Link
+              to="/mega-relatorio"
+              className="block rounded-2xl p-5 border-2 border-primary/20 bg-primary/[0.04] hover:border-primary/40 transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <ArrowRight className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-[15px] font-bold text-foreground">Mega Relatório</h3>
+                  <p className="text-[12px] text-muted-foreground">Relatório progressivo com todos os seus dados cruzados</p>
+                </div>
+              </div>
+            </Link>
+
             {/* Individual Results */}
             {neurocog && latest["neurocognitivo"] && (
               <NeurocogView scores={neurocog} date={formatDate(latest["neurocognitivo"].created_at)} />

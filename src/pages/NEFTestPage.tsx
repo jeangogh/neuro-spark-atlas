@@ -1,13 +1,11 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { useDropoutTracking } from "@/hooks/useDropoutTracking";
-import PostResultFeedback from "@/components/PostResultFeedback";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronDown, ChevronUp, Brain, Target, ArrowRight } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useQuota } from "@/hooks/useQuota";
+import { supabase } from "@/integrations/supabase/client";
 import {
   NEFS,
   INTENSITY_ITEMS,
@@ -122,31 +120,28 @@ export default function NEFTestPage() {
 
   const primaryNef = results[0] ?? null;
 
-  // ── Auth guard ──
-  const { user, loading } = useAuth();
-
-  // ── Save results to DB ──
+  // ── Persist NEF results to Supabase ──
   const savedRef = useRef(false);
   useEffect(() => {
-    if (phase !== "results" || !user || savedRef.current || results.length === 0) return;
+    if (phase !== "results" || results.length === 0 || savedRef.current) return;
+    if (!user) return;
     savedRef.current = true;
-
-    const scores: Record<string, number> = {};
-    results.forEach((r) => { scores[r.id] = r.score; });
 
     supabase.from("quiz_results").insert({
       user_id: user.id,
       test_type: "nef",
       answers: { intensity: intensityAnswers, hierarchy: hierarchyAnswers } as any,
-      scores: scores as any,
+      scores: {
+        nefScores: results.map(r => ({ id: r.id, name: r.name, score: r.score, intensity: r.intensity, hierarchy: r.hierarchy, color: r.color })),
+        primaryNef: results[0] ? { id: results[0].id, name: results[0].name, score: results[0].score } : null,
+      } as any,
     }).then(({ error }) => {
-      if (error) console.error("Erro ao salvar NEF:", error);
+      if (error) console.error("Failed to save NEF results:", error);
     });
-  }, [phase, user, results, intensityAnswers, hierarchyAnswers]);
+  }, [phase, results, user, intensityAnswers, hierarchyAnswers]);
 
-  // ── Dropout tracking ──
-  useDropoutTracking("nef", totalQuestions, user?.id, answeredCount, phase === "results");
-
+  // ── Auth guard ──
+  const { user, loading } = useAuth();
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
   if (!user) return <Navigate to="/auth" replace />;
 
@@ -524,9 +519,6 @@ export default function NEFTestPage() {
             </p>
           </motion.div>
         )}
-
-        {/* Post-result feedback */}
-        <PostResultFeedback testType="nef" />
 
         {/* ── Next step CTA ── */}
         <motion.div

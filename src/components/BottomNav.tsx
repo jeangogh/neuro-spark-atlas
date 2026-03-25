@@ -1,9 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Headphones, BookOpen, BarChart3 } from "lucide-react";
+import { Home, Headphones, BookOpen, BarChart3, ScrollText } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "Home", path: "/", icon: Home },
   { label: "Explorar", path: "/explorar", icon: Headphones },
+  { label: "Relatório", path: "/mega-relatorio", icon: ScrollText },
   { label: "Aprender", path: "/aprender", icon: BookOpen },
   { label: "Análises", path: "/analises", icon: BarChart3 },
 ];
